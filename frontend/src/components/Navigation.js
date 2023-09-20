@@ -31,8 +31,8 @@ function Navigation() {
             </div>
             <ul>
                 {navLinks.map((link) => (
-                    <li>
-                        <Link to={link.href} className="nav-link" key={link.key}>{link.title}</Link>
+                    <li key={link.key}>
+                        <Link to={link.href} className="nav-link">{link.title}</Link>
                     </li>
                 ))}
             </ul>

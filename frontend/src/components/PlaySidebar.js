@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 
-function SidebarLink({ key, gameType }) {
+function SidebarLink({ gameType }) {
     return (
         <li>
-            <Link to={gameType.href} key={key} className="sidebar-play-button">
+            <Link to={gameType.href} className="sidebar-play-button">
                 <span className="sidebar-play-button-title">{gameType.title}</span>
                 <span className="sidebar-play-button-content">{gameType.content}</span>
             </Link>
@@ -34,7 +34,7 @@ function Sidebar() {
     ]
 
     return (
-        <div className="game-sidebar">
+        <div className="play-page-sidebar">
             <ul style={{width: '100%'}}>
                 {gameTypes.map((type) => (
                     <SidebarLink key={type.key} gameType={type} />

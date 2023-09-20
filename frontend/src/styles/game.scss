@@ -1,0 +1,91 @@
+$game-border-color: #262626;
+
+@mixin square {
+    font-size: large;
+    height: 90px;
+    width: 90px;
+    position: relative;
+}
+
+.game-container {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    .game-content {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid;
+        border-color: $game-border-color;
+        border-radius: 10px;
+        height: 800px;
+        width: 720px;
+        overflow: hidden;
+
+        .game-sidebar {
+            font-size: large;
+            display: flex;
+            align-items: center;
+            width: calc(100% - 5px - 5px);
+            height: 40px;
+            padding: 0px 5px 0px 5px;
+            background-color: #2f2f2f;
+        
+            .game-timer {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 55px;
+                height: 30px;
+                background-color: #5c5c5c;
+                border-radius: 5px;
+                margin-left: auto;                
+            }
+
+            .game-user-avatar {
+                width: 30px;
+                height: 30px;
+                margin-right: 5px;
+            }
+
+            .game-user-rating {
+                color: grey;
+                margin-left: 5px;
+            }
+        }
+
+        .game-board {
+            display: flex;
+            flex-grow: 1;
+            border-top: 1px solid;
+            border-bottom: 1px solid;
+            border-color: $game-border-color;
+
+            .white-square {
+                @include square;
+                color: rgb(119, 153, 84);
+                background-color: rgb(233, 237, 204);
+            }
+
+            .black-square {
+                @include square;
+                color: rgb(233, 237, 204);
+                background-color: rgb(119, 153, 84);
+            }
+
+            .square-number {
+                position: absolute;
+                left: 3px;
+                top: 0px;
+            }
+
+            .square-letter {
+                position: absolute;
+                right: 3px;
+                bottom: 0px;
+            }
+        }
+    }
+}
