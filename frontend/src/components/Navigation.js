@@ -36,7 +36,7 @@ function Navigation() {
                     </li>
                 ))}
             </ul>
-            <div className="nav-footer">
+            <div className="nav-footer" key="nav-username">
                 Username Placeholder
             </div>
         </nav>

@@ -1,0 +1,32 @@
+.error-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+
+    .error-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .error-header {
+            font-family: 'Arial Black', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: 500;
+            font-size: 160px;
+        }
+
+        .error-content {
+            font-size: x-large;
+            margin-bottom: 15px;
+        }
+
+        .error-home-button {
+            background-color: rgb(3, 121, 3);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: large;
+        }
+    }
+}

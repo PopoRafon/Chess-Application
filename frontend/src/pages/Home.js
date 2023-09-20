@@ -1,7 +1,12 @@
+import Navigation from '../components/Navigation';
+
 function Home() {
     return (
-        <div>
-        </div>
+        <>
+            <Navigation />
+            <div>
+            </div>
+        </>
     );
 }
 

@@ -4,7 +4,7 @@
   text-align: center;
   background-color: #2c2c2c;
   border-right: 1px solid;
-  border-color: #323232;
+  border-color: #363636;
   height: 100vh;
   width: 20vh;
 }
@@ -28,13 +28,42 @@
 .nav .nav-footer {
   display: flex;
   border-top: 1px solid;
-  border-color: #323232;
+  border-color: #363636;
   position: absolute;
   align-items: center;
   justify-content: center;
   bottom: 0px;
   height: 5%;
   width: 20vh;
+}
+
+.error-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+.error-page .error-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.error-page .error-box .error-header {
+  font-family: "Arial Black", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-weight: 500;
+  font-size: 160px;
+}
+.error-page .error-box .error-content {
+  font-size: x-large;
+  margin-bottom: 15px;
+}
+.error-page .error-box .error-home-button {
+  background-color: rgb(3, 121, 3);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: large;
 }
 
 .app {
