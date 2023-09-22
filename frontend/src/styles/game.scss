@@ -1,11 +1,5 @@
-$game-border-color: #262626;
-
-@mixin square {
-    font-size: large;
-    height: 90px;
-    width: 90px;
-    position: relative;
-}
+@import 'chess_pieces';
+@import 'board';
 
 .game-container {
     display: flex;
@@ -18,7 +12,7 @@ $game-border-color: #262626;
         display: flex;
         flex-direction: column;
         border: 1px solid;
-        border-color: $game-border-color;
+        border-color: #262626;
         border-radius: 10px;
         height: 800px;
         width: 720px;
@@ -53,38 +47,6 @@ $game-border-color: #262626;
             .game-user-rating {
                 color: grey;
                 margin-left: 5px;
-            }
-        }
-
-        .game-board {
-            display: flex;
-            flex-grow: 1;
-            border-top: 1px solid;
-            border-bottom: 1px solid;
-            border-color: $game-border-color;
-
-            .white-square {
-                @include square;
-                color: rgb(119, 153, 84);
-                background-color: rgb(233, 237, 204);
-            }
-
-            .black-square {
-                @include square;
-                color: rgb(233, 237, 204);
-                background-color: rgb(119, 153, 84);
-            }
-
-            .square-number {
-                position: absolute;
-                left: 3px;
-                top: 0px;
-            }
-
-            .square-letter {
-                position: absolute;
-                right: 3px;
-                bottom: 0px;
             }
         }
     }

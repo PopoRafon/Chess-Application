@@ -66,6 +66,103 @@
   font-size: large;
 }
 
+.piece {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70px;
+}
+
+.bp {
+  background-image: url("../assets/chess_pieces/black_pawn.png");
+}
+
+.br {
+  background-image: url("../assets/chess_pieces/black_rook.png");
+}
+
+.bn {
+  background-image: url("../assets/chess_pieces/black_knight.png");
+}
+
+.bb {
+  background-image: url("../assets/chess_pieces/black_bishop.png");
+}
+
+.bq {
+  background-image: url("../assets/chess_pieces/black_queen.png");
+}
+
+.bk {
+  background-image: url("../assets/chess_pieces/black_king.png");
+}
+
+.wp {
+  background-image: url("../assets/chess_pieces/white_pawn.png");
+}
+
+.wr {
+  background-image: url("../assets/chess_pieces/white_rook.png");
+}
+
+.wn {
+  background-image: url("../assets/chess_pieces/white_knight.png");
+}
+
+.wb {
+  background-image: url("../assets/chess_pieces/white_bishop.png");
+}
+
+.wq {
+  background-image: url("../assets/chess_pieces/white_queen.png");
+}
+
+.wk {
+  background-image: url("../assets/chess_pieces/white_king.png");
+}
+
+.chess-board {
+  position: relative;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-color: #262626;
+  overflow: hidden;
+}
+.chess-board .board-cols {
+  font-weight: 500;
+  font-size: large;
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(8, 90px);
+  bottom: 0px;
+  left: 75px;
+}
+.chess-board .board-rows {
+  font-weight: 500;
+  font-size: large;
+  position: absolute;
+  display: grid;
+  grid-template-rows: repeat(8, 90px);
+  top: 0px;
+  left: 2px;
+}
+.chess-board .black-letter {
+  color: rgb(119, 153, 84);
+}
+.chess-board .white-letter {
+  color: rgb(233, 237, 204);
+}
+.chess-board .board-squares {
+  display: grid;
+  grid-template-columns: repeat(8, 90px);
+  grid-template-rows: repeat(8, 90px);
+}
+.chess-board .board-squares .black-square {
+  background-color: rgb(119, 153, 84);
+}
+.chess-board .board-squares .white-square {
+  background-color: rgb(233, 237, 204);
+}
+
 .game-container {
   display: flex;
   flex-grow: 1;
@@ -110,39 +207,6 @@
 .game-container .game-content .game-sidebar .game-user-rating {
   color: grey;
   margin-left: 5px;
-}
-.game-container .game-content .game-board {
-  display: flex;
-  flex-grow: 1;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
-  border-color: #262626;
-}
-.game-container .game-content .game-board .white-square {
-  font-size: large;
-  height: 90px;
-  width: 90px;
-  position: relative;
-  color: rgb(119, 153, 84);
-  background-color: rgb(233, 237, 204);
-}
-.game-container .game-content .game-board .black-square {
-  font-size: large;
-  height: 90px;
-  width: 90px;
-  position: relative;
-  color: rgb(233, 237, 204);
-  background-color: rgb(119, 153, 84);
-}
-.game-container .game-content .game-board .square-number {
-  position: absolute;
-  left: 3px;
-  top: 0px;
-}
-.game-container .game-content .game-board .square-letter {
-  position: absolute;
-  right: 3px;
-  bottom: 0px;
 }
 
 .play-page {

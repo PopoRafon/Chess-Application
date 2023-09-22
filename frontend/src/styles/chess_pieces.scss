@@ -1,0 +1,18 @@
+.piece {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 70px;
+}
+
+.bp {background-image: url('../assets/chess_pieces/black_pawn.png')}
+.br {background-image: url('../assets/chess_pieces/black_rook.png')}
+.bn {background-image: url('../assets/chess_pieces/black_knight.png')}
+.bb {background-image: url('../assets/chess_pieces/black_bishop.png')}
+.bq {background-image: url('../assets/chess_pieces/black_queen.png')}
+.bk {background-image: url('../assets/chess_pieces/black_king.png')}
+.wp {background-image: url('../assets/chess_pieces/white_pawn.png')}
+.wr {background-image: url('../assets/chess_pieces/white_rook.png')}
+.wn {background-image: url('../assets/chess_pieces/white_knight.png')}
+.wb {background-image: url('../assets/chess_pieces/white_bishop.png')}
+.wq {background-image: url('../assets/chess_pieces/white_queen.png')}
+.wk {background-image: url('../assets/chess_pieces/white_king.png')}
