@@ -1,3 +1,5 @@
+import Pieces from './Pieces';
+
 function RowLetters({ rows }) {
     return (
         <div className="board-rows">
@@ -30,13 +32,14 @@ function ChessBoard() {
 
     for (const row of rows) {
         for (const col of cols) {
-            board.push(<Square rowIdx={rows.indexOf(row)} colIdx={cols.indexOf(col)} key={`${row}${col}`} />);
+            board.push(<Square rowIdx={rows.indexOf(row)} colIdx={cols.indexOf(col)} key={row + '-' + col} />);
         }
     }
 
     return (
         <div className="chess-board">
             <div className="board-squares">{board}</div>
+            <Pieces />
             <RowLetters rows={rows} />
             <ColLetters columns={cols} />
         </div>

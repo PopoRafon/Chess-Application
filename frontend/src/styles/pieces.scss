@@ -1,7 +1,16 @@
+.pieces {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
 .piece {
+    position: absolute;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 70px;
+    background-size: 80px;
+    width: 90px;
+    height: 90px;
 }
 
 .bp {background-image: url('../assets/chess_pieces/black_pawn.png')}
@@ -16,3 +25,9 @@
 .wb {background-image: url('../assets/chess_pieces/white_bishop.png')}
 .wq {background-image: url('../assets/chess_pieces/white_queen.png')}
 .wk {background-image: url('../assets/chess_pieces/white_king.png')}
+
+@for $i from 0 through 7 {
+    @for $j from 0 through 7 {
+        .p-#{$i}#{$j} {transform: translate($j * 100%, $i * 100%)}
+    }
+}
