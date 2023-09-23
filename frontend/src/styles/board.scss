@@ -47,10 +47,12 @@ $board-white-color: rgb(233, 237, 204);
 
         .black-square {
             background-color: $board-black-color;
+            border-color: rgb(208, 219, 195);
         }
 
         .white-square {
             background-color: $board-white-color;
+            border-color: rgb(247, 249, 237);
         }
     }
 }

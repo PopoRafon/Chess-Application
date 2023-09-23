@@ -21,7 +21,12 @@ function ColLetters({ columns }) {
 }
 
 function Square({ colIdx, rowIdx }) {
-    return <div className={(colIdx + rowIdx) % 2 === 0 ? 'white-square' : 'black-square'}></div>;
+    return (
+        <div
+            className={(colIdx + rowIdx) % 2 === 0 ? 'white-square' : 'black-square'}
+            >
+        </div>
+    );
 }
 
 function ChessBoard() {
@@ -32,7 +37,13 @@ function ChessBoard() {
 
     for (const row of rows) {
         for (const col of cols) {
-            board.push(<Square rowIdx={rows.indexOf(row)} colIdx={cols.indexOf(col)} key={row + '-' + col} />);
+            board.push(
+                <Square
+                    rowIdx={rows.indexOf(row)}
+                    colIdx={cols.indexOf(col)}
+                    key={row + '-' + col}
+                    />
+            );
         }
     }
 
