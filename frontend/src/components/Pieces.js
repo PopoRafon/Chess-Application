@@ -52,7 +52,7 @@ function Piece({ type, row, col }) {
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
             className={`piece ${type} p-${row}${col}`}
-            >
+        >
         </div>
     );
 }
@@ -80,7 +80,7 @@ function Pieces() {
             className="pieces"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
-            >
+        >
             {positions.map((row, i) => (
                 row.map((col, j) => (
                     (positions[i][j] && (

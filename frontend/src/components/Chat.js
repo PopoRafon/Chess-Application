@@ -13,12 +13,12 @@ function Chat({ messages }) {
                         type="text"
                         placeholder="Send message..."
                         className="chat-footer-input"
-                        />
+                    />
                     <input
                         type="submit"
                         value=""
                         className="chat-footer-submit"
-                        />
+                    />
                 </div>
             </div>
         </div>

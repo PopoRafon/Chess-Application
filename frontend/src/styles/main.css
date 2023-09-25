@@ -89,51 +89,51 @@
 }
 
 .bp {
-  background-image: url("../assets/chess_pieces/black_pawn.png");
+  background-image: url("../../public/static/images/chess_pieces/black_pawn.png");
 }
 
 .br {
-  background-image: url("../assets/chess_pieces/black_rook.png");
+  background-image: url("../../public/static/images/chess_pieces/black_rook.png");
 }
 
 .bn {
-  background-image: url("../assets/chess_pieces/black_knight.png");
+  background-image: url("../../public/static/images/chess_pieces/black_knight.png");
 }
 
 .bb {
-  background-image: url("../assets/chess_pieces/black_bishop.png");
+  background-image: url("../../public/static/images/chess_pieces/black_bishop.png");
 }
 
 .bq {
-  background-image: url("../assets/chess_pieces/black_queen.png");
+  background-image: url("../../public/static/images/chess_pieces/black_queen.png");
 }
 
 .bk {
-  background-image: url("../assets/chess_pieces/black_king.png");
+  background-image: url("../../public/static/images/chess_pieces/black_king.png");
 }
 
 .wp {
-  background-image: url("../assets/chess_pieces/white_pawn.png");
+  background-image: url("../../public/static/images/chess_pieces/white_pawn.png");
 }
 
 .wr {
-  background-image: url("../assets/chess_pieces/white_rook.png");
+  background-image: url("../../public/static/images/chess_pieces/white_rook.png");
 }
 
 .wn {
-  background-image: url("../assets/chess_pieces/white_knight.png");
+  background-image: url("../../public/static/images/chess_pieces/white_knight.png");
 }
 
 .wb {
-  background-image: url("../assets/chess_pieces/white_bishop.png");
+  background-image: url("../../public/static/images/chess_pieces/white_bishop.png");
 }
 
 .wq {
-  background-image: url("../assets/chess_pieces/white_queen.png");
+  background-image: url("../../public/static/images/chess_pieces/white_queen.png");
 }
 
 .wk {
-  background-image: url("../assets/chess_pieces/white_king.png");
+  background-image: url("../../public/static/images/chess_pieces/white_king.png");
 }
 
 .p-00 {
@@ -569,7 +569,7 @@
   height: 35px;
   background-color: transparent;
   border: 0px;
-  background-image: url("../assets/images/send_message_icon.png");
+  background-image: url("../../public/static/images/icons/send_message_icon.png");
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 50%;

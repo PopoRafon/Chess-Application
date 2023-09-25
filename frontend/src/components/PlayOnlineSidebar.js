@@ -4,13 +4,13 @@ function PastMovesButtons() {
     return (
         <div className="play-online-sidebar-buttons-container">
             <button className="play-online-sidebar-button">
-                <img src="/static/images/new_game_icon.png" alt="New Game" />
+                <img src="/static/images/icons/new_game_icon.png" alt="New Game" />
             </button>
             <button className="play-online-sidebar-button" style={{margin: "6px"}}>
-                <img src="/static/images/move_back_icon.png" alt="Move Back" />
+                <img src="/static/images/icons/move_back_icon.png" alt="Move Back" />
             </button>
             <button className="play-online-sidebar-button">
-                <img src="/static/images/move_forward_icon.png" alt="Move Forward" />
+                <img src="/static/images/icons/move_forward_icon.png" alt="Move Forward" />
             </button>
         </div>
     );
@@ -23,7 +23,10 @@ function PastMovesContainer({ moves }) {
             <div className="past-moves-content">
                 <ol>
                     {moves.map((move, index) => (
-                        <li className="move" key={index}>
+                        <li
+                            className="move"
+                            key={index}
+                        >
                             {move}
                         </li>
                     ))}

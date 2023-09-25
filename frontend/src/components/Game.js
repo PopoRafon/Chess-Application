@@ -3,7 +3,11 @@ import ChessBoard from './Board';
 function GameSidebar() {
     return (
         <div className="game-sidebar">
-            <img src='/static/images/avatar.png' className="game-user-avatar" alt="Avatar" />
+            <img
+                src='/static/images/avatar.png'
+                className="game-user-avatar"
+                alt="Avatar"
+            />
             <div>
                 <span>Username</span>
                 <span className="game-user-rating">(800)</span>

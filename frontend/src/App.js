@@ -4,11 +4,15 @@ import Page404 from './pages/Page404';
 import Home from './pages/Home';
 import Play from './pages/Play';
 import PlayOnline from './pages/PlayOnline';
+import Navigation from './components/Navigation';
 
 function App() {
+  const paths = ['/', '/play', '/play/online'];
+
   return (
     <BrowserRouter>
       <div className="app">
+        <Navigation routerPaths={paths} />
         <Routes>
           <Route path='/'>
             <Route index element={<Home />} />

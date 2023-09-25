@@ -1,0 +1,41 @@
+.pieces {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.piece {
+    cursor: grab;
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80px;
+    width: 90px;
+    height: 90px;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.bp {background-image: url('../../public/static/images/chess_pieces/black_pawn.png')}
+.br {background-image: url('../../public/static/images/chess_pieces/black_rook.png')}
+.bn {background-image: url('../../public/static/images/chess_pieces/black_knight.png')}
+.bb {background-image: url('../../public/static/images/chess_pieces/black_bishop.png')}
+.bq {background-image: url('../../public/static/images/chess_pieces/black_queen.png')}
+.bk {background-image: url('../../public/static/images/chess_pieces/black_king.png')}
+.wp {background-image: url('../../public/static/images/chess_pieces/white_pawn.png')}
+.wr {background-image: url('../../public/static/images/chess_pieces/white_rook.png')}
+.wn {background-image: url('../../public/static/images/chess_pieces/white_knight.png')}
+.wb {background-image: url('../../public/static/images/chess_pieces/white_bishop.png')}
+.wq {background-image: url('../../public/static/images/chess_pieces/white_queen.png')}
+.wk {background-image: url('../../public/static/images/chess_pieces/white_king.png')}
+
+@for $i from 0 through 7 {
+    @for $j from 0 through 7 {
+        .p-#{$i}#{$j} {transform: translate($j * 100%, $i * 100%)}
+    }
+}

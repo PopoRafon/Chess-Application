@@ -1,7 +1,7 @@
-@import 'home';
-@import 'navigation';
-@import 'page404';
-@import 'play';
+@import 'pages/home';
+@import 'components/navigation';
+@import 'pages/page404';
+@import 'pages/play';
 
 .app {
   display: flex;
