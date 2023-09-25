@@ -5,9 +5,10 @@ import Home from './pages/Home';
 import Play from './pages/Play';
 import PlayOnline from './pages/PlayOnline';
 import Navigation from './components/Navigation';
+import Register from './pages/Register';
 
 function App() {
-  const paths = ['/', '/play', '/play/online'];
+  const paths = ['/', '/register', '/play', '/play/online'];
 
   return (
     <BrowserRouter>
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path='/'>
             <Route index element={<Home />} />
+            <Route path='register' element={<Register />} />
             <Route path='play'>
               <Route index element={<Play />} />
               <Route path='online' element={<PlayOnline />} />
