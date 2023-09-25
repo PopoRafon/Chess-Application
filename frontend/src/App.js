@@ -3,14 +3,20 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Page404 from './pages/Page404';
 import Home from './pages/Home';
 import Play from './pages/Play';
+import PlayOnline from './pages/PlayOnline';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="app">
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/play' element={<Play />} />
+          <Route path='/'>
+            <Route index element={<Home />} />
+            <Route path='play'>
+              <Route index element={<Play />} />
+              <Route path='online' element={<PlayOnline />} />
+            </Route>
+          </Route>
           <Route path='*' element={<Page404 />} />
         </Routes>
       </div>

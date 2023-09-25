@@ -8,12 +8,17 @@
 }
 
 .piece {
+    cursor: grab;
     position: absolute;
     background-position: center;
     background-repeat: no-repeat;
     background-size: 80px;
     width: 90px;
     height: 90px;
+
+    &:active {
+        cursor: grabbing;
+    }
 }
 
 .bp {background-image: url('../assets/chess_pieces/black_pawn.png')}

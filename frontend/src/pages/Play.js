@@ -7,7 +7,7 @@ function Play() {
         <>
             <Navigation />
             <div className="play-page">
-                <Game />
+                <Game isDisabled={true} />
                 <Sidebar />
             </div>
         </>

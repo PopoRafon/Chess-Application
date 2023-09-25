@@ -13,12 +13,12 @@ function GameSidebar() {
     );
 }
 
-function Game() {
+function Game({ isDisabled }) {
     return (
         <div className="game-container">
             <div className="game-content">
                 <GameSidebar />
-                <ChessBoard />
+                <ChessBoard isDisabled={isDisabled} />
                 <GameSidebar />
             </div>
         </div>

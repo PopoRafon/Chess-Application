@@ -29,7 +29,15 @@ function Square({ colIdx, rowIdx }) {
     );
 }
 
-function ChessBoard() {
+function DisableChessBoard() {
+    return (
+        <div className="disable-board">
+            <div className="disable-board-content">Waiting for match...</div>
+        </div>
+    );
+}
+
+function ChessBoard({ isDisabled }) {
     let board = [];
 
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -49,6 +57,9 @@ function ChessBoard() {
 
     return (
         <div className="chess-board">
+            {isDisabled && (
+                <DisableChessBoard />
+            )}
             <div className="board-squares">{board}</div>
             <Pieces />
             <RowLetters rows={rows} />
