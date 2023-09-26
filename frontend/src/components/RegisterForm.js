@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterForm() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         username: '',
@@ -27,6 +29,24 @@ function RegisterForm() {
 
     function handleSubmit(event) {
         event.preventDefault();
+
+        fetch('/api/v1/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            if (data.success) {
+                navigate('/');
+            } else {
+                console.log(data);
+            }
+        });
     }
 
     return (
