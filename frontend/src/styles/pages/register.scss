@@ -1,3 +1,19 @@
+@mixin register-form-input-mixin {
+    background-color: #313131;
+    border: 1px solid;
+    border-radius: 25px;
+    padding: 8px;
+    width: 60%;
+    margin-top: 5px;
+
+    &:focus {
+        outline: 1px solid;
+        border: 1px solid;
+    }
+}
+
+$invalid-field-color: rgb(221, 16, 16);
+
 .register-page {
     display: flex;
     justify-content: center;
@@ -27,26 +43,28 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                margin-bottom: 15px;
+                margin-bottom: 10px;
+                height: 76px;
                 width: 100%;
     
                 .register-form-input {
                     color: white;
-                    background-color: #313131;
-                    border: 1px solid;
+                    @include register-form-input-mixin;
                     border-color: #363636;
-                    border-radius: 25px;
-                    padding: 8px;
-                    width: 60%;
-                    margin-top: 5px;
 
                     &:focus {
-                        outline: 1px solid;
                         outline-color: #454545;
-                        border: 1px solid;
                         border-color: #454545;
                     }
                 }
+            }
+
+            .register-form-checkbox-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 38px;
+                width: 100%;
             }
             
             .register-form-submit-button {
@@ -62,6 +80,24 @@
 
                 &:hover {
                     background-color: #353535;
+                }
+            }
+
+            .invalid-field {
+                display: flex;
+                justify-content: center;
+                font-size: small;
+                color: $invalid-field-color;
+            }
+
+            .register-invalid-form-input {
+                color: $invalid-field-color;
+                @include register-form-input-mixin;
+                border-color: $invalid-field-color;
+
+                &:focus {
+                    outline-color: $invalid-field-color;
+                    border-color: $invalid-field-color;
                 }
             }
         }

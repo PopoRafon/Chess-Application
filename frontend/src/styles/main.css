@@ -715,24 +715,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  height: 76px;
   width: 100%;
 }
 .register-page .register-form-container .register-form .register-form-input-container .register-form-input {
   color: white;
   background-color: #313131;
   border: 1px solid;
-  border-color: #363636;
   border-radius: 25px;
   padding: 8px;
   width: 60%;
   margin-top: 5px;
+  border-color: #363636;
 }
 .register-page .register-form-container .register-form .register-form-input-container .register-form-input:focus {
   outline: 1px solid;
-  outline-color: #454545;
   border: 1px solid;
+}
+.register-page .register-form-container .register-form .register-form-input-container .register-form-input:focus {
+  outline-color: #454545;
   border-color: #454545;
+}
+.register-page .register-form-container .register-form .register-form-checkbox-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 38px;
+  width: 100%;
 }
 .register-page .register-form-container .register-form .register-form-submit-button {
   cursor: pointer;
@@ -747,6 +757,30 @@
 }
 .register-page .register-form-container .register-form .register-form-submit-button:hover {
   background-color: #353535;
+}
+.register-page .register-form-container .register-form .invalid-field {
+  display: flex;
+  justify-content: center;
+  font-size: small;
+  color: rgb(221, 16, 16);
+}
+.register-page .register-form-container .register-form .register-invalid-form-input {
+  color: rgb(221, 16, 16);
+  background-color: #313131;
+  border: 1px solid;
+  border-radius: 25px;
+  padding: 8px;
+  width: 60%;
+  margin-top: 5px;
+  border-color: rgb(221, 16, 16);
+}
+.register-page .register-form-container .register-form .register-invalid-form-input:focus {
+  outline: 1px solid;
+  border: 1px solid;
+}
+.register-page .register-form-container .register-form .register-invalid-form-input:focus {
+  outline-color: rgb(221, 16, 16);
+  border-color: rgb(221, 16, 16);
 }
 
 .app {
