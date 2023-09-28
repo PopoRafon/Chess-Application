@@ -5,12 +5,13 @@ function Chat({ messages }) {
                 <div className="chat-header">Chat</div>
                 <ul className="chat-messages">
                     {messages.map((message, index) => (
-                        <li key={index}>{message}</li>
+                        <li key={index}>Username: {message}</li>
                     ))}
                 </ul>
                 <div className="chat-footer">
                     <input
                         type="text"
+                        name="message"
                         placeholder="Send message..."
                         className="chat-footer-input"
                     />

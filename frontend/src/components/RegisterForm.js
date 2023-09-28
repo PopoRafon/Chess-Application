@@ -89,30 +89,35 @@ function RegisterForm() {
             noValidate
         >
             <div className="register-form-input-container">
-                <label>Email Address</label>
+                <label htmlFor="email">Email Address</label>
                 <input
+                    id="email"
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    autoComplete="off"
                     className={errors.email ? "register-invalid-form-input" : "register-form-input"}
                 />
                 {errors.email && (<div className="invalid-field">{errors.email}</div>)}
             </div>
             <div className="register-form-input-container">
-                <label>Username</label>
+                <label htmlFor="username">Username</label>
                 <input
+                    id="username"
                     type="text"
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
+                    autoComplete="off"
                     className={errors.username ? "register-invalid-form-input" : "register-form-input"}
                 />
                 {errors.username && (<div className="invalid-field">{errors.username}</div>)}
             </div>
             <div className="register-form-input-container">
-                <label>Password</label>
+                <label htmlFor="password1">Password</label>
                 <input
+                    id="password1"
                     type="password"
                     name="password1"
                     value={formData.password1}
@@ -122,8 +127,9 @@ function RegisterForm() {
                 {errors.password1 && (<div className="invalid-field">{errors.password1}</div>)}
             </div>
             <div className="register-form-input-container">
-                <label>Confirm Password</label>
+                <label htmlFor="password2">Confirm Password</label>
                 <input
+                    id="password2"
                     type="password"
                     name="password2"
                     value={formData.password2}

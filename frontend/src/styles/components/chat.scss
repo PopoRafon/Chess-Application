@@ -16,6 +16,7 @@ $chat-border-color: #363636;
         border: 1px solid;
         border-color: $chat-border-color;
         overflow: hidden;
+        box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.2);
 
         .chat-header {
             font-size: large;
@@ -30,7 +31,7 @@ $chat-border-color: #363636;
 
         .chat-messages {
             width: 100%;
-            height: calc(315px - 50px - 51px);
+            height: calc(315px - 52px - 60px);
             padding: 5px;
             overflow-y: auto;
             overflow-x: hidden;
@@ -62,6 +63,8 @@ $chat-border-color: #363636;
                 &:focus {
                     outline: 1px solid;
                     outline-color: #454545;
+                    border: 1px solid;
+                    border-color: #454545;
                 }
             }
 

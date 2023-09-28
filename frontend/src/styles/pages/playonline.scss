@@ -5,9 +5,10 @@ $play-online-border-color: #363636;
 .play-online-page-sidebar {
     background-color: #2c2c2c;
     border-left: 1px solid;
-    border-color: #363636;
+    border-color: $play-online-border-color;
     height: 100%;
     width: 350px;
+    box-shadow: -4px 0px 6px rgb(0, 0, 0, 0.15);
 
     .past-moves {
         display: flex;
@@ -25,6 +26,7 @@ $play-online-border-color: #363636;
             overflow: hidden;
             border: 1px solid;
             border-color: $play-online-border-color;
+            box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.2);
 
             .past-moves-header {
                 font-size: large;
@@ -67,6 +69,7 @@ $play-online-border-color: #363636;
                 border-radius: 5px;
                 border: 1px solid;
                 border-color: $play-online-border-color;
+                box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.2);
 
                 &:hover {
                     background-color: #272727;

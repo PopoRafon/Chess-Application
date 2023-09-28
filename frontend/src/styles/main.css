@@ -7,6 +7,7 @@
   border-color: #363636;
   height: 100vh;
   width: 20vh;
+  box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.15);
 }
 .nav .nav-logo {
   display: flex;
@@ -417,6 +418,7 @@
   width: 175px;
   height: 50px;
   border-radius: 25px;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
 }
 .chess-board .board-cols {
   font-weight: 500;
@@ -472,6 +474,7 @@
   height: 800px;
   width: 720px;
   overflow: hidden;
+  box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.2);
 }
 .game-container .game-content .game-sidebar {
   font-size: large;
@@ -518,6 +521,7 @@
   border: 1px solid;
   border-color: #363636;
   overflow: hidden;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 .chat .chat-container .chat-header {
   font-size: large;
@@ -531,7 +535,7 @@
 }
 .chat .chat-container .chat-messages {
   width: 100%;
-  height: 214px;
+  height: 203px;
   padding: 5px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -562,6 +566,8 @@
 .chat .chat-container .chat-footer .chat-footer-input:focus {
   outline: 1px solid;
   outline-color: #454545;
+  border: 1px solid;
+  border-color: #454545;
 }
 .chat .chat-container .chat-footer .chat-footer-submit {
   cursor: pointer;
@@ -584,6 +590,7 @@
   border-color: #363636;
   height: 100%;
   width: 350px;
+  box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.15);
 }
 .play-online-page-sidebar .past-moves {
   display: flex;
@@ -601,6 +608,7 @@
   overflow: hidden;
   border: 1px solid;
   border-color: #363636;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 .play-online-page-sidebar .past-moves .past-moves-container .past-moves-header {
   font-size: large;
@@ -639,6 +647,7 @@
   border-radius: 5px;
   border: 1px solid;
   border-color: #363636;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 .play-online-page-sidebar .past-moves .play-online-sidebar-buttons-container .play-online-sidebar-button:hover {
   background-color: #272727;
@@ -659,6 +668,7 @@
   background-color: #2c2c2c;
   height: 100%;
   width: 350px;
+  box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.15);
 }
 .play-page .play-page-sidebar .sidebar-play-button {
   display: flex;
@@ -673,6 +683,7 @@
   border-radius: 15px;
   border-bottom: 4px solid;
   border-color: rgb(6, 141, 6);
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.15);
 }
 .play-page .play-page-sidebar .sidebar-play-button:hover {
   background-color: rgb(62, 151, 62);
@@ -703,6 +714,7 @@
   border: 1px solid;
   border-radius: 25px;
   border-color: #363636;
+  box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.2);
 }
 .register-page .register-form-container .register-form {
   display: flex;
@@ -718,6 +730,7 @@
   margin-bottom: 10px;
   height: 76px;
   width: 100%;
+  text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
 }
 .register-page .register-form-container .register-form .register-form-input-container .register-form-input {
   color: white;
@@ -727,11 +740,13 @@
   padding: 8px;
   width: 60%;
   margin-top: 5px;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   border-color: #363636;
 }
 .register-page .register-form-container .register-form .register-form-input-container .register-form-input:focus {
   outline: 1px solid;
   border: 1px solid;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 .register-page .register-form-container .register-form .register-form-input-container .register-form-input:focus {
   outline-color: #454545;
@@ -743,6 +758,7 @@
   align-items: center;
   height: 38px;
   width: 100%;
+  text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
 }
 .register-page .register-form-container .register-form .register-form-submit-button {
   cursor: pointer;
@@ -754,6 +770,8 @@
   padding: 8px 16px;
   margin-top: 20px;
   font-size: 16px;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
 }
 .register-page .register-form-container .register-form .register-form-submit-button:hover {
   background-color: #353535;
@@ -772,11 +790,13 @@
   padding: 8px;
   width: 60%;
   margin-top: 5px;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   border-color: rgb(221, 16, 16);
 }
 .register-page .register-form-container .register-form .register-invalid-form-input:focus {
   outline: 1px solid;
   border: 1px solid;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 .register-page .register-form-container .register-form .register-invalid-form-input:focus {
   outline-color: rgb(221, 16, 16);
