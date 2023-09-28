@@ -74,10 +74,14 @@ function RegisterForm() {
             })
             .then((data) => {
                 if (data.success) {
+                    localStorage.setItem('access', data.success.access);
                     navigate('/');
                 } else {
                     setErrors(data);
                 }
+            })
+            .catch((err) => {
+                console.log(err);
             });
         }
     }
