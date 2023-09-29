@@ -1,6 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
 
 function Navigation({ routerPaths }) {
+    const { user } = useUser();
     const location = useLocation();
     const isPathValid = routerPaths.includes(location.pathname);
 
@@ -36,19 +38,25 @@ function Navigation({ routerPaths }) {
                     </div>
                     <ul>
                         {navLinks.map((link) => (
-                            <li key={link.key}>
-                                <Link
-                                    to={link.href}
-                                    className="nav-link"
-                                >
-                                    {link.title}
-                                </Link>
-                            </li>
+                            user.isLoggedIn && (link.title === 'Login' || link.title === 'Sign Up') ? (
+                                ''
+                            ) : (
+                                <li key={link.key}>
+                                    <Link
+                                        to={link.href}
+                                        className="nav-link"
+                                    >
+                                        {link.title}
+                                    </Link>
+                                </li>
+                            )
                         ))}
                     </ul>
-                    <div className="nav-footer">
-                        Username Placeholder
-                    </div>
+                    {user.isLoggedIn && (
+                        <div className="nav-footer">
+                            {user.username}
+                        </div>
+                    )}
                 </nav>
             )}
         </>

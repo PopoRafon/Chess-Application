@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
+import getUserData from '../utils/UserData';
 
 function RegisterForm() {
+    const { setUser } = useUser();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
@@ -75,6 +78,7 @@ function RegisterForm() {
             .then((data) => {
                 if (data.success) {
                     localStorage.setItem('access', data.success.access);
+                    getUserData(setUser);
                     navigate('/');
                 } else {
                     setErrors(data);

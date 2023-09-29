@@ -5,6 +5,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import timedelta
+from rest_framework_simplejwt.views import TokenRefreshView
+
+
+class TokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get('refresh')
+        request.data['refresh'] = refresh_token
+
+        return super().post(request, *args, **kwargs)
 
 
 class UserData(APIView):
@@ -16,9 +25,7 @@ class UserData(APIView):
                 }
             })
         else:
-            return Response({
-                'error': 'You need to login.'
-            }, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'You need to login.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class Register(APIView):
