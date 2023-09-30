@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import getUserData from '../utils/UserData';
+import { refreshAccessToken } from '../utils/AccessToken';
 
 function RegisterForm() {
     const { setUser } = useUser();
@@ -79,6 +80,7 @@ function RegisterForm() {
                 if (data.success) {
                     localStorage.setItem('access', data.success.access);
                     getUserData(setUser);
+                    refreshAccessToken();
                     navigate('/');
                 } else {
                     setErrors(data);

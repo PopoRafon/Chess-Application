@@ -1,5 +1,6 @@
 .nav {
   display: flex;
+  position: relative;
   flex-direction: column;
   text-align: center;
   background-color: #2c2c2c;
@@ -32,10 +33,43 @@
   border-color: #363636;
   position: absolute;
   align-items: center;
-  justify-content: center;
   bottom: 0px;
   height: 5%;
-  width: 20vh;
+  width: 100%;
+  overflow: hidden;
+}
+.nav .nav-footer .nav-footer-user {
+  display: flex;
+  position: relative;
+  text-align: left;
+  align-items: center;
+  width: calc(100% - 25px - 15px);
+  margin-left: 10px;
+  overflow: hidden;
+}
+.nav .nav-footer .nav-footer-user .nav-footer-avatar {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+.nav .nav-footer .nav-footer-user .nav-footer-username {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+.nav .nav-footer .nav-footer-logout-button {
+  cursor: pointer;
+  position: absolute;
+  background-color: transparent;
+  border: 0px;
+  background-image: url("../../public/static/images/icons/logout_icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 20px;
+  height: 20px;
+  background-size: 20px;
+  right: 5px;
 }
 
 .error-page {

@@ -16,7 +16,7 @@ class TokenRefreshView(TokenRefreshView):
         return super().post(request, *args, **kwargs)
 
 
-class UserData(APIView):
+class UserDataView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             return Response({
@@ -28,7 +28,7 @@ class UserData(APIView):
             return Response({'error': 'You need to login.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class Register(APIView):
+class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
 
@@ -61,3 +61,14 @@ class Register(APIView):
             return response
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(APIView):
+    def get(self, request):
+        response = Response({
+            'success': 'You have been successfuly log off your account.'
+        }, status=status.HTTP_200_OK)
+
+        response.delete_cookie('refresh')
+
+        return response
