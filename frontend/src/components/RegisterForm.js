@@ -94,11 +94,11 @@ function RegisterForm() {
 
     return (
         <form
-            className="register-form"
+            className="form"
             onSubmit={handleSubmit}
-            noValidate
+            noValidate={true}
         >
-            <div className="register-form-input-container">
+            <div className="form-input-container">
                 <label htmlFor="email">Email Address</label>
                 <input
                     id="email"
@@ -107,11 +107,11 @@ function RegisterForm() {
                     value={formData.email}
                     onChange={handleChange}
                     autoComplete="off"
-                    className={errors.email ? "register-invalid-form-input" : "register-form-input"}
+                    className={errors.email ? "invalid-form-input" : "form-input"}
                 />
                 {errors.email && (<div className="invalid-field">{errors.email}</div>)}
             </div>
-            <div className="register-form-input-container">
+            <div className="form-input-container">
                 <label htmlFor="username">Username</label>
                 <input
                     id="username"
@@ -120,11 +120,11 @@ function RegisterForm() {
                     value={formData.username}
                     onChange={handleChange}
                     autoComplete="off"
-                    className={errors.username ? "register-invalid-form-input" : "register-form-input"}
+                    className={errors.username ? "invalid-form-input" : "form-input"}
                 />
                 {errors.username && (<div className="invalid-field">{errors.username}</div>)}
             </div>
-            <div className="register-form-input-container">
+            <div className="form-input-container">
                 <label htmlFor="password1">Password</label>
                 <input
                     id="password1"
@@ -132,11 +132,11 @@ function RegisterForm() {
                     name="password1"
                     value={formData.password1}
                     onChange={handleChange}
-                    className={errors.password1 ? "register-invalid-form-input" : "register-form-input"}
+                    className={errors.password1 ? "invalid-form-input" : "form-input"}
                 />
                 {errors.password1 && (<div className="invalid-field">{errors.password1}</div>)}
             </div>
-            <div className="register-form-input-container">
+            <div className="form-input-container">
                 <label htmlFor="password2">Confirm Password</label>
                 <input
                     id="password2"
@@ -144,11 +144,11 @@ function RegisterForm() {
                     name="password2"
                     value={formData.password2}
                     onChange={handleChange}
-                    className={errors.password2 ? "register-invalid-form-input" : "register-form-input"}
+                    className={errors.password2 ? "invalid-form-input" : "form-input"}
                 />
                 {errors.password2 && (<div className="invalid-field">{errors.password2}</div>)}
             </div>
-            <div className="register-form-checkbox-container">
+            <div className="form-checkbox-container">
                 <label>
                     <input
                         type="checkbox"
@@ -163,7 +163,7 @@ function RegisterForm() {
             <input
                 type="submit"
                 value="Register"
-                className="register-form-submit-button"
+                className="form-submit-button"
             />
         </form>
     );

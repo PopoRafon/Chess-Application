@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import timedelta
 from rest_framework_simplejwt.views import TokenRefreshView
+from django.contrib.auth import authenticate
 
 
 class TokenRefreshView(TokenRefreshView):
@@ -61,6 +62,37 @@ class RegisterView(APIView):
             return response
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginView(APIView):
+    def post(self, request):
+        username = request.data['username']
+        password = request.data['password']
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            refresh = RefreshToken.for_user(user)
+
+            response = Response({
+                'success': {
+                    'access': str(refresh.access_token)
+                }
+            }, status=status.HTTP_201_CREATED)
+
+            response.set_cookie(
+                key='refresh',
+                value=str(refresh),
+                max_age=timedelta(days=7),
+                httponly=True
+            )
+
+            return response
+        else:
+            return Response({
+                'username': 'Provided credentials are incorrect.',
+                'password': 'Provided credentials are incorrect.'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):

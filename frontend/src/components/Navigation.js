@@ -31,7 +31,7 @@ function Navigation({ routerPaths, isLoaded }) {
     ];
 
     async function handleClick() {
-        await fetch('api/v1/logout', {
+        await fetch('/api/v1/logout', {
             method: 'GET'
         })
         .then((response) => {

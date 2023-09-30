@@ -10,10 +10,11 @@ import Play from './pages/Play';
 import PlayOnline from './pages/PlayOnline';
 import Navigation from './components/Navigation';
 import Register from './pages/Register';
+import Login from './pages/Login';
 
 function App() {
   const { setUser } = useUser();
-  const paths = ['/', '/register', '/play', '/play/online'];
+  const paths = ['/', '/register', '/login', '/play', '/play/online'];
   const [isLoaded, setIsLoaded] = useState(false); 
 
   useEffect(() => {
@@ -35,6 +36,7 @@ function App() {
           <Route path='/'>
             <Route index element={<Home />} />
             <Route path='register' element={<Register />} />
+            <Route path='login' element={<Login />} />
             <Route path='play'>
               <Route index element={<Play />} />
               <Route path='online' element={<PlayOnline />} />

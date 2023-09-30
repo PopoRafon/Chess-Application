@@ -2,7 +2,7 @@ async function getUserData(setUser) {
     const token = localStorage.getItem('access');
 
     if (token) {
-        await fetch('api/v1/user/data', {
+        await fetch('/api/v1/user/data', {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`

@@ -1,13 +1,13 @@
-import RegisterForm from '../components/RegisterForm';
+import LoginForm from '../components/LoginForm';
 
-function Register() {
+function Login() {
     return (
         <div className="form-page">
             <div className="form-container">
-                <RegisterForm />
+                <LoginForm />
             </div>
         </div>
     );
 }
 
-export default Register;
+export default Login;

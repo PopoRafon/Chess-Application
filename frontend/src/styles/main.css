@@ -731,14 +731,14 @@
   font-size: small;
 }
 
-.register-page {
+.form-page {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
   height: 100vh;
 }
-.register-page .register-form-container {
+.form-page .form-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -750,14 +750,14 @@
   border-color: #363636;
   box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.2);
 }
-.register-page .register-form-container .register-form {
+.form-page .form-container .form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
-.register-page .register-form-container .register-form .register-form-input-container {
+.form-page .form-container .form .form-input-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -766,7 +766,7 @@
   width: 100%;
   text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
 }
-.register-page .register-form-container .register-form .register-form-input-container .register-form-input {
+.form-page .form-container .form .form-input-container .form-input {
   color: white;
   background-color: #313131;
   border: 1px solid;
@@ -777,24 +777,16 @@
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   border-color: #363636;
 }
-.register-page .register-form-container .register-form .register-form-input-container .register-form-input:focus {
+.form-page .form-container .form .form-input-container .form-input:focus {
   outline: 1px solid;
   border: 1px solid;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
-.register-page .register-form-container .register-form .register-form-input-container .register-form-input:focus {
+.form-page .form-container .form .form-input-container .form-input:focus {
   outline-color: #454545;
   border-color: #454545;
 }
-.register-page .register-form-container .register-form .register-form-checkbox-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 38px;
-  width: 100%;
-  text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
-}
-.register-page .register-form-container .register-form .register-form-submit-button {
+.form-page .form-container .form .form-submit-button {
   cursor: pointer;
   color: white;
   background-color: #313131;
@@ -807,16 +799,16 @@
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
 }
-.register-page .register-form-container .register-form .register-form-submit-button:hover {
+.form-page .form-container .form .form-submit-button:hover {
   background-color: #353535;
 }
-.register-page .register-form-container .register-form .invalid-field {
+.form-page .form-container .form .invalid-field {
   display: flex;
   justify-content: center;
   font-size: small;
   color: rgb(221, 16, 16);
 }
-.register-page .register-form-container .register-form .register-invalid-form-input {
+.form-page .form-container .form .invalid-form-input {
   color: rgb(221, 16, 16);
   background-color: #313131;
   border: 1px solid;
@@ -827,14 +819,22 @@
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   border-color: rgb(221, 16, 16);
 }
-.register-page .register-form-container .register-form .register-invalid-form-input:focus {
+.form-page .form-container .form .invalid-form-input:focus {
   outline: 1px solid;
   border: 1px solid;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
-.register-page .register-form-container .register-form .register-invalid-form-input:focus {
+.form-page .form-container .form .invalid-form-input:focus {
   outline-color: rgb(221, 16, 16);
   border-color: rgb(221, 16, 16);
+}
+.form-page .form-container .form .form-checkbox-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 38px;
+  width: 100%;
+  text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
 }
 
 .app {

@@ -1,4 +1,6 @@
-@mixin register-form-input-mixin {
+$invalid-field-color: rgb(221, 16, 16);
+
+@mixin form-input-mixin {
     background-color: #313131;
     border: 1px solid;
     border-radius: 25px;
@@ -14,16 +16,14 @@
     }
 }
 
-$invalid-field-color: rgb(221, 16, 16);
-
-.register-page {
+.form-page {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-grow: 1;
     height: 100vh;
 
-    .register-form-container {
+    .form-container {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -35,14 +35,14 @@ $invalid-field-color: rgb(221, 16, 16);
         border-color: #363636;
         box-shadow: 5px 5px 6px rgb(0, 0, 0, 0.20);
 
-        .register-form {
+        .form {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 100%;
 
-            .register-form-input-container {
+            .form-input-container {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -50,12 +50,12 @@ $invalid-field-color: rgb(221, 16, 16);
                 height: 76px;
                 width: 100%;
                 text-shadow: 5px 5px 6px rgb(0, 0, 0, 0.30);
-
-                .register-form-input {
+            
+                .form-input {
                     color: white;
-                    @include register-form-input-mixin;
+                    @include form-input-mixin;
                     border-color: #363636;
-
+            
                     &:focus {
                         outline-color: #454545;
                         border-color: #454545;
@@ -63,16 +63,7 @@ $invalid-field-color: rgb(221, 16, 16);
                 }
             }
 
-            .register-form-checkbox-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                height: 38px;
-                width: 100%;
-                text-shadow: 5px 5px 6px rgb(0, 0, 0, 0.30);
-            }
-
-            .register-form-submit-button {
+            .form-submit-button {
                 cursor: pointer;
                 color: white;
                 background-color: #313131;
@@ -84,7 +75,7 @@ $invalid-field-color: rgb(221, 16, 16);
                 font-size: 16px;
                 box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
                 text-shadow: 3px 3px 6px rgb(0, 0, 0, 0.30);
-
+            
                 &:hover {
                     background-color: #353535;
                 }
@@ -96,17 +87,26 @@ $invalid-field-color: rgb(221, 16, 16);
                 font-size: small;
                 color: $invalid-field-color;
             }
-
-            .register-invalid-form-input {
+            
+            .invalid-form-input {
                 color: $invalid-field-color;
-                @include register-form-input-mixin;
+                @include form-input-mixin;
                 border-color: $invalid-field-color;
-
+            
                 &:focus {
                     outline-color: $invalid-field-color;
                     border-color: $invalid-field-color;
                 }
             }
+
+            .form-checkbox-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 38px;
+                width: 100%;
+                text-shadow: 5px 5px 6px rgb(0, 0, 0, 0.30);
+            }            
         }
     }
 }
