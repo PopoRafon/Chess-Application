@@ -4,7 +4,7 @@ import { useUser } from '../contexts/UserContext';
 import getUserData from '../utils/UserData';
 import { refreshAccessToken } from '../utils/AccessToken';
 
-function LoginForm() {
+function LoginForm({ setAlert }) {
     const { setUser } = useUser();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -59,6 +59,10 @@ function LoginForm() {
                     localStorage.setItem('access', data.success.access);
                     getUserData(setUser);
                     refreshAccessToken();
+                    setAlert({
+                        show: true,
+                        message: 'You have been successfuly logged in to your account!'
+                    });
                     navigate('/');
                 } else {
                     setErrors(data);

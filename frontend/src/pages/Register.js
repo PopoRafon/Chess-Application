@@ -2,7 +2,7 @@ import RegisterForm from '../components/RegisterForm';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
-function Register() {
+function Register({ setAlert }) {
     const { user } = useUser();
     const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ function Register() {
     return (
         <div className="form-page">
             <div className="form-container">
-                <RegisterForm />
+                <RegisterForm setAlert={setAlert} />
             </div>
         </div>
     );

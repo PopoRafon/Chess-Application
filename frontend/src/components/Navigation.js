@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
-function Navigation({ routerPaths, isLoaded }) {
+function Navigation({ setAlert, routerPaths, isLoaded }) {
     const { user, setUser } = useUser();
     const location = useLocation();
     const navigate = useNavigate();
@@ -42,6 +42,10 @@ function Navigation({ routerPaths, isLoaded }) {
                 localStorage.removeItem('access');
                 setUser({
                     isLoggedIn: false
+                });
+                setAlert({
+                    show: true,
+                    message: 'You have been successfuly logged out of your account!'
                 });
             }
         })

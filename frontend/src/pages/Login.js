@@ -2,7 +2,7 @@ import LoginForm from '../components/LoginForm';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
-function Login() {
+function Login({ setAlert }) {
     const { user } = useUser();
     const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ function Login() {
     return (
         <div className="form-page">
             <div className="form-container">
-                <LoginForm />
+                <LoginForm setAlert={setAlert} />
             </div>
         </div>
     );

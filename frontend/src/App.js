@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useUser } from './contexts/UserContext';
 import getUserData from './utils/UserData';
 import { createAccessToken } from './utils/AccessToken';
+import Alert from './components/Alert';
 import Page404 from './pages/Page404';
 import Home from './pages/Home';
 import Play from './pages/Play';
@@ -15,7 +16,8 @@ import Login from './pages/Login';
 function App() {
   const { setUser } = useUser();
   const paths = ['/', '/register', '/login', '/play', '/play/online'];
-  const [isLoaded, setIsLoaded] = useState(false); 
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [alert, setAlert] = useState({show: false, message: ''});
 
   useEffect(() => {
     const fetchData = async() => {
@@ -31,12 +33,15 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app">
-        <Navigation routerPaths={paths} isLoaded={isLoaded} />
+        {alert.show && (
+          <Alert setAlert={setAlert} message={alert.message} />
+        )}
+        <Navigation setAlert={setAlert} routerPaths={paths} isLoaded={isLoaded} />
         <Routes>
           <Route path='/'>
             <Route index element={<Home />} />
-            <Route path='register' element={<Register />} />
-            <Route path='login' element={<Login />} />
+            <Route path='register' element={<Register setAlert={setAlert} />} />
+            <Route path='login' element={<Login setAlert={setAlert} />} />
             <Route path='play'>
               <Route index element={<Play />} />
               <Route path='online' element={<PlayOnline />} />

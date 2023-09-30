@@ -4,7 +4,7 @@ import { useUser } from '../contexts/UserContext';
 import getUserData from '../utils/UserData';
 import { refreshAccessToken } from '../utils/AccessToken';
 
-function RegisterForm() {
+function RegisterForm({ setAlert }) {
     const { setUser } = useUser();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -81,6 +81,10 @@ function RegisterForm() {
                     localStorage.setItem('access', data.success.access);
                     getUserData(setUser);
                     refreshAccessToken();
+                    setAlert({
+                        show: true,
+                        message: 'Your account has been successfuly created!'
+                    });
                     navigate('/');
                 } else {
                     setErrors(data);
