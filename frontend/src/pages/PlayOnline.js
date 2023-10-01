@@ -1,5 +1,5 @@
-import Sidebar from '../components/PlayOnlineSidebar';
-import Game from '../components/Game';
+import Sidebar from '../components/sidebars/PlayOnlineSidebar';
+import Game from '../components/game/Game';
 
 function PlayOnline() {
     return (

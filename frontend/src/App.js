@@ -9,7 +9,7 @@ import Page404 from './pages/Page404';
 import Home from './pages/Home';
 import Play from './pages/Play';
 import PlayOnline from './pages/PlayOnline';
-import Navigation from './components/Navigation';
+import Navigation from './components/sidebars/Navigation';
 import Register from './pages/Register';
 import Login from './pages/Login';
 

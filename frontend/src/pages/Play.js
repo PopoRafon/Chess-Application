@@ -1,5 +1,5 @@
-import Sidebar  from '../components/PlaySidebar';
-import Game from '../components/Game';
+import Sidebar  from '../components/sidebars/PlaySidebar';
+import Game from '../components/game/Game';
 
 function Play() {
     return (

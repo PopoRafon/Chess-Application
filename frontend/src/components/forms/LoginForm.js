@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
-import getUserData from '../utils/UserData';
-import { refreshAccessToken } from '../utils/AccessToken';
+import { useUser } from '../../contexts/UserContext';
+import getUserData from '../../utils/UserData';
+import { refreshAccessToken } from '../../utils/AccessToken';
+import { FormInput } from './Form';
 
 function LoginForm({ setAlert }) {
     const { setUser } = useUser();
@@ -80,31 +81,22 @@ function LoginForm({ setAlert }) {
             onSubmit={handleSubmit}
             noValidate={true}
         >
-            <div className="form-input-container">
-                <label htmlFor="username">Username</label>
-                <input
-                    id="username"
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    autoComplete="off"
-                    className={errors.username ? "invalid-form-input" : "form-input"}
-                />
-                {errors.username && (<div className="invalid-field">{errors.username}</div>)}
-            </div>
-            <div className="form-input-container">
-                <label htmlFor="password">Password</label>
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={errors.password ? "invalid-form-input" : "form-input"}
-                />
-                {errors.password && (<div className="invalid-field">{errors.password}</div>)}
-            </div>
+            <FormInput
+                id="username"
+                label="Username"
+                type="text"
+                value={formData.username}
+                handleChange={handleChange}
+                error={errors.username}
+            />
+            <FormInput
+                id="password"
+                label="Password"
+                type="password"
+                value={formData.password}
+                handleChange={handleChange}
+                error={errors.password}
+            />
             <input
                 type="submit"
                 value="Login"

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
-import getUserData from '../utils/UserData';
-import { refreshAccessToken } from '../utils/AccessToken';
+import { useUser } from '../../contexts/UserContext';
+import getUserData from '../../utils/UserData';
+import { refreshAccessToken } from '../../utils/AccessToken';
+import { FormInput, FormCheckbox } from './Form';
 
 function RegisterForm({ setAlert }) {
     const { setUser } = useUser();
@@ -102,68 +103,44 @@ function RegisterForm({ setAlert }) {
             onSubmit={handleSubmit}
             noValidate={true}
         >
-            <div className="form-input-container">
-                <label htmlFor="email">Email Address</label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    autoComplete="off"
-                    className={errors.email ? "invalid-form-input" : "form-input"}
-                />
-                {errors.email && (<div className="invalid-field">{errors.email}</div>)}
-            </div>
-            <div className="form-input-container">
-                <label htmlFor="username">Username</label>
-                <input
-                    id="username"
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    autoComplete="off"
-                    className={errors.username ? "invalid-form-input" : "form-input"}
-                />
-                {errors.username && (<div className="invalid-field">{errors.username}</div>)}
-            </div>
-            <div className="form-input-container">
-                <label htmlFor="password1">Password</label>
-                <input
-                    id="password1"
-                    type="password"
-                    name="password1"
-                    value={formData.password1}
-                    onChange={handleChange}
-                    className={errors.password1 ? "invalid-form-input" : "form-input"}
-                />
-                {errors.password1 && (<div className="invalid-field">{errors.password1}</div>)}
-            </div>
-            <div className="form-input-container">
-                <label htmlFor="password2">Confirm Password</label>
-                <input
-                    id="password2"
-                    type="password"
-                    name="password2"
-                    value={formData.password2}
-                    onChange={handleChange}
-                    className={errors.password2 ? "invalid-form-input" : "form-input"}
-                />
-                {errors.password2 && (<div className="invalid-field">{errors.password2}</div>)}
-            </div>
-            <div className="form-checkbox-container">
-                <label>
-                    <input
-                        type="checkbox"
-                        name="checkbox"
-                        checked={formData.checkbox}
-                        onChange={handleChange}
-                    />
-                    Agree to Terms of Service
-                </label>
-                {errors.checkbox && (<div className="invalid-field">{errors.checkbox}</div>)}
-            </div>
+            <FormInput
+                id="email"
+                label="Email Address"
+                type="email"
+                value={formData.email}
+                handleChange={handleChange}
+                error={errors.email}
+            />
+            <FormInput
+                id="username"
+                label="Username"
+                type="text"
+                value={formData.username}
+                handleChange={handleChange}
+                error={errors.username}
+            />
+            <FormInput
+                id="password1"
+                label="Password"
+                type="password"
+                value={formData.password1}
+                handleChange={handleChange}
+                error={errors.password1}
+            />
+            <FormInput
+                id="password2"
+                label="Confirm Password"
+                type="password"
+                value={formData.password2}
+                handleChange={handleChange}
+                error={errors.password2}
+            />
+            <FormCheckbox
+                checked={formData.checkbox}
+                handleChange={handleChange}
+                label="Agree to Terms of Service"
+                error={errors.checkbox}
+            />
             <input
                 type="submit"
                 value="Register"
