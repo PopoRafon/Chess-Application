@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import Piece from './Piece';
+import validate_move from './Moves';
 
 function initialPositionsSetup() {
     return [
@@ -10,68 +12,37 @@ function initialPositionsSetup() {
         ['', '', '', '', '', '', '', ''],
         ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
         ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
-    ]
+    ];
 }
 
 function calcPosition(ref, event) {
-    const {width, x, y} = ref.current.getBoundingClientRect();
+    const { width, x, y } = ref.current.getBoundingClientRect();
     const squareSize = width / 8;
     const row = Math.floor((event.clientY - y) / squareSize);
     const col = Math.floor((event.clientX - x) / squareSize);
 
-    return {row, col};
-}
-
-function Piece({ type, row, col }) {
-    const [pos, setPos] = useState();
-
-    function handleDragStart(event) {
-        const {left, top} = event.target.getBoundingClientRect();
-        
-        event.dataTransfer.setDragImage(event.target, window.outerWidth, window.outerHeight);
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/plain', [type, row, col]);
-        event.target.style = 'z-index: 10;';
-
-        setPos([left, top]);
-    }
-
-    function handleDrag(event) {
-        event.target.style.left = `${event.clientX-pos[0]-45}px`;
-        event.target.style.top = `${event.clientY-pos[1]-45}px`;
-    }
-
-    function handleDragEnd(event) {
-        event.target.removeAttribute('style');
-    }
-
-    return (
-        <div
-            draggable={true}
-            onDragStart={handleDragStart}
-            onDrag={handleDrag}
-            onDragEnd={handleDragEnd}
-            className={`piece ${type} p-${row}${col}`}
-        >
-        </div>
-    );
+    return { row, col };
 }
 
 function Pieces() {
     const [positions, setPositions] = useState(initialPositionsSetup());
+    const [turn, setTurn] = useState('w');
     const ref = useRef();
-    
+
     const handleDragOver = (event) => event.preventDefault();
 
     function handleDrop(event) {
         const data = event.dataTransfer.getData('text').split(',');
         const newPositions = positions.slice();
-        const {row, col} = calcPosition(ref, event);
+        const { row, col } = calcPosition(ref, event);
 
-        newPositions[data[1]][data[2]] = '';
-        newPositions[row][col] = data[0];
+        if (validate_move(data, row, col, turn, positions)) {
+            newPositions[data[1]][data[2]] = '';
+            newPositions[row][col] = data[0];
 
-        setPositions(newPositions);
+            setPositions(newPositions);
+            turn === 'w' ? setTurn('b') : setTurn('w');
+        }
     }
 
     return (

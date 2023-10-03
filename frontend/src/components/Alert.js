@@ -1,6 +1,6 @@
 function Alert({ setAlert, message }) {
     setTimeout(() => {
-        setAlert({show: false, message: ''});
+        setAlert({ show: false, message: '' });
     }, 3500);
 
     return (
