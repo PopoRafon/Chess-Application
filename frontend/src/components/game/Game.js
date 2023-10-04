@@ -1,4 +1,6 @@
 import ChessBoard from './Board';
+import { useState } from 'react';
+import PromotionMenu from './PromotionMenu';
 
 function GameSidebar() {
     return (
@@ -17,16 +19,25 @@ function GameSidebar() {
     );
 }
 
-function Game({ isDisabled }) {
+export default function Game({ isDisabled }) {
+    const [promotionMenu, setPromotionMenu] = useState({show: false});
+
     return (
         <div className="game-container">
             <div className="game-content">
+                {promotionMenu.show && (
+                    <PromotionMenu
+                        promotionMenu={promotionMenu}
+                        setPromotionMenu={setPromotionMenu}
+                    />
+                )}
                 <GameSidebar />
-                <ChessBoard isDisabled={isDisabled} />
+                <ChessBoard
+                    isDisabled={isDisabled}
+                    setPromotionMenu={setPromotionMenu}
+                />
                 <GameSidebar />
             </div>
         </div>
     );
 }
-
-export default Game;

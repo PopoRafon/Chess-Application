@@ -140,7 +140,7 @@ function validate_queen(prevRow, prevCol, newRow, newCol, positions) {
     return false;
 }
 
-function validate_move(data, newRow, newCol, turn, positions) {
+export default function validate_move(data, newRow, newCol, turn, positions) {
     const piece = data[0];
     const prevRow = Number(data[1]);
     const prevCol = Number(data[2]);
@@ -165,5 +165,3 @@ function validate_move(data, newRow, newCol, turn, positions) {
 
     return false;
 }
-
-export default validate_move;

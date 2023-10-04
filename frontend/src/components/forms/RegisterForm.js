@@ -5,7 +5,7 @@ import getUserData from '../../utils/UserData';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { FormInput, FormCheckbox } from './Form';
 
-function RegisterForm({ setAlert }) {
+export default function RegisterForm({ setAlert }) {
     const { setUser } = useUser();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -149,5 +149,3 @@ function RegisterForm({ setAlert }) {
         </form>
     );
 }
-
-export default RegisterForm;

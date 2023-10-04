@@ -45,7 +45,7 @@ function PastMoves({ moves }) {
     );
 }
 
-function Sidebar({ messages, moves }) {
+export default function Sidebar({ messages, moves }) {
     return (
         <div className="play-online-page-sidebar">
             <Chat messages={messages} />
@@ -53,5 +53,3 @@ function Sidebar({ messages, moves }) {
         </div>
     );
 }
-
-export default Sidebar;

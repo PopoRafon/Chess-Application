@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Piece({ type, row, col }) {
+export default function Piece({ type, row, col }) {
     const [pos, setPos] = useState();
 
     function handleDragStart(event) {
@@ -34,5 +34,3 @@ function Piece({ type, row, col }) {
         </div>
     );
 }
-
-export default Piece;

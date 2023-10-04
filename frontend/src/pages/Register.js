@@ -2,7 +2,7 @@ import RegisterForm from '../components/forms/RegisterForm';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
-function Register({ setAlert }) {
+export default function Register({ setAlert }) {
     const { user } = useUser();
     const navigate = useNavigate();
 
@@ -18,5 +18,3 @@ function Register({ setAlert }) {
         </div>
     );
 }
-
-export default Register;

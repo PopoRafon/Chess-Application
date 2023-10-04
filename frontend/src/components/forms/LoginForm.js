@@ -5,7 +5,7 @@ import getUserData from '../../utils/UserData';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { FormInput } from './Form';
 
-function LoginForm({ setAlert }) {
+export default function LoginForm({ setAlert }) {
     const { setUser } = useUser();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -105,5 +105,3 @@ function LoginForm({ setAlert }) {
         </form>
     );
 }
-
-export default LoginForm;

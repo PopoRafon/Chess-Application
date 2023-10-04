@@ -24,11 +24,10 @@ function calcPosition(ref, event) {
     return { row, col };
 }
 
-function Pieces() {
+export default function Pieces({ setPromotionMenu }) {
     const [positions, setPositions] = useState(initialPositionsSetup());
     const [turn, setTurn] = useState('w');
     const ref = useRef();
-
     const handleDragOver = (event) => event.preventDefault();
 
     function handleDrop(event) {
@@ -36,7 +35,23 @@ function Pieces() {
         const newPositions = positions.slice();
         const { row, col } = calcPosition(ref, event);
 
+        setPromotionMenu({show: false});
+
         if (validate_move(data, row, col, turn, positions)) {
+            if ((data[0] === 'wp' && row === 0) || (data[0] === 'bp' && row === 7)) {
+                setPromotionMenu({
+                    show: true,
+                    data: data,
+                    newPositions: newPositions,
+                    position: [row, col],
+                    setPositions: setPositions,
+                    turn: turn,
+                    setTurn: setTurn
+                });
+
+                return;
+            }
+
             newPositions[data[1]][data[2]] = '';
             newPositions[row][col] = data[0];
 
@@ -67,5 +82,3 @@ function Pieces() {
         </div>
     );
 }
-
-export default Pieces;

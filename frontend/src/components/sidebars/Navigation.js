@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 
-function Navigation({ setAlert, routerPaths, isLoaded }) {
+export default function Navigation({ setAlert, routerPaths, isLoaded }) {
     const { user, setUser } = useUser();
     const location = useLocation();
     const navigate = useNavigate();
@@ -101,5 +101,3 @@ function Navigation({ setAlert, routerPaths, isLoaded }) {
         </>
     );
 }
-
-export default Navigation;

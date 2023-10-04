@@ -14,7 +14,7 @@ function SidebarLink({ gameType }) {
     );
 }
 
-function Sidebar() {
+export default function Sidebar() {
     const gameTypes = [
         {
             key: 1,
@@ -49,5 +49,3 @@ function Sidebar() {
         </div>
     );
 }
-
-export default Sidebar;

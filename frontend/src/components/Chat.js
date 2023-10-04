@@ -1,4 +1,4 @@
-function Chat({ messages }) {
+export default function Chat({ messages }) {
     return (
         <div className="chat">
             <div className="chat-container">
@@ -25,5 +25,3 @@ function Chat({ messages }) {
         </div>
     );
 }
-
-export default Chat;

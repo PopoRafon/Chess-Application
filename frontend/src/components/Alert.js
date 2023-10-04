@@ -1,4 +1,4 @@
-function Alert({ setAlert, message }) {
+export default function Alert({ setAlert, message }) {
     setTimeout(() => {
         setAlert({ show: false, message: '' });
     }, 3500);
@@ -16,5 +16,3 @@ function Alert({ setAlert, message }) {
         </div>
     );
 }
-
-export default Alert;

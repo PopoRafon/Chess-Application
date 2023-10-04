@@ -101,6 +101,139 @@
   font-size: large;
 }
 
+.promotion-menu {
+  display: grid;
+  position: absolute;
+  grid-template-rows: repeat(2, 115px);
+  grid-template-columns: repeat(2, 115px);
+  border-radius: 50%;
+  box-shadow: 6px 6px 8px 0px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+  transform: rotate(45deg);
+  animation: promotion-appear-animation 0.5s ease-out 0s 1;
+}
+@keyframes promotion-appear-animation {
+  from {
+    opacity: 0;
+    transform: rotate(45deg) scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+.promotion-menu .promotion-exit-button {
+  cursor: pointer;
+  position: absolute;
+  align-self: center;
+  justify-self: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: rgba(58, 58, 58, 0.9725490196);
+  background-image: url("../../public/static/images/icons/promotion_exit_icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.4) inset;
+  border: 1px solid;
+  border-color: #303030;
+  transform: rotate(-45deg);
+  z-index: 5;
+}
+.promotion-menu .promotion-exit-button:hover {
+  background-color: rgba(51, 51, 51, 0.9725490196);
+}
+.promotion-menu .promotion-q-field {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  border-color: #3a3a3a;
+  border-radius: 100% 0px 0px 0px;
+}
+.promotion-menu .promotion-q-field .promotion-q-piece {
+  background-size: 75px 75px;
+  background-repeat: no-repeat;
+  width: 75px;
+  height: 75px;
+  transform: rotate(-45deg);
+  border: 0px;
+  background-color: transparent;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.promotion-menu .promotion-r-field {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  border-color: #3a3a3a;
+  border-radius: 0px 100% 0px 0px;
+}
+.promotion-menu .promotion-r-field .promotion-r-piece {
+  background-size: 75px 75px;
+  background-repeat: no-repeat;
+  width: 75px;
+  height: 75px;
+  transform: rotate(-45deg);
+  border: 0px;
+  background-color: transparent;
+  margin-right: 10px;
+}
+.promotion-menu .promotion-b-field {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  border-color: #3a3a3a;
+  border-radius: 0px 0px 0px 100%;
+}
+.promotion-menu .promotion-b-field .promotion-b-piece {
+  background-size: 75px 75px;
+  background-repeat: no-repeat;
+  width: 75px;
+  height: 75px;
+  transform: rotate(-45deg);
+  border: 0px;
+  background-color: transparent;
+  margin-bottom: 10px;
+}
+.promotion-menu .promotion-n-field {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  border-color: #3a3a3a;
+  border-radius: 0px 0px 100% 0px;
+}
+.promotion-menu .promotion-n-field .promotion-n-piece {
+  background-size: 75px 75px;
+  background-repeat: no-repeat;
+  width: 75px;
+  height: 75px;
+  transform: rotate(-45deg);
+  border: 0px;
+  background-color: transparent;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+.promotion-menu .promotion-field-b {
+  background-color: rgba(255, 255, 255, 0.9725490196);
+}
+.promotion-menu .promotion-field-b:hover {
+  background-color: rgba(240, 240, 240, 0.9725490196);
+}
+.promotion-menu .promotion-field-w {
+  background-color: rgba(58, 58, 58, 0.9725490196);
+}
+.promotion-menu .promotion-field-w:hover {
+  background-color: rgba(50, 50, 50, 0.9725490196);
+}
+
 .pieces {
   position: absolute;
   z-index: 10;
@@ -845,9 +978,9 @@
   width: 100%;
   height: 150px;
   pointer-events: none;
-  animation: reverse-transformer 0.6s ease-out 3s 1;
+  animation: alert-disappear-animation 0.6s ease-out 3s 1;
 }
-@keyframes reverse-transformer {
+@keyframes alert-disappear-animation {
   from {
     transform: translate(0px, 0px);
   }
@@ -870,9 +1003,9 @@
   height: 50px;
   pointer-events: all;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-  animation: transformer 0.6s ease-out 0s 1;
+  animation: alert-appear-animation 0.6s ease-out 0s 1;
 }
-@keyframes transformer {
+@keyframes alert-appear-animation {
   from {
     transform: translate(0px, -150px);
   }

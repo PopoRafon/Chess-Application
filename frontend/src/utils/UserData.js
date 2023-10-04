@@ -1,4 +1,4 @@
-async function getUserData(setUser) {
+export default async function getUserData(setUser) {
     const token = localStorage.getItem('access');
 
     if (token) {
@@ -24,5 +24,3 @@ async function getUserData(setUser) {
         });
     }
 }
-
-export default getUserData;

@@ -2,7 +2,7 @@ import LoginForm from '../components/forms/LoginForm';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
-function Login({ setAlert }) {
+export default function Login({ setAlert }) {
     const { user } = useUser();
     const navigate = useNavigate();
 
@@ -18,5 +18,3 @@ function Login({ setAlert }) {
         </div>
     );
 }
-
-export default Login;

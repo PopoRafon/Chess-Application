@@ -1,7 +1,7 @@
 import Sidebar from '../components/sidebars/PlayOnlineSidebar';
 import Game from '../components/game/Game';
 
-function PlayOnline() {
+export default function PlayOnline() {
     return (
         <div className="play-page">
             <Game
@@ -14,5 +14,3 @@ function PlayOnline() {
         </div>
     );
 }
-
-export default PlayOnline;

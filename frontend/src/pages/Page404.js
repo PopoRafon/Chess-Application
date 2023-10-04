@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-function Page404() {
+export default function Page404() {
     return (
         <div className="error-page">
             <div className="error-box">
@@ -16,5 +16,3 @@ function Page404() {
         </div>
     );
 }
-
-export default Page404;

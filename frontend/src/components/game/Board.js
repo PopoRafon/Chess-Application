@@ -47,7 +47,7 @@ function DisableChessBoard() {
     );
 }
 
-function ChessBoard({ isDisabled }) {
+export default function ChessBoard({ isDisabled, setPromotionMenu }) {
     let board = [];
 
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -71,11 +71,9 @@ function ChessBoard({ isDisabled }) {
                 <DisableChessBoard />
             )}
             <div className="board-squares">{board}</div>
-            <Pieces />
+            <Pieces setPromotionMenu={setPromotionMenu} />
             <RowLetters rows={rows} />
             <ColLetters columns={cols} />
         </div>
     );
 }
-
-export default ChessBoard;
