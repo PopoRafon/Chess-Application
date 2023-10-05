@@ -1,5 +1,10 @@
+import { usePositions } from '../../contexts/PositionsContext';
+import { usePrevMoves } from '../../contexts/PreviousMovesContext';
+
 export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
-    const { data, newPositions, position, setPositions, turn, setTurn } = promotionMenu;
+    const { setPositions } = usePositions();
+    const { prevMoves, setPrevMoves } = usePrevMoves();
+    const { data, newPositions, position, turn, setTurn } = promotionMenu;
     const [row, col] = position;
 
     function handleExit() {
@@ -7,10 +12,26 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     }
 
     function handlePromote(type) {
+        const capturedPiece = newPositions[row][col];
+        const square = 'abcdefgh'[col] + '87654321'[row];
+        let move;
+
+        if (capturedPiece) {
+            move = square + '=' + type.toUpperCase() + 'x' + capturedPiece[1].toUpperCase() + square;
+        } else {
+            move = square + '=' + type.toUpperCase();
+        }
+
         newPositions[data[1]][data[2]] = '';
         newPositions[row][col] = data[0][0] + type;
 
         setPositions(newPositions);
+
+        setPrevMoves([
+            ...prevMoves,
+            [move, newPositions.map(row => row.slice())]
+        ]);
+
         turn === 'w' ? setTurn('b') : setTurn('w');
         setPromotionMenu({show: false});
     }

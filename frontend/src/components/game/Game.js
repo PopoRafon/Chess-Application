@@ -1,4 +1,4 @@
-import ChessBoard from './Board';
+import ChessBoard from './ChessBoard';
 import { useState } from 'react';
 import PromotionMenu from './PromotionMenu';
 
@@ -19,7 +19,7 @@ function GameSidebar() {
     );
 }
 
-export default function Game({ isDisabled }) {
+export default function Game({ disableBoard }) {
     const [promotionMenu, setPromotionMenu] = useState({show: false});
 
     return (
@@ -33,7 +33,7 @@ export default function Game({ isDisabled }) {
                 )}
                 <GameSidebar />
                 <ChessBoard
-                    isDisabled={isDisabled}
+                    disableBoard={disableBoard}
                     setPromotionMenu={setPromotionMenu}
                 />
                 <GameSidebar />

@@ -10,7 +10,7 @@ $play-online-border-color: #363636;
     width: 350px;
     box-shadow: -4px 0px 6px rgb(0, 0, 0, 0.15);
 
-    .past-moves {
+    .prev-moves {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -18,7 +18,7 @@ $play-online-border-color: #363636;
         height: calc(100% - 350px);
         width: 100%;
 
-        .past-moves-container {
+        .prev-moves-container {
             background-color: rgb(0, 0, 0, 0.13);
             height: 80%;
             width: 85%;
@@ -28,7 +28,7 @@ $play-online-border-color: #363636;
             border-color: $play-online-border-color;
             box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.2);
 
-            .past-moves-header {
+            .prev-moves-header {
                 font-size: large;
                 display: flex;
                 height: 50px;
@@ -39,7 +39,7 @@ $play-online-border-color: #363636;
                 border-color: $play-online-border-color;
             }
 
-            .past-moves-content {
+            .prev-moves-content {
                 height: calc(50vh - 50px);
                 width: 100%;
                 overflow-x: hidden;
@@ -47,6 +47,19 @@ $play-online-border-color: #363636;
 
                 .move {
                     list-style-type: decimal;
+
+                    .prev-move-button {
+                        cursor: pointer;
+                        color: white;
+                        font-weight: 600;
+                        border: 0px;
+                        background-color: #282828f0;
+                        border-radius: 5px;
+                        text-align: left;
+                        width: 80px;
+                        margin-right: 10px;
+                        box-shadow: 1px 1px 3px 0px rgb(0, 0, 0, 0.1);
+                    }
                 }
             }
         }

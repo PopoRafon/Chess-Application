@@ -1,55 +1,15 @@
-import Chat from '../Chat';
+import Chat from '../game/Chat';
+import PrevMoves from '../game/PreviousMoves';
 
-function PastMovesButtons() {
-    return (
-        <div className="play-online-sidebar-buttons-container">
-            <button className="play-online-sidebar-button">
-                <img src="/static/images/icons/new_game_icon.png" alt="New Game" />
-            </button>
-            <button className="play-online-sidebar-button" style={{margin: "6px"}}>
-                <img src="/static/images/icons/move_back_icon.png" alt="Move Back" />
-            </button>
-            <button className="play-online-sidebar-button">
-                <img src="/static/images/icons/move_forward_icon.png" alt="Move Forward" />
-            </button>
-        </div>
-    );
-}
-
-function PastMovesContainer({ moves }) {
-    return (
-        <div className="past-moves-container">
-            <div className="past-moves-header">Past Moves</div>
-            <div className="past-moves-content">
-                <ol>
-                    {moves.map((move, index) => (
-                        <li
-                            className="move"
-                            key={index}
-                        >
-                            {move}
-                        </li>
-                    ))}
-                </ol>
-            </div>
-        </div>
-    );
-}
-
-function PastMoves({ moves }) {
-    return (
-        <div className="past-moves">
-            <PastMovesContainer moves={moves} />
-            <PastMovesButtons />
-        </div>
-    );
-}
-
-export default function Sidebar({ messages, moves }) {
+export default function Sidebar({ messages, setDisableBoard }) {
     return (
         <div className="play-online-page-sidebar">
-            <Chat messages={messages} />
-            <PastMoves moves={moves} />
+            <Chat
+                messages={messages}
+            />
+            <PrevMoves
+                setDisableBoard={setDisableBoard}
+            />
         </div>
     );
 }

@@ -42,12 +42,11 @@ function Square({ colIdx, rowIdx }) {
 function DisableChessBoard() {
     return (
         <div className="disable-board">
-            <div className="disable-board-content">Waiting for match...</div>
         </div>
     );
 }
 
-export default function ChessBoard({ isDisabled, setPromotionMenu }) {
+export default function ChessBoard({ disableBoard, setPromotionMenu }) {
     let board = [];
 
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -67,13 +66,19 @@ export default function ChessBoard({ isDisabled, setPromotionMenu }) {
 
     return (
         <div className="chess-board">
-            {isDisabled && (
+            {disableBoard && (
                 <DisableChessBoard />
             )}
             <div className="board-squares">{board}</div>
-            <Pieces setPromotionMenu={setPromotionMenu} />
-            <RowLetters rows={rows} />
-            <ColLetters columns={cols} />
+            <Pieces
+                setPromotionMenu={setPromotionMenu}
+            />
+            <RowLetters
+                rows={rows}
+            />
+            <ColLetters
+                columns={cols}
+            />
         </div>
     );
 }

@@ -1,19 +1,8 @@
 import { useState, useRef } from 'react';
 import Piece from './Piece';
 import validate_move from './Moves';
-
-function initialPositionsSetup() {
-    return [
-        ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
-        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
-        ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
-    ];
-}
+import { usePrevMoves } from '../../contexts/PreviousMovesContext';
+import { usePositions } from '../../contexts/PositionsContext';
 
 function calcPosition(ref, event) {
     const { width, x, y } = ref.current.getBoundingClientRect();
@@ -25,9 +14,11 @@ function calcPosition(ref, event) {
 }
 
 export default function Pieces({ setPromotionMenu }) {
-    const [positions, setPositions] = useState(initialPositionsSetup());
+    const { positions, setPositions } = usePositions();
+    const { prevMoves, setPrevMoves } = usePrevMoves();
     const [turn, setTurn] = useState('w');
     const ref = useRef();
+
     const handleDragOver = (event) => event.preventDefault();
 
     function handleDrop(event) {
@@ -44,7 +35,6 @@ export default function Pieces({ setPromotionMenu }) {
                     data: data,
                     newPositions: newPositions,
                     position: [row, col],
-                    setPositions: setPositions,
                     turn: turn,
                     setTurn: setTurn
                 });
@@ -52,10 +42,26 @@ export default function Pieces({ setPromotionMenu }) {
                 return;
             }
 
+            const capturedPiece = newPositions[row][col];
+            const square = 'abcdefgh'[col] + '87654321'[row];
+            let move;
+
+            if (capturedPiece) {
+                move = 'abcdefgh'[data[2]] + 'x' + square;
+            } else {
+                move = data[0][1] === 'p' ? square : data[0][1].toUpperCase() + square;
+            }
+
             newPositions[data[1]][data[2]] = '';
             newPositions[row][col] = data[0];
 
             setPositions(newPositions);
+            
+            setPrevMoves([
+                ...prevMoves,
+                [move, newPositions.map(row => row.slice())]
+            ]);
+
             turn === 'w' ? setTurn('b') : setTurn('w');
         }
     }
