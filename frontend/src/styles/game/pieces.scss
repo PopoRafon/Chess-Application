@@ -15,12 +15,21 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: 80px;
+    z-index: 5;
     width: 90px;
     height: 90px;
 
     &:active {
         cursor: grabbing;
     }
+}
+
+.highlight {
+    position: absolute;
+    background-color: rgb(255, 255, 51, 0.5);
+    z-index: 1;
+    width: 90px;
+    height: 90px;
 }
 
 .bp {background-image: url('../../public/static/images/chess_pieces/black_pawn.png')}

@@ -8,12 +8,14 @@ export default function gameReducer(state, action) {
                     ...state.prevMoves,
                     action.prevMove
                 ],
+                markedSquares: action.markedSquares,
                 turn: newTurn
             };
         case 'NEW_POSITIONS':
             return {
                 ...state,
-                positions: action.positions
+                positions: action.positions,
+                markedSquares: action.markedSquares
             };
         default:
             throw new Error();

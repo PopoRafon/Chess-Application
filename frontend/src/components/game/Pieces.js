@@ -35,10 +35,17 @@ export default function Pieces({ setPromotionMenu }) {
             newPositions[data[1]][data[2]] = '';
             newPositions[row][col] = data[0];
 
+            const markedSquares = [`${data[1]}${data[2]}`, `${row}${col}`];
+
             dispatchGame({
                 type: 'NEXT_ROUND',
                 positions: newPositions,
-                prevMove: [move, newPositions.map(row => row.slice())]
+                prevMove: [
+                    move,
+                    newPositions.map(row => row.slice()),
+                    markedSquares
+                ],
+                markedSquares: markedSquares
             });
         }
     }
@@ -50,8 +57,15 @@ export default function Pieces({ setPromotionMenu }) {
             onDragOver={handleDragOver}
             onDrop={handleDrop}
         >
+            {game.markedSquares.map((square, index) => (
+                <div
+                    className={`highlight p-${square}`}
+                    key={index}
+                >
+                </div>
+            ))}
             {game.positions.map((row, i) => (
-                row.map((col, j) => (
+                row.map((_, j) => (
                     (game.positions[i][j] && (
                         <Piece
                             type={game.positions[i][j]}

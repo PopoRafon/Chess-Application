@@ -18,10 +18,17 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
         newPositions[data[1]][data[2]] = '';
         newPositions[row][col] = data[0][0] + type;
 
+        const markedSquares = [`${data[1]}${data[2]}`, `${row}${col}`];
+
         dispatchGame({
             type: 'NEXT_ROUND',
             positions: newPositions,
-            prevMove: [move, newPositions.map(row => row.slice())]
+            prevMove: [
+                move,
+                newPositions.map(row => row.slice()),
+                markedSquares
+            ],
+            markedSquares: markedSquares
         });
 
         setPromotionMenu({show: false});

@@ -8,6 +8,7 @@ function GameProvider({ children }) {
     const [game, dispatchGame] = useReducer(gameReducer, {
         positions: setup(),
         prevMoves: [],
+        markedSquares: [],
         turn: 'w'
     });
 

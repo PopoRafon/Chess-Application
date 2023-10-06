@@ -31,11 +31,19 @@ function PrevMovesContainer({ setDisableBoard }) {
         }
 
         if (game.prevMoves.length === index + 1) {
-            dispatchGame({type: 'NEW_POSITIONS', positions: refPositions.current});
+            dispatchGame({
+                type: 'NEW_POSITIONS',
+                positions: refPositions.current,
+                markedSquares: game.prevMoves[game.prevMoves.length - 1][2]
+            });
             refPositions.current = '';
             setDisableBoard(false);
         } else {
-            dispatchGame({type: 'NEW_POSITIONS', positions: game.prevMoves[index][1]})
+            dispatchGame({
+                type: 'NEW_POSITIONS',
+                positions: game.prevMoves[index][1],
+                markedSquares: game.prevMoves[index][2]
+            });
         }
     }
 
