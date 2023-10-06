@@ -818,6 +818,7 @@
 .play-online-page-sidebar .prev-moves .play-online-sidebar-buttons-container .play-online-sidebar-button {
   cursor: pointer;
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
   height: 45px;
@@ -1029,6 +1030,34 @@
   width: 30px;
   height: 30px;
   margin-right: 5px;
+}
+
+.tooltip-trigger:hover .tooltip {
+  visibility: visible;
+}
+.tooltip-trigger .tooltip {
+  color: white;
+  background-color: rgba(36, 36, 36, 0.6274509804);
+  border-radius: 5px;
+  border: 1px solid;
+  border-color: #363636;
+  position: absolute;
+  padding: 4px 8px;
+  z-index: 10;
+  top: -30px;
+  visibility: hidden;
+  pointer-events: none;
+  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.1);
+}
+.tooltip-trigger .tooltip::after {
+  content: " ";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #363636 transparent transparent transparent;
 }
 
 .app {

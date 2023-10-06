@@ -1,10 +1,8 @@
-import { usePositions } from '../../contexts/PositionsContext';
-import { usePrevMoves } from '../../contexts/PreviousMovesContext';
+import { useGame } from '../../contexts/GameContext';
 
 export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
-    const { setPositions } = usePositions();
-    const { prevMoves, setPrevMoves } = usePrevMoves();
-    const { data, newPositions, position, turn, setTurn } = promotionMenu;
+    const { game, dispatchGame } = useGame();
+    const { data, position } = promotionMenu;
     const [row, col] = position;
 
     function handleExit() {
@@ -12,27 +10,20 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     }
 
     function handlePromote(type) {
+        const newPositions = game.positions.slice();
         const capturedPiece = newPositions[row][col];
         const square = 'abcdefgh'[col] + '87654321'[row];
-        let move;
-
-        if (capturedPiece) {
-            move = square + '=' + type.toUpperCase() + 'x' + capturedPiece[1].toUpperCase() + square;
-        } else {
-            move = square + '=' + type.toUpperCase();
-        }
+        const move = square + '=' + type.toUpperCase() + (capturedPiece ? 'x' + capturedPiece[1].toUpperCase() + square : '');
 
         newPositions[data[1]][data[2]] = '';
         newPositions[row][col] = data[0][0] + type;
 
-        setPositions(newPositions);
+        dispatchGame({
+            type: 'NEXT_ROUND',
+            positions: newPositions,
+            prevMove: [move, newPositions.map(row => row.slice())]
+        });
 
-        setPrevMoves([
-            ...prevMoves,
-            [move, newPositions.map(row => row.slice())]
-        ]);
-
-        turn === 'w' ? setTurn('b') : setTurn('w');
         setPromotionMenu({show: false});
     }
 
@@ -47,10 +38,10 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
             {['q', 'r', 'b', 'n'].map((type) => (
                 <button
                     key={type}
-                    className={`promotion-${type}-field promotion-field-${turn}`}
+                    className={`promotion-${type}-field promotion-field-${game.turn}`}
                     onClick={() => handlePromote(`${type}`)}
                     >
-                    <div className={`promotion-${type}-piece ${turn}${type}`}></div>
+                    <div className={`promotion-${type}-piece ${game.turn}${type}`}></div>
                 </button>
             ))}
             <button

@@ -41,8 +41,7 @@ function Square({ colIdx, rowIdx }) {
 
 function DisableChessBoard() {
     return (
-        <div className="disable-board">
-        </div>
+        <div className="disable-board"></div>
     );
 }
 
@@ -51,7 +50,7 @@ export default function ChessBoard({ disableBoard, setPromotionMenu }) {
 
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
     const cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-
+    
     for (const row of rows) {
         for (const col of cols) {
             board.push(

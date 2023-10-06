@@ -1,7 +1,6 @@
 import Sidebar from '../components/sidebars/PlayOnlineSidebar';
 import Game from '../components/game/Game';
-import { PrevMovesProvider } from '../contexts/PreviousMovesContext';
-import { PositionsProvider } from '../contexts/PositionsContext';
+import { GameProvider } from '../contexts/GameContext';
 import { useState } from 'react';
 
 export default function PlayOnline() {
@@ -9,17 +8,15 @@ export default function PlayOnline() {
 
     return (
         <div className="play-page">
-            <PositionsProvider>
-                <PrevMovesProvider>
-                    <Game
-                        disableBoard={disableBoard}
-                    />
-                    <Sidebar
-                        messages={[]}
-                        setDisableBoard={setDisableBoard}
-                    />
-                </PrevMovesProvider>
-            </PositionsProvider>
+            <GameProvider>
+                <Game
+                    disableBoard={disableBoard}
+                />
+                <Sidebar
+                    messages={[]}
+                    setDisableBoard={setDisableBoard}
+                />
+            </GameProvider>
         </div>
     );
 }

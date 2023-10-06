@@ -1,8 +1,11 @@
 import ChessBoard from './ChessBoard';
 import { useState } from 'react';
 import PromotionMenu from './PromotionMenu';
+import { useUser } from '../../contexts/UserContext';
 
 function GameSidebar() {
+    const { user } = useUser();
+
     return (
         <div className="game-sidebar">
             <img
@@ -10,10 +13,15 @@ function GameSidebar() {
                 className="game-user-avatar"
                 alt="Avatar"
             />
-            <div>
-                <span>Username</span>
-                <span className="game-user-rating">(800)</span>
-            </div>
+                {user.isLoggedIn ? (
+                    <div>
+                        <span>{user.username}</span>
+                        <span className="game-user-rating">(800)</span>
+                    </div>
+
+                ) : (
+                    <span>Guest</span>
+                )}
             <div className="game-timer">10:00</div>
         </div>
     );

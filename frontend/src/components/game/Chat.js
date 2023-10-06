@@ -16,6 +16,7 @@ export default function Chat({ messages }) {
                         className="chat-footer-input"
                     />
                     <input
+                        id="test"
                         type="submit"
                         value=""
                         className="chat-footer-submit"

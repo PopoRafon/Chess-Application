@@ -74,6 +74,7 @@ $play-online-border-color: #363636;
             .play-online-sidebar-button {
                 cursor: pointer;
                 display: flex;
+                position: relative;
                 justify-content: center;
                 align-items: center;
                 height: 45px;

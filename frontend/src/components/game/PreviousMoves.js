@@ -1,40 +1,41 @@
-import { usePrevMoves } from '../../contexts/PreviousMovesContext';
-import { usePositions } from '../../contexts/PositionsContext';
+import { useGame } from '../../contexts/GameContext';
 import { useRef } from 'react';
 
 function PrevMovesButtons() {
     return (
         <div className="play-online-sidebar-buttons-container">
-            <button className="play-online-sidebar-button">
+            <button className="play-online-sidebar-button tooltip-trigger">
                 <img src="/static/images/icons/new_game_icon.png" alt="New Game" />
+                <div className="tooltip">New game</div>
             </button>
-            <button className="play-online-sidebar-button" style={{margin: "6px"}}>
+            <button className="play-online-sidebar-button tooltip-trigger" style={{margin: "6px"}}>
                 <img src="/static/images/icons/move_back_icon.png" alt="Move Back" />
+                <div className="tooltip">Prev move</div>
             </button>
-            <button className="play-online-sidebar-button">
+            <button className="play-online-sidebar-button tooltip-trigger">
                 <img src="/static/images/icons/move_forward_icon.png" alt="Move Forward" />
+                <div className="tooltip">Next move</div>
             </button>
         </div>
     );
 }
 
 function PrevMovesContainer({ setDisableBoard }) {
-    const { positions, setPositions } = usePositions();
-    const { prevMoves } = usePrevMoves();
+    const { game, dispatchGame } = useGame();
     const refPositions = useRef();
 
     function handleClick(index) {
         if (!refPositions.current) {
-            refPositions.current = positions;
+            refPositions.current = game.positions;
             setDisableBoard(true);
         }
 
-        if (prevMoves.length === index + 1) {
-            setPositions(refPositions.current);
+        if (game.prevMoves.length === index + 1) {
+            dispatchGame({type: 'NEW_POSITIONS', positions: refPositions.current});
             refPositions.current = '';
             setDisableBoard(false);
         } else {
-            setPositions(prevMoves[index][1]);
+            dispatchGame({type: 'NEW_POSITIONS', positions: game.prevMoves[index][1]})
         }
     }
 
@@ -43,7 +44,7 @@ function PrevMovesContainer({ setDisableBoard }) {
             <div className="prev-moves-header">Previous Moves</div>
             <div className="prev-moves-content">
                 <ol>
-                    {prevMoves.map((move, index) => (
+                    {game.prevMoves.map((move, index) => (
                         index % 2 === 0 && (
                             <li
                                 className="move"
@@ -55,12 +56,12 @@ function PrevMovesContainer({ setDisableBoard }) {
                                 >
                                     {move[0]}
                                 </button>
-                                {prevMoves[index + 1] && (
+                                {game.prevMoves[index + 1] && (
                                     <button
                                         className="prev-move-button"
                                         onClick={() => handleClick(index + 1)}
                                     >
-                                        {prevMoves[index + 1][0]}
+                                        {game.prevMoves[index + 1][0]}
                                     </button>
                                 )}
                             </li>

@@ -1,4 +1,4 @@
-function validate_pawn(piece, prevRow, prevCol, newRow, newCol, positions) {
+function validatePawn(piece, prevRow, prevCol, newRow, newCol, positions) {
     const rowDiff = newRow - prevRow;
     const colDiff = newCol - prevCol;
     const pieceOnNewPosition = positions[newRow][newCol];
@@ -24,7 +24,7 @@ function validate_pawn(piece, prevRow, prevCol, newRow, newCol, positions) {
     return false;
 }
 
-function validate_rook(prevRow, prevCol, newRow, newCol, positions) {
+function validateRook(prevRow, prevCol, newRow, newCol, positions) {
     const rowDiff = newRow - prevRow;
     const colDiff = newCol - prevCol;
 
@@ -65,7 +65,7 @@ function validate_rook(prevRow, prevCol, newRow, newCol, positions) {
     return false;
 }
 
-function validate_bishop(prevRow, prevCol, newRow, newCol, positions) {
+function validateBishop(prevRow, prevCol, newRow, newCol, positions) {
     const rowDiff = newRow - prevRow;
     const colDiff = newCol - prevCol;
 
@@ -102,7 +102,7 @@ function validate_bishop(prevRow, prevCol, newRow, newCol, positions) {
     return false;
 }
 
-function validate_king(prevRow, prevCol, newRow, newCol) {
+function validateKing(prevRow, prevCol, newRow, newCol) {
     const rowDiff = newRow - prevRow;
     const colDiff = newCol - prevCol;
 
@@ -113,7 +113,7 @@ function validate_king(prevRow, prevCol, newRow, newCol) {
     return false;
 }
 
-function validate_knight(prevRow, prevCol, newRow, newCol) {
+function validateKnight(prevRow, prevCol, newRow, newCol) {
     const rowDiff = newRow - prevRow;
     const colDiff = newCol - prevCol;
 
@@ -130,17 +130,17 @@ function validate_knight(prevRow, prevCol, newRow, newCol) {
     return false;
 }
 
-function validate_queen(prevRow, prevCol, newRow, newCol, positions) {
-    if (validate_rook(prevRow, prevCol, newRow, newCol, positions)) {
+function validateQueen(prevRow, prevCol, newRow, newCol, positions) {
+    if (validateRook(prevRow, prevCol, newRow, newCol, positions)) {
         return true;
-    } else if (validate_bishop(prevRow, prevCol, newRow, newCol, positions)) {
+    } else if (validateBishop(prevRow, prevCol, newRow, newCol, positions)) {
         return true;
     }
     
     return false;
 }
 
-export default function validate_move(data, newRow, newCol, turn, positions) {
+export default function validateMove(data, newRow, newCol, turn, positions) {
     const piece = data[0];
     const prevRow = Number(data[1]);
     const prevCol = Number(data[2]);
@@ -151,17 +151,17 @@ export default function validate_move(data, newRow, newCol, turn, positions) {
 
     if (positions[newRow][newCol][0] === piece[0]) return false;
 
-    if (piece[1] === 'p' && validate_pawn(piece, prevRow, prevCol, newRow, newCol, positions)) return true;
+    if (piece[1] === 'k') return validateKing(prevRow, prevCol, newRow, newCol);
 
-    if (piece[1] === 'r' && validate_rook(prevRow, prevCol, newRow, newCol, positions)) return true;
+    if (piece[1] === 'p') return validatePawn(piece, prevRow, prevCol, newRow, newCol, positions);
 
-    if (piece[1] === 'b' && validate_bishop(prevRow, prevCol, newRow, newCol, positions)) return true;
+    if (piece[1] === 'r') return validateRook(prevRow, prevCol, newRow, newCol, positions);
 
-    if (piece[1] === 'k' && validate_king(prevRow, prevCol, newRow, newCol)) return true;
+    if (piece[1] === 'b') return validateBishop(prevRow, prevCol, newRow, newCol, positions);
 
-    if (piece[1] === 'n' && validate_knight(prevRow, prevCol, newRow, newCol)) return true;
-
-    if (piece[1] === 'q' && validate_queen(prevRow, prevCol, newRow, newCol, positions)) return true;
+    if (piece[1] === 'n') return validateKnight(prevRow, prevCol, newRow, newCol);
+    
+    if (piece[1] === 'q') return validateQueen(prevRow, prevCol, newRow, newCol, positions);
 
     return false;
 }
