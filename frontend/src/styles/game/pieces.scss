@@ -24,12 +24,30 @@
     }
 }
 
-.highlight {
+.mark {
     position: absolute;
     background-color: rgb(255, 255, 51, 0.5);
     z-index: 1;
     width: 90px;
     height: 90px;
+}
+
+.valid-moves-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    width: 90px;
+    height: 90px;
+    pointer-events: none;
+
+    .valid-move {
+        background-color: rgb(51, 51, 51, 0.5);
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+    }
 }
 
 .bp {background-image: url('../../public/static/images/chess_pieces/black_pawn.png')}

@@ -1,167 +1,97 @@
-function validatePawn(piece, prevRow, prevCol, newRow, newCol, positions) {
-    const rowDiff = newRow - prevRow;
-    const colDiff = newCol - prevCol;
-    const pieceOnNewPosition = positions[newRow][newCol];
+import { queenDirections, rookDirections, bishopDirections, knightDirections, kingDirections } from '../../helpers/Directions';
 
-    if (piece[0] === 'w') {
-        if (rowDiff === -1 && colDiff === 0 && !pieceOnNewPosition) {
-            return true;
-        } else if (rowDiff === -1 && (colDiff === 1 || colDiff === -1) && pieceOnNewPosition) {
-            return true;
-        } else if (prevRow === 6 && rowDiff === -2 && colDiff === 0) {
-            return true;
+function calcQueenRookBishopMoves(directions, positions, row, col) {
+    let viableMoves = [];
+
+    for (let i = 0; i < directions.length; i++) {
+        let x = col;
+        let y = row;
+
+        x += directions[i][0];
+        y += directions[i][1];
+        while (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
+            if ((x === col && y === row) || (positions[y][x][0] === positions[row][col][0])) {
+                break;
+            } else if (positions[y][x] !== '') {
+                viableMoves.push(`${y}${x}`);
+                break;
+            }
+            viableMoves.push(`${y}${x}`);
+            x += directions[i][0];
+            y += directions[i][1];
         }
-    } else {
-        if (rowDiff === 1 && colDiff === 0 && !pieceOnNewPosition) {
-            return true;
-        } else if (rowDiff === 1 && (colDiff === 1 || colDiff === -1) && pieceOnNewPosition) {
-            return true;
-        } else if (prevRow === 1 && rowDiff === 2 && colDiff === 0) {
-            return true;
+    }
+
+    return viableMoves;
+}
+
+function calcKingKnightMoves(directions, positions, row, col) {
+    let viableMoves = [];
+
+    for (const direction of directions) {
+        const x = direction[1];
+        const y = direction[0];
+
+        if ((row + y < 0 || col + x < 0 || row + y > 7 || col + x > 7) || positions[row + y][col + x][0] === positions[row][col][0]) {
+            continue;
+        }
+        viableMoves.push(`${row + y}${col + x}`);
+    }
+
+    return viableMoves;
+}
+
+function calcPawnMoves(positions, type, row, col) {
+    let viableMoves = [];
+
+    const direction = type[0] === 'w' ? -1 : 1;
+    const startingPos = type[0] === 'w' ? 6 : 1;
+
+    if (positions[row + direction][col] === '') {
+        viableMoves.push(`${row + direction}${col}`);
+        if (row === startingPos && positions[startingPos + direction * 2][col] === '') {
+            viableMoves.push(`${row + direction * 2}${col}`);
         }
     }
 
-    return false;
-}
-
-function validateRook(prevRow, prevCol, newRow, newCol, positions) {
-    const rowDiff = newRow - prevRow;
-    const colDiff = newCol - prevCol;
-
-    if (rowDiff === 0) {
-        if (colDiff < 0) { // Checking left
-            for (let i = colDiff + 1; i < 0; i++) {
-                if (positions[prevRow][prevCol + i] !== '') {
-                    return false;
-                }
-            }
-            return true;
-        } else if (colDiff > 0) { // Checking right
-            for (let i = colDiff - 1; i > 0; i--) {
-                if (positions[prevRow][prevCol + i] !== '') {
-                    return false;
-                }
-            }
-        }
-        return true;
-    } else if (colDiff === 0) {
-        if (rowDiff < 0) { // Checking top
-            for (let i = rowDiff + 1; i < 0; i++) {
-                if (positions[prevRow + i][prevCol] !== '') {
-                    return false;
-                }
-            }
-            return true;
-        } else if (rowDiff > 0) { // Checking bottom
-            for (let i = rowDiff - 1; i > 0; i--) {
-                if (positions[prevRow + i][prevCol] !== '') {
-                    return false;
-                }
-            }
-        }
-        return true;
+    if (col - 1 >= 0 && positions[row + direction][col - 1] !== '' && positions[row + direction][col - 1][0] !== type[0]) {
+        viableMoves.push(`${row + direction}${col - 1}`);
+    }
+    if (col + 1 <= 7 && positions[row + direction][col + 1] !== '' && positions[row + direction][col + 1][0] !== type[0]) {
+        viableMoves.push(`${row + direction}${col + 1}`);
     }
 
-    return false;
+    return viableMoves;
 }
 
-function validateBishop(prevRow, prevCol, newRow, newCol, positions) {
-    const rowDiff = newRow - prevRow;
-    const colDiff = newCol - prevCol;
+function getViableMoves(positions, piece, row, col) {
+    let moves = [];
 
-    if (Math.abs(rowDiff) === Math.abs(colDiff)) {
-        if (rowDiff < 0 && colDiff < 0) { // Checking top left
-            for (let i = rowDiff + 1; i < 0; i++) {
-                if (positions[prevRow + i][prevCol + i] !== '') {
-                    return false;
-                }
-            }
-        } else if (rowDiff < 0 && colDiff > 0) { // Checking top right
-            for (let i = rowDiff + 1; i < 0; i++) {
-                if (positions[prevRow + i][prevCol - i] !== '') {
-                    return false;
-                }
-            }
-        } else if (rowDiff > 0 && colDiff > 0) { // Checking bottom right
-            for (let i = rowDiff - 1; i > 0; i--) {
-                if (positions[prevRow + i][prevCol + i] !== '') {
-                    return false;
-                }
-            }
-        } else if (rowDiff > 0 && colDiff < 0) { // Checking bottom left
-            for (let i = rowDiff - 1; i > 0; i--) {
-                if (positions[prevRow + i][prevCol - i] !== '') {
-                    return false;
-                }
-            }
-        }
+    if (piece[1] === 'p') moves = calcPawnMoves(positions, piece, row, col);
 
-        return true;
-    }
+    if (piece[1] === 'n') moves = calcKingKnightMoves(knightDirections(), positions, row, col);
 
-    return false;
+    if (piece[1] === 'k') moves = calcKingKnightMoves(kingDirections(), positions, row, col);
+
+    if (piece[1] === 'r') moves = calcQueenRookBishopMoves(rookDirections(), positions, row, col);
+
+    if (piece[1] === 'b') moves = calcQueenRookBishopMoves(bishopDirections(), positions, row, col);
+
+    if (piece[1] === 'q') moves = calcQueenRookBishopMoves(queenDirections(), positions, row, col);
+
+    return moves;
 }
 
-function validateKing(prevRow, prevCol, newRow, newCol) {
-    const rowDiff = newRow - prevRow;
-    const colDiff = newCol - prevCol;
-
-    if ((rowDiff >= -1 && rowDiff <= 1) && (colDiff >= -1 && colDiff <= 1)) {
-        return true;
-    }
-
-    return false;
-}
-
-function validateKnight(prevRow, prevCol, newRow, newCol) {
-    const rowDiff = newRow - prevRow;
-    const colDiff = newCol - prevCol;
-
-    if (rowDiff === 2 && (colDiff === 1 || colDiff === -1)) {
-        return true;
-    } else if (rowDiff === 1 && (colDiff === 2 || colDiff === -2)) {
-        return true;
-    } else if (rowDiff === -1 && (colDiff === 2 || colDiff === -2)) {
-        return true;
-    } else if (rowDiff === -2 && (colDiff === 1 || colDiff === -1)) {
-        return true;
-    }
-
-    return false;
-}
-
-function validateQueen(prevRow, prevCol, newRow, newCol, positions) {
-    if (validateRook(prevRow, prevCol, newRow, newCol, positions)) {
-        return true;
-    } else if (validateBishop(prevRow, prevCol, newRow, newCol, positions)) {
-        return true;
-    }
-    
-    return false;
-}
-
-export default function validateMove(data, newRow, newCol, turn, positions) {
+function validateMove(positions, data, row, col, turn) {
     const piece = data[0];
-    const prevRow = Number(data[1]);
-    const prevCol = Number(data[2]);
+    const x = Number(data[2]);
+    const y = Number(data[1]);
 
     if (turn !== piece[0]) return false;
-    
-    if (prevRow === newRow && prevCol === newCol) return false;
 
-    if (positions[newRow][newCol][0] === piece[0]) return false;
+    const viableMoves = getViableMoves(positions, piece, y, x);
 
-    if (piece[1] === 'k') return validateKing(prevRow, prevCol, newRow, newCol);
-
-    if (piece[1] === 'p') return validatePawn(piece, prevRow, prevCol, newRow, newCol, positions);
-
-    if (piece[1] === 'r') return validateRook(prevRow, prevCol, newRow, newCol, positions);
-
-    if (piece[1] === 'b') return validateBishop(prevRow, prevCol, newRow, newCol, positions);
-
-    if (piece[1] === 'n') return validateKnight(prevRow, prevCol, newRow, newCol);
-    
-    if (piece[1] === 'q') return validateQueen(prevRow, prevCol, newRow, newCol, positions);
-
-    return false;
+    return viableMoves.includes(`${row}${col}`);
 }
+
+export { validateMove, getViableMoves };

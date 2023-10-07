@@ -1,5 +1,6 @@
 import { useGame } from '../../contexts/GameContext';
 import { useRef } from 'react';
+import { useValidMoves } from '../../contexts/ValidMovesContext';
 
 function PrevMovesButtons() {
     return (
@@ -22,11 +23,13 @@ function PrevMovesButtons() {
 
 function PrevMovesContainer({ setDisableBoard }) {
     const { game, dispatchGame } = useGame();
+    const { setValidMoves } = useValidMoves();
     const refPositions = useRef();
 
     function handleClick(index) {
         if (!refPositions.current) {
             refPositions.current = game.positions;
+            setValidMoves([]);
             setDisableBoard(true);
         }
 

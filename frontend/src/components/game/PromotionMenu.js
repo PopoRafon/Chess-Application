@@ -1,7 +1,9 @@
 import { useGame } from '../../contexts/GameContext';
+import { useValidMoves } from '../../contexts/ValidMovesContext';
 
 export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     const { game, dispatchGame } = useGame();
+    const { setValidMoves } = useValidMoves();
     const { data, position } = promotionMenu;
     const [row, col] = position;
 
@@ -19,6 +21,8 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
         newPositions[row][col] = data[0][0] + type;
 
         const markedSquares = [`${data[1]}${data[2]}`, `${row}${col}`];
+
+        setValidMoves([]);
 
         dispatchGame({
             type: 'NEXT_ROUND',
