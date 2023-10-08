@@ -63,17 +63,16 @@ export default function Pieces({ setPromotionMenu }) {
         >
             {game.markedSquares.map((square, index) => (
                 <div
-                    className={`mark p-${square}`}
+                    className={`highlight p-${square}`}
                     key={index}
                 >
                 </div>
             ))}
             {validMoves.map((square, index) => (
                 <div
-                    className={`valid-moves-container p-${square}`}
+                    className={`p-${square}`}
                     key={index}
                 >
-                    <div className="valid-move"></div>
                 </div>
             ))}
             {game.positions.map((row, i) => (

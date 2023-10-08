@@ -21,7 +21,7 @@ function PrevMovesButtons() {
     );
 }
 
-function PrevMovesContainer({ setDisableBoard }) {
+function PrevMovesContainer({ setDisableBoard, setPromotionMenu }) {
     const { game, dispatchGame } = useGame();
     const { setValidMoves } = useValidMoves();
     const refPositions = useRef();
@@ -30,6 +30,7 @@ function PrevMovesContainer({ setDisableBoard }) {
         if (!refPositions.current) {
             refPositions.current = game.positions;
             setValidMoves([]);
+            setPromotionMenu(false);
             setDisableBoard(true);
         }
 
@@ -84,11 +85,12 @@ function PrevMovesContainer({ setDisableBoard }) {
     );
 }
 
-export default function PrevMoves({ setDisableBoard }) {
+export default function PrevMoves({ setDisableBoard, setPromotionMenu }) {
     return (
         <div className="prev-moves">
             <PrevMovesContainer
                 setDisableBoard={setDisableBoard}
+                setPromotionMenu={setPromotionMenu}
             />
             <PrevMovesButtons />
         </div>

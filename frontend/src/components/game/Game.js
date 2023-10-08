@@ -1,5 +1,4 @@
 import ChessBoard from './ChessBoard';
-import { useState } from 'react';
 import PromotionMenu from './PromotionMenu';
 import { useUser } from '../../contexts/UserContext';
 
@@ -27,9 +26,7 @@ function GameSidebar() {
     );
 }
 
-export default function Game({ disableBoard }) {
-    const [promotionMenu, setPromotionMenu] = useState({show: false});
-
+export default function Game({ disableBoard, promotionMenu, setPromotionMenu }) {
     return (
         <div className="game-container">
             <div className="game-content">

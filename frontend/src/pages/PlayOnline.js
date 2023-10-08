@@ -6,6 +6,7 @@ import { ValidMovesProvider } from '../contexts/ValidMovesContext';
 
 export default function PlayOnline() {
     const [disableBoard, setDisableBoard] = useState(false);
+    const [promotionMenu, setPromotionMenu] = useState({show: false});
 
     return (
         <div className="play-page">
@@ -13,10 +14,13 @@ export default function PlayOnline() {
                 <ValidMovesProvider>
                     <Game
                         disableBoard={disableBoard}
+                        promotionMenu={promotionMenu}
+                        setPromotionMenu={setPromotionMenu}
                     />
                     <Sidebar
                         messages={[]}
                         setDisableBoard={setDisableBoard}
+                        setPromotionMenu={setPromotionMenu}
                     />
                 </ValidMovesProvider>
             </GameProvider>
