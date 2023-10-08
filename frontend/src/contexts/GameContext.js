@@ -5,7 +5,7 @@ import initGameState from '../helpers/InitialGameState';
 const GameContext = createContext();
 
 function GameProvider({ children }) {
-    const [game, dispatchGame] = useReducer(gameReducer, initGameState);
+    const [game, dispatchGame] = useReducer(gameReducer, initGameState());
 
     return (
         <GameContext.Provider value={{game, dispatchGame}}>

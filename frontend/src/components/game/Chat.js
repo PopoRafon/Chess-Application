@@ -3,7 +3,7 @@ export default function Chat({ messages }) {
         <div className="chat">
             <div className="chat-container">
                 <div className="chat-header">Chat</div>
-                <ul className="chat-messages">
+                <ul className="chat-messages scrollbar">
                     {messages.map((message, index) => (
                         <li key={index}>Username: {message}</li>
                     ))}
