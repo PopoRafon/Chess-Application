@@ -18,7 +18,7 @@ export default function Pieces({ setPromotionMenu }) {
 
         setPromotionMenu({show: false});
 
-        if (validateMove(game.positions, data, row, col, game.turn)) {
+        if (validateMove(game, data, row, col)) {
             if ((data[0] === 'wp' && row === 0) || (data[0] === 'bp' && row === 7)) {
                 setPromotionMenu({
                     show: true,
@@ -32,12 +32,35 @@ export default function Pieces({ setPromotionMenu }) {
             const newPositions = game.positions.slice();
             const capturedPiece = newPositions[row][col];
             const square = 'abcdefgh'[col] + '87654321'[row];
-            const move = (data[0][1] === 'p' ? (capturedPiece ? 'abcdefgh'[data[2]] : '') : data[0][1].toUpperCase()) + (capturedPiece ? 'x' : '') + square;
+            const markedSquares = [`${data[1]}${data[2]}`, `${row}${col}`];
+            const side = data[0][0] === 'w' ? 7 : 0;
+            let move = (data[0][1] === 'p' ? (capturedPiece ? 'abcdefgh'[data[2]] : '') : data[0][1].toUpperCase()) + (capturedPiece ? 'x' : '') + square;
+            let newCastlingDirections = '';
+
+            if (data[0][1] === 'k') {
+                if (col - data[2] === -2) {
+                    newPositions[side][3] = newPositions[side][0];
+                    newPositions[side][0] = '';
+                    move = 'O-O-O';
+                } else if (col - data[2] === 2) {
+                    newPositions[side][5] = newPositions[side][7];
+                    newPositions[side][7] = '';
+                    move = 'O-O';
+                }
+            }
 
             newPositions[data[1]][data[2]] = '';
             newPositions[row][col] = data[0];
 
-            const markedSquares = [`${data[1]}${data[2]}`, `${row}${col}`];
+            if (data[0][1] === 'k' && game.castlingDirections[data[0]] !== 'none') {
+                newCastlingDirections = data[0][0] === 'w' ? { wk: 'none' } : { bk: 'none' };
+            } else if (data[0][1] === 'r' && game.castlingDirections[data[0][0] + 'k'] !== 'none') {
+                if (col === 0 && game.castlingDirections[data[0][0] + 'k'] !== 'left') {
+                    newCastlingDirections = data[0][0] === 'w' ? { wk: 'right' } : { bk: 'right' };
+                } else if (col === 7 && game.castlingDirections[data[0][0] + 'k'] !== 'right') {
+                    newCastlingDirections = data[0][0] === 'w' ? { wk: 'left' } : { bk: 'left' };
+                }
+            }
 
             setValidMoves([]);
 
@@ -49,7 +72,8 @@ export default function Pieces({ setPromotionMenu }) {
                     newPositions.map(row => row.slice()),
                     markedSquares
                 ],
-                markedSquares: markedSquares
+                markedSquares: markedSquares,
+                castlingDirections: newCastlingDirections
             });
         }
     }

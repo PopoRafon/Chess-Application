@@ -25,7 +25,7 @@ function calcQueenRookBishopMoves(directions, positions, row, col) {
     return viableMoves;
 }
 
-function calcKingKnightMoves(directions, positions, row, col) {
+function calcKnightMoves(directions, positions, row, col) {
     let viableMoves = [];
 
     for (const direction of directions) {
@@ -41,6 +41,39 @@ function calcKingKnightMoves(directions, positions, row, col) {
         } else {
             viableMoves.push(`${rowY}${colX} valid-move`);
         }
+    }
+
+    return viableMoves;
+}
+
+function calcKingMoves(directions, positions, row, col, castlingDirections) {
+    const piece = positions[row][col];
+    const side = piece[0] === 'w' ? '7' : '0';
+    let viableMoves = calcKnightMoves(directions, positions, row, col);
+
+    switch (castlingDirections[piece]) {
+        case 'none':
+            break;
+        case 'both':
+            if (positions[row][col - 1] === '' && positions[row][col - 2] === '' && positions[row][col - 3] === '') {
+                viableMoves.push(`${side}2 valid-move`);
+            }
+            if (positions[row][col + 1] === '' && positions[row][col + 2] === '') {
+                viableMoves.push(`${side}6 valid-move`);
+            }
+            break;
+        case 'left':
+            if (positions[row][col - 1] === '' && positions[row][col - 2] === '' && positions[row][col - 3] === '') {
+                viableMoves.push(`${side}2 valid-move`);
+            }
+            break;
+        case 'right':
+            if (positions[row][col + 1] === '' && positions[row][col + 2] === '') {
+                viableMoves.push(`${side}6 valid-move`);
+            }
+            break;
+        default:
+            throw new Error();
     }
 
     return viableMoves;
@@ -69,14 +102,14 @@ function calcPawnMoves(positions, type, row, col) {
     return viableMoves;
 }
 
-function getViableMoves(positions, piece, row, col) {
+function getViableMoves(positions, piece, row, col, castlingDirections) {
     switch (piece[1]) {
         case 'p':
             return calcPawnMoves(positions, piece, row, col);
         case 'n':
-            return calcKingKnightMoves(knightDirections(), positions, row, col);
+            return calcKnightMoves(knightDirections(), positions, row, col);
         case 'k':
-            return calcKingKnightMoves(kingDirections(), positions, row, col);
+            return calcKingMoves(kingDirections(), positions, row, col, castlingDirections);
         case 'r':
             return calcQueenRookBishopMoves(rookDirections(), positions, row, col);
         case 'b':
@@ -88,12 +121,12 @@ function getViableMoves(positions, piece, row, col) {
     }
 }
 
-function validateMove(positions, data, row, col, turn) {
+function validateMove(game, data, row, col) {
     const piece = data[0];
 
-    if (turn !== piece[0]) return false;
+    if (game.turn !== piece[0]) return false;
 
-    const viableMoves = getViableMoves(positions, piece, Number(data[1]), Number(data[2]));
+    const viableMoves = getViableMoves(game.positions, piece, Number(data[1]), Number(data[2]), game.castlingDirections);
 
     for (const move of viableMoves) {
         if (move.includes(`${row}${col}`)) {

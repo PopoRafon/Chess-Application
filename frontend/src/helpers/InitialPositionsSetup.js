@@ -1,4 +1,4 @@
-export default function setup() {
+export default function initPositionsSetup() {
     return [
         ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
         ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
