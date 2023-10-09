@@ -17,6 +17,8 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
         const square = 'abcdefgh'[col] + '87654321'[row];
         const move = square + '=' + type.toUpperCase() + (capturedPiece ? 'x' + capturedPiece[1].toUpperCase() + square : '');
 
+        new Audio('/static/sounds/promote.mp3').play();
+
         newPositions[data[1]][data[2]] = '';
         newPositions[row][col] = data[0][0] + type;
 

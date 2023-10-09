@@ -36,18 +36,29 @@ export default function Pieces({ setPromotionMenu }) {
             const side = data[0][0] === 'w' ? 7 : 0;
             let move = (data[0][1] === 'p' ? (capturedPiece ? 'abcdefgh'[data[2]] : '') : data[0][1].toUpperCase()) + (capturedPiece ? 'x' : '') + square;
             let newCastlingDirections = '';
+            let audio;
 
             if (data[0][1] === 'k') {
                 if (col - data[2] === -2) {
                     newPositions[side][3] = newPositions[side][0];
                     newPositions[side][0] = '';
                     move = 'O-O-O';
+                    audio = new Audio('/static/sounds/castle.mp3');
                 } else if (col - data[2] === 2) {
                     newPositions[side][5] = newPositions[side][7];
                     newPositions[side][7] = '';
                     move = 'O-O';
+                    audio = new Audio('/static/sounds/castle.mp3');
                 }
             }
+
+            if (newPositions[row][col] && !audio) {
+                audio = new Audio('/static/sounds/capture.mp3');
+            } else if (!audio) {
+                audio = new Audio('/static/sounds/move.mp3');
+            }
+
+            audio.play();
 
             newPositions[data[1]][data[2]] = '';
             newPositions[row][col] = data[0];

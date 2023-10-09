@@ -13,7 +13,7 @@
         border: 1px solid;
         border-color: #262626;
         border-radius: 10px;
-        height: 800px;
+        height: 810px;
         width: 720px;
         overflow: hidden;
         box-shadow: 6px 6px 8px rgb(0, 0, 0, 0.20);
@@ -23,7 +23,7 @@
             display: flex;
             align-items: center;
             width: calc(100% - 5px - 5px);
-            height: 40px;
+            height: 45px;
             padding: 0px 5px 0px 5px;
             background-color: #2f2f2f;
         
@@ -39,14 +39,23 @@
             }
 
             .game-user-avatar {
-                width: 30px;
-                height: 30px;
+                width: 35px;
+                height: 35px;
                 margin-right: 5px;
             }
 
             .game-user-rating {
                 color: grey;
                 margin-left: 5px;
+            }
+
+            .game-information {
+                font-size: medium;
+            }
+
+            .game-points {
+                color: rgb(109, 109, 109);
+                height: 21px;
             }
         }
     }

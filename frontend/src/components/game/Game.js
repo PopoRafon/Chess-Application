@@ -1,30 +1,6 @@
 import ChessBoard from './ChessBoard';
 import PromotionMenu from './PromotionMenu';
-import { useUser } from '../../contexts/UserContext';
-
-function GameSidebar() {
-    const { user } = useUser();
-
-    return (
-        <div className="game-sidebar">
-            <img
-                src='/static/images/avatar.png'
-                className="game-user-avatar"
-                alt="Avatar"
-            />
-                {user.isLoggedIn ? (
-                    <div>
-                        <span>{user.username}</span>
-                        <span className="game-user-rating">(800)</span>
-                    </div>
-
-                ) : (
-                    <span>Guest</span>
-                )}
-            <div className="game-timer">10:00</div>
-        </div>
-    );
-}
+import GameSidebar from './GameSidebar';
 
 export default function Game({ disableBoard, promotionMenu, setPromotionMenu }) {
     return (
