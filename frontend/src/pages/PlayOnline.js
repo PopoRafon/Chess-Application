@@ -3,7 +3,6 @@ import Game from '../components/game/Game';
 import { GameProvider } from '../contexts/GameContext';
 import { useState } from 'react';
 import { ValidMovesProvider } from '../contexts/ValidMovesContext';
-import { PointsProvider } from '../contexts/PointsContext';
 
 export default function PlayOnline() {
     const [disableBoard, setDisableBoard] = useState(false);
@@ -13,13 +12,11 @@ export default function PlayOnline() {
         <div className="play-page">
             <GameProvider>
                 <ValidMovesProvider>
-                    <PointsProvider>
-                        <Game
-                            disableBoard={disableBoard}
-                            promotionMenu={promotionMenu}
-                            setPromotionMenu={setPromotionMenu}
-                        />
-                    </PointsProvider>
+                    <Game
+                        disableBoard={disableBoard}
+                        promotionMenu={promotionMenu}
+                        setPromotionMenu={setPromotionMenu}
+                    />
                     <Sidebar
                         messages={[]}
                         setDisableBoard={setDisableBoard}

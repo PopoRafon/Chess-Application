@@ -683,11 +683,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #494949;
+  color: #b3b3b3;
+  border: 1px solid;
+  border-color: #606060;
   width: 55px;
   height: 30px;
-  background-color: #5c5c5c;
   border-radius: 5px;
   margin-left: auto;
+}
+.game-container .game-content .game-sidebar .game-timer-on {
+  background-color: #585858;
+  color: #bababa;
+  border: 1px solid;
+  border-color: #a6a6a6;
 }
 .game-container .game-content .game-sidebar .game-user-avatar {
   width: 35px;
