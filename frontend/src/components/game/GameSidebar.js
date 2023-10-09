@@ -1,8 +1,4 @@
-import { useUser } from '../../contexts/UserContext';
-
-export default function GameSidebar() {
-    const { user } = useUser();
-
+export default function GameSidebar({ user, rating, points }) {
     return (
         <div className="game-sidebar">
             <img
@@ -10,17 +6,14 @@ export default function GameSidebar() {
                 className="game-user-avatar"
                 alt="Avatar"
             />
-            <div className="game-information">
-                {user.isLoggedIn ? (
-                    <div>
-                        <span>{user.username}</span>
-                        <span className="game-user-rating">(800)</span>
-                    </div>
-
+            <div className="player-information">
+                <span>{user}</span>
+                {rating ? (
+                    <span className="game-user-rating">({rating})</span>
                 ) : (
-                    <span>Guest</span>
+                    ''
                 )}
-                <div className="game-points"></div>
+                <div className="game-points">Points: +{points ? points : '0'}</div>
             </div>
             <div className="game-timer">10:00</div>
         </div>

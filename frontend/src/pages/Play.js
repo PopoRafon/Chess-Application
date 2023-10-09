@@ -3,6 +3,7 @@ import Game from '../components/game/Game';
 import { GameProvider } from '../contexts/GameContext';
 import { ValidMovesProvider } from '../contexts/ValidMovesContext';
 import { useState } from 'react';
+import { PointsProvider } from '../contexts/PointsContext';
 
 export default function Play() {
     const [promotionMenu, setPromotionMenu] = useState({show: false});
@@ -11,11 +12,13 @@ export default function Play() {
         <div className="play-page">
             <GameProvider>
                 <ValidMovesProvider>
-                    <Game
-                        disableBoard={true}
-                        promotionMenu={promotionMenu}
-                        setPromotionMenu={setPromotionMenu}
-                    />
+                    <PointsProvider>
+                        <Game
+                            disableBoard={true}
+                            promotionMenu={promotionMenu}
+                            setPromotionMenu={setPromotionMenu}
+                        />
+                    </PointsProvider>
                     <Sidebar />
                 </ValidMovesProvider>
             </GameProvider>

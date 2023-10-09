@@ -1,10 +1,12 @@
 import { useGame } from '../../contexts/GameContext';
 import { useValidMoves } from '../../contexts/ValidMovesContext';
+import { usePoints } from '../../contexts/PointsContext';
 
 export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     const { game, dispatchGame } = useGame();
     const { setValidMoves } = useValidMoves();
     const { data, position } = promotionMenu;
+    const { dispatchPoints } = usePoints();
     const [row, col] = position;
 
     function handleExit() {
@@ -12,6 +14,9 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     }
 
     function handlePromote(type) {
+        const piece = data[0];
+        const oldRow = data[1];
+        const oldCol = data[2];
         const newPositions = game.positions.slice();
         const capturedPiece = newPositions[row][col];
         const square = 'abcdefgh'[col] + '87654321'[row];
@@ -19,10 +24,17 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
 
         new Audio('/static/sounds/promote.mp3').play();
 
-        newPositions[data[1]][data[2]] = '';
-        newPositions[row][col] = data[0][0] + type;
+        if (newPositions[row][col]) {
+            dispatchPoints({
+                type: newPositions[row][col],
+                turn: game.turn
+            });
+        }
 
-        const markedSquares = [`${data[1]}${data[2]}`, `${row}${col}`];
+        newPositions[oldRow][oldCol] = '';
+        newPositions[row][col] = piece[0] + type;
+
+        const markedSquares = [`${oldRow}${oldCol}`, `${row}${col}`];
 
         setValidMoves([]);
 
