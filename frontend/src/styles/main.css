@@ -718,7 +718,7 @@
 .play-page {
   display: flex;
   flex-grow: 1;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 }
 .play-page .play-page-sidebar {

@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { ValidMovesProvider } from '../contexts/ValidMovesContext';
 import { useUser } from '../contexts/UserContext';
 
-export default function PlayOnline() {
+export default function PlayComputer() {
     const [disableBoard, setDisableBoard] = useState(false);
     const [promotionMenu, setPromotionMenu] = useState({ show: false });
     const { user } = useUser();
     const users = [
-        {username: 'Guest', rating: ''},
-        user.isLoggedIn ? {username: user.username, rating: user.rating} : {username:'Guest', rating: ''}
+        {username: 'Bot', rating: 800},
+        user.isLoggedIn ? {username: user.username, rating: user.rating} : {username: 'Guest', rating: ''}
     ];
 
     return (

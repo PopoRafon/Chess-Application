@@ -7,7 +7,7 @@ function PointsProvider({ children }) {
     const [points, dispatchPoints] = useReducer(pointsReducer, { w: 0, b: 0 });
 
     return (
-        <PointsContext.Provider value={{points, dispatchPoints}}>
+        <PointsContext.Provider value={{ points, dispatchPoints }}>
             {children}
         </PointsContext.Provider>
     );

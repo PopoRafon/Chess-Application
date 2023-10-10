@@ -1,12 +1,9 @@
 import ChessBoard from './ChessBoard';
 import PromotionMenu from './PromotionMenu';
-import GameSidebar from './GameSidebar';
-import { useUser } from '../../contexts/UserContext';
+import GameSidebar from '../sidebars/GameSidebar';
 import { PointsProvider } from '../../contexts/PointsContext';
 
-export default function Game({ disableBoard, promotionMenu, setPromotionMenu }) {
-    const { user } = useUser();
-
+export default function Game({ users, disableBoard, promotionMenu, setPromotionMenu }) {
     return (
         <div className="game-container">
             <div className="game-content">
@@ -19,7 +16,8 @@ export default function Game({ disableBoard, promotionMenu, setPromotionMenu }) 
                     )}
                     <GameSidebar
                         player='b'
-                        user='Bot'
+                        user={users[0].username}
+                        rating={users[0].rating}
                     />
                     <ChessBoard
                         disableBoard={disableBoard}
@@ -27,8 +25,8 @@ export default function Game({ disableBoard, promotionMenu, setPromotionMenu }) 
                     />
                     <GameSidebar
                         player='w'
-                        user={user.isLoggedIn ? user.username : 'Guest'}
-                        rating='800'
+                        user={users[1].username}
+                        rating={users[1].rating}
                     />
                 </PointsProvider>
             </div>

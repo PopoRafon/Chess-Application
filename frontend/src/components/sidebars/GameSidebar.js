@@ -22,7 +22,7 @@ export default function GameSidebar({ player, user, rating }) {
         return () => {
             clearInterval(timerInterval);
         };
-    }, [game, player]);
+    }, [game.turn, player]);
 
     return (
         <div className="game-sidebar">
@@ -33,10 +33,8 @@ export default function GameSidebar({ player, user, rating }) {
             />
             <div className="player-information">
                 <span>{user}</span>
-                {rating ? (
+                {rating && (
                     <span className="game-user-rating">({rating})</span>
-                ) : (
-                    ''
                 )}
                 <div className="game-points">Points: +{points[player] ? points[player] : '0'}</div>
             </div>

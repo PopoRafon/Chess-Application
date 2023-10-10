@@ -102,7 +102,11 @@ function calcPawnMoves(positions, type, row, col) {
     return viableMoves;
 }
 
-function getViableMoves(positions, piece, row, col, castlingDirections) {
+function getViableMoves(game, piece, row, col) {
+    const { positions, turn, castlingDirections } = game;
+
+    if (turn !== piece[0]) return [];
+
     switch (piece[1]) {
         case 'p':
             return calcPawnMoves(positions, piece, row, col);
@@ -122,11 +126,7 @@ function getViableMoves(positions, piece, row, col, castlingDirections) {
 }
 
 function validateMove(game, data, row, col) {
-    const piece = data[0];
-
-    if (game.turn !== piece[0]) return false;
-
-    const viableMoves = getViableMoves(game.positions, piece, Number(data[1]), Number(data[2]), game.castlingDirections);
+    const viableMoves = getViableMoves(game, data[0], Number(data[1]), Number(data[2]));
 
     for (const move of viableMoves) {
         if (move.includes(`${row}${col}`)) {

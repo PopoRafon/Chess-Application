@@ -22,7 +22,8 @@ class UserDataView(APIView):
         if request.user.is_authenticated:
             return Response({
                 'success': {
-                    'username': request.user.username
+                    'username': request.user.username,
+                    'rating': request.user.profile.rating
                 }
             })
         else:

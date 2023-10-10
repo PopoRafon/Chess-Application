@@ -6,7 +6,7 @@ function ValidMovesProvider({ children }) {
     const [validMoves, setValidMoves] = useState([]);
 
     return (
-        <ValidMovesContext.Provider value={{validMoves, setValidMoves}}>
+        <ValidMovesContext.Provider value={{ validMoves, setValidMoves }}>
             {children}
         </ValidMovesContext.Provider>
     );

@@ -9,13 +9,13 @@ export default function Piece({ type, row, col }) {
     const { setValidMoves } = useValidMoves();
 
     function handleClick() {
-        const viableMoves = getViableMoves(game.positions, type, row, col, game.castlingDirections);
+        const viableMoves = getViableMoves(game, type, row, col);
 
         setValidMoves(viableMoves);
     }
 
     function handleDragStart(event) {
-        const viableMoves = getViableMoves(game.positions, type, row, col, game.castlingDirections);
+        const viableMoves = getViableMoves(game, type, row, col);
         const { left, top } = event.target.getBoundingClientRect();
 
         event.dataTransfer.setDragImage(event.target, window.outerWidth, window.outerHeight);
