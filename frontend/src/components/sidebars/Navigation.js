@@ -1,30 +1,24 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 
-export default function Navigation({ setAlert, routerPaths, isLoaded }) {
+export default function Navigation({ setAlert, isLoaded }) {
     const { user, setUser } = useUser();
-    const location = useLocation();
     const navigate = useNavigate();
-    const isPathValid = routerPaths.includes(location.pathname);
 
     const navLinks = [
         {
-            key: 1,
             title: 'Play',
             href: '/play'
         },
         {
-            key: 2,
             title: 'Ranking',
             href: '/ranking'
         },
         {
-            key: 3,
             title: 'Login',
             href: '/login'
         },
         {
-            key: 4,
             title: 'Sign Up',
             href: '/register'
         }
@@ -58,17 +52,17 @@ export default function Navigation({ setAlert, routerPaths, isLoaded }) {
 
     return (
         <>
-            {isPathValid && isLoaded && (
+            {isLoaded && (
                 <nav className="nav">
                     <div className="nav-logo">
                         <Link to='/'>Logo Placeholder</Link>
                     </div>
                     <ul>
-                        {navLinks.map((link) => (
+                        {navLinks.map((link, index) => (
                             user.isLoggedIn && (link.title === 'Login' || link.title === 'Sign Up') ? (
                                 ''
                             ) : (
-                                <li key={link.key}>
+                                <li key={index}>
                                     <Link
                                         to={link.href}
                                         className="nav-link"

@@ -9,3 +9,17 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Room(models.Model):
+    players = models.ManyToManyField(User, related_name='rooms')
+    hashed_url = models.CharField(max_length=255, blank=True)
+
+
+class Message(models.Model):
+    room = models.ForeignKey(Room, related_name='messages', on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name='messages', on_delete=models.CASCADE)
+    body = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.sender.username}: {self.body}'

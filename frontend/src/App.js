@@ -16,7 +16,6 @@ import PlayComputer from './pages/PlayComputer';
 
 function App() {
   const { setUser } = useUser();
-  const paths = ['/', '/register', '/login', '/play', '/play/online', '/play/computer'];
   const [isLoaded, setIsLoaded] = useState(false);
   const [alert, setAlert] = useState({show: false, message: ''});
 
@@ -37,7 +36,7 @@ function App() {
         {alert.show && (
           <Alert setAlert={setAlert} message={alert.message} />
         )}
-        <Navigation setAlert={setAlert} routerPaths={paths} isLoaded={isLoaded} />
+        <Navigation setAlert={setAlert} isLoaded={isLoaded} />
         <Routes>
           <Route path='/'>
             <Route index element={<Home />} />
@@ -45,7 +44,7 @@ function App() {
             <Route path='login' element={<Login setAlert={setAlert} />} />
             <Route path='play'>
               <Route index element={<Play />} />
-              <Route path='online' element={<PlayOnline />} />
+              <Route path='online/:id' element={<PlayOnline />} />
               <Route path='computer' element={<PlayComputer />} />
             </Route>
           </Route>

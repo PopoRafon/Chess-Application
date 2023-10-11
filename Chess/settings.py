@@ -24,6 +24,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'rest_framework',
     'rest_framework_simplejwt',
 
@@ -68,6 +69,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Chess.wsgi.application'
+
+ASGI_APPLICATION = 'Chess.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
-from .serializers import RegisterSerializer
+from rest_framework.generics import RetrieveAPIView
+from .serializers import RegisterSerializer, PlayOnlineSerializer
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,6 +8,16 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import timedelta
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.contrib.auth import authenticate
+from .models import Room
+
+
+class PlayOnline(RetrieveAPIView):
+    lookup_field = 'hashed_url'
+    lookup_url_kwarg = 'id'
+    serializer_class = PlayOnlineSerializer
+
+    def get_queryset(self):
+        return Room.objects.all()
 
 
 class TokenRefreshView(TokenRefreshView):

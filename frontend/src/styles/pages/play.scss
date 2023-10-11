@@ -1,3 +1,25 @@
 @import '../game/game';
 @import '../sidebars/play_sidebar';
 @import 'play_online';
+
+.play-page {
+    display: flex;
+    position: relative;
+    flex-grow: 1;
+    justify-content: flex-end;
+    align-items: center;
+
+    .matchmaking {
+        position: absolute;
+        display: flex;
+        margin-right: calc(50vw - 180px / 2);
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
+        background-color: rgb(13, 146, 13);
+        width: 180px;
+        height: 50px;
+        border-radius: 25px;
+        box-shadow: 4px 4px 6px rgb(0, 0, 0, 0.20);
+    }
+}

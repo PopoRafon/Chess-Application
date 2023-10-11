@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.models import User
+from .models import Room
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -40,3 +41,9 @@ class RegisterSerializer(serializers.Serializer):
             raise serializers.ValidationError({'checkbox': 'Terms of Service must be accepted.'})
 
         return attrs
+
+
+class PlayOnlineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ['players']

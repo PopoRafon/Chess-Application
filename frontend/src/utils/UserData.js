@@ -8,9 +8,7 @@ export default async function getUserData(setUser) {
               'Authorization': `Bearer ${token}`
             }
         })
-        .then((response) => {
-            return response.json();
-        })
+        .then((response) => response.json())
         .then((data) => {
             if (data.success) {
                 setUser({

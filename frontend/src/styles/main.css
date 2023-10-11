@@ -603,17 +603,6 @@
   height: 100%;
   z-index: 50;
 }
-.chess-board .disable-board .disable-board-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-  background-color: rgb(13, 146, 13);
-  width: 175px;
-  height: 50px;
-  border-radius: 25px;
-  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
-}
 .chess-board .board-cols {
   font-weight: 500;
   font-size: large;
@@ -715,13 +704,7 @@
   height: 21px;
 }
 
-.play-page {
-  display: flex;
-  flex-grow: 1;
-  justify-content: flex-end;
-  align-items: center;
-}
-.play-page .play-page-sidebar {
+.play-page-sidebar {
   display: flex;
   flex-direction: reverse;
   align-items: center;
@@ -732,30 +715,34 @@
   width: 350px;
   box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.15);
 }
-.play-page .play-page-sidebar .sidebar-play-button {
+.play-page-sidebar .sidebar-play-button {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 80%;
-  height: 6vh;
+  height: 7vh;
+  padding: 0px;
   margin: auto;
   margin-top: 10px;
   background-color: rgb(65, 161, 65);
   border-radius: 15px;
+  border: 0px;
   border-bottom: 4px solid;
   border-color: rgb(6, 141, 6);
+  color: white;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.15);
 }
-.play-page .play-page-sidebar .sidebar-play-button:hover {
+.play-page-sidebar .sidebar-play-button:hover {
   background-color: rgb(62, 151, 62);
   border-color: rgb(6, 133, 6);
 }
-.play-page .play-page-sidebar .sidebar-play-button .sidebar-play-button-title {
+.play-page-sidebar .sidebar-play-button .sidebar-play-button-title {
   font-size: large;
   font-weight: 700;
 }
-.play-page .play-page-sidebar .sidebar-play-button .sidebar-play-button-content {
+.play-page-sidebar .sidebar-play-button .sidebar-play-button-content {
   font-size: small;
 }
 
@@ -926,6 +913,27 @@
 }
 .play-online-page-sidebar .prev-moves .play-online-sidebar-buttons-container .play-online-sidebar-button:hover {
   background-color: #272727;
+}
+
+.play-page {
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+.play-page .matchmaking {
+  position: absolute;
+  display: flex;
+  margin-right: calc(50vw - 90px);
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  background-color: rgb(13, 146, 13);
+  width: 180px;
+  height: 50px;
+  border-radius: 25px;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .form-page {
