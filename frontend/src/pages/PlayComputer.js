@@ -1,11 +1,12 @@
 import Sidebar from '../components/sidebars/PlayOnlineSidebar';
 import Game from '../components/game/Game';
+import Navigation from '../components/sidebars/Navigation';
 import { GameProvider } from '../contexts/GameContext';
 import { useState } from 'react';
 import { ValidMovesProvider } from '../contexts/ValidMovesContext';
 import { useUser } from '../contexts/UserContext';
 
-export default function PlayComputer() {
+export default function PlayComputer({ isLoaded }) {
     const [disableBoard, setDisableBoard] = useState(false);
     const [promotionMenu, setPromotionMenu] = useState({ show: false });
     const { user } = useUser();
@@ -14,23 +15,26 @@ export default function PlayComputer() {
         user.isLoggedIn ? {username: user.username, rating: user.rating} : {username: 'Guest', rating: ''}
     ];
 
-    return (
-        <div className="play-page">
-            <GameProvider>
-                <ValidMovesProvider>
-                    <Game
-                        users={users}
-                        disableBoard={disableBoard}
-                        promotionMenu={promotionMenu}
-                        setPromotionMenu={setPromotionMenu}
-                    />
-                    <Sidebar
-                        messages={[]}
-                        setDisableBoard={setDisableBoard}
-                        setPromotionMenu={setPromotionMenu}
-                    />
-                </ValidMovesProvider>
-            </GameProvider>
-        </div>
+    return isLoaded && (
+        <>
+            <Navigation />
+            <div className="play-page">
+                <GameProvider>
+                    <ValidMovesProvider>
+                        <Game
+                            users={users}
+                            disableBoard={disableBoard}
+                            promotionMenu={promotionMenu}
+                            setPromotionMenu={setPromotionMenu}
+                        />
+                        <Sidebar
+                            messages={[]}
+                            setDisableBoard={setDisableBoard}
+                            setPromotionMenu={setPromotionMenu}
+                        />
+                    </ValidMovesProvider>
+                </GameProvider>
+            </div>
+        </>
     );
 }

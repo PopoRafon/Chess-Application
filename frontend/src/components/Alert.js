@@ -1,9 +1,16 @@
-export default function Alert({ setAlert, message }) {
-    setTimeout(() => {
-        setAlert({ show: false, message: '' });
-    }, 3500);
+import { useAlert } from '../contexts/AlertContext';
+import { useEffect } from 'react';
 
-    return (
+export default function Alert() {
+    const { alert, setAlert } = useAlert();
+
+    useEffect(() => {
+        setTimeout(() => {
+            setAlert({ show: false, message: '' });
+        }, 3500);
+    }, [setAlert, alert.show]);
+
+    return alert.show && (
         <div className="alert">
             <div className="alert-box">
                 <img
@@ -11,7 +18,7 @@ export default function Alert({ setAlert, message }) {
                     className="alert-icon"
                     alt="Alert"
                 />
-                {message}
+                {alert.message}
             </div>
         </div>
     );

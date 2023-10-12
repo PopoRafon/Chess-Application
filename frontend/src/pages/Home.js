@@ -1,6 +1,11 @@
-export default function Home() {
-    return (
-        <div>
-        </div>
+import Navigation from '../components/sidebars/Navigation';
+
+export default function Home({ isLoaded }) {
+    return isLoaded && (
+        <>
+            <Navigation />
+            <div>
+            </div>
+        </>
     );
 }

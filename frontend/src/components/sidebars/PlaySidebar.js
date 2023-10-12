@@ -1,9 +1,18 @@
 import { useNavigate } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 export default function Sidebar({ setMatchmaking }) {
     const navigate = useNavigate();
     const socket = useRef();
+
+    useEffect(() => {
+        return () => {
+            if (socket.current) {
+                socket.current.close();
+                socket.current = null;
+            }
+        }
+    }, []);
 
     function handleClick() {
         if (!socket.current) {
@@ -15,8 +24,6 @@ export default function Sidebar({ setMatchmaking }) {
                 const data = JSON.parse(message.data);
 
                 if (data.url) {
-                    socket.current.close();
-                    socket.current = null;
                     navigate(`online/${data.url}`);
                 }
             }

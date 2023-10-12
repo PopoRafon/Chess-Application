@@ -4,9 +4,11 @@ import { useUser } from '../../contexts/UserContext';
 import getUserData from '../../utils/UserData';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { FormInput, FormCheckbox } from './Form';
+import { useAlert } from '../../contexts/AlertContext';
 
-export default function RegisterForm({ setAlert }) {
+export default function RegisterForm() {
     const { setUser } = useUser();
+    const { setAlert } = useAlert();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',

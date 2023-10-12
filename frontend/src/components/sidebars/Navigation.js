@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
+import { useAlert } from '../../contexts/AlertContext';
 
-export default function Navigation({ setAlert, isLoaded }) {
+export default function Navigation() {
     const { user, setUser } = useUser();
+    const { setAlert } = useAlert();
     const navigate = useNavigate();
 
     const navLinks = [
@@ -28,15 +30,11 @@ export default function Navigation({ setAlert, isLoaded }) {
         await fetch('/api/v1/logout', {
             method: 'GET'
         })
-        .then((response) => {
-            return response.json();
-        })
+        .then((response) => response.json())
         .then((data) => {
             if (data.success) {
                 localStorage.removeItem('access');
-                setUser({
-                    isLoggedIn: false
-                });
+                setUser({ isLoggedIn: false });
                 setAlert({
                     show: true,
                     message: 'You have been successfuly logged out of your account!'
@@ -51,47 +49,43 @@ export default function Navigation({ setAlert, isLoaded }) {
     }
 
     return (
-        <>
-            {isLoaded && (
-                <nav className="nav">
-                    <div className="nav-logo">
-                        <Link to='/'>Logo Placeholder</Link>
-                    </div>
-                    <ul>
-                        {navLinks.map((link, index) => (
-                            user.isLoggedIn && (link.title === 'Login' || link.title === 'Sign Up') ? (
-                                ''
-                            ) : (
-                                <li key={index}>
-                                    <Link
-                                        to={link.href}
-                                        className="nav-link"
-                                    >
-                                        {link.title}
-                                    </Link>
-                                </li>
-                            )
-                        ))}
-                    </ul>
-                    {user.isLoggedIn && (
-                        <div className="nav-footer">
-                            <div className="nav-footer-user">
-                                <img
-                                    src='/static/images/avatar.png'
-                                    className="nav-footer-avatar"
-                                    alt="Avatar"
-                                />
-                                <span className="nav-footer-username">{user.username}</span>
-                            </div>
-                            <button
-                                onClick={handleClick}
-                                className="nav-footer-logout-button"
+        <nav className="nav">
+            <div className="nav-logo">
+                <Link to='/'>Logo Placeholder</Link>
+            </div>
+            <ul>
+                {navLinks.map((link, index) => (
+                    user.isLoggedIn && (link.title === 'Login' || link.title === 'Sign Up') ? (
+                        ''
+                    ) : (
+                        <li key={index}>
+                            <Link
+                                to={link.href}
+                                className="nav-link"
                             >
-                            </button>
-                        </div>
-                    )}
-                </nav>
+                                {link.title}
+                            </Link>
+                        </li>
+                    )
+                ))}
+            </ul>
+            {user.isLoggedIn && (
+                <div className="nav-footer">
+                    <div className="nav-footer-user">
+                        <img
+                            src='/static/images/avatar.png'
+                            className="nav-footer-avatar"
+                            alt="Avatar"
+                        />
+                        <span className="nav-footer-username">{user.username}</span>
+                    </div>
+                    <button
+                        onClick={handleClick}
+                        className="nav-footer-logout-button"
+                    >
+                    </button>
+                </div>
             )}
-        </>
+        </nav>
     );
 }

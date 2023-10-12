@@ -4,9 +4,11 @@ import { useUser } from '../../contexts/UserContext';
 import getUserData from '../../utils/UserData';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { FormInput } from './Form';
+import { useAlert } from '../../contexts/AlertContext';
 
-export default function LoginForm({ setAlert }) {
+export default function LoginForm() {
     const { setUser } = useUser();
+    const { setAlert } = useAlert();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',

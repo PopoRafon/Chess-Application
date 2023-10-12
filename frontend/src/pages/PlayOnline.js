@@ -1,18 +1,19 @@
 import Sidebar from '../components/sidebars/PlayOnlineSidebar';
 import Game from '../components/game/Game';
+import Navigation from '../components/sidebars/Navigation';
 import { GameProvider } from '../contexts/GameContext';
 import { useState, useEffect, useRef } from 'react';
 import { ValidMovesProvider } from '../contexts/ValidMovesContext';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
-export default function PlayOnline() {
+export default function PlayOnline({ isLoaded }) {
+    const { user } = useUser();
     const navigate = useNavigate();
     const [disableBoard, setDisableBoard] = useState(false);
     const [promotionMenu, setPromotionMenu] = useState({ show: false });
+    const [isSocketLoaded, setIsSocketLoaded] = useState(false);
     const gameId = window.location.pathname.split('/')[3];
-    const [load, setLoad] = useState(false);
-    const { user } = useUser();
     const socket = useRef();
     const users = [
         {username: 'Guest', rating: ''},
@@ -26,7 +27,7 @@ export default function PlayOnline() {
         .then((response) => response.json())
         .then((data) => {
             if (data.players) {
-                setLoad(true);
+                setIsSocketLoaded(true);
                 socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${gameId}/`);
             } else {
                 navigate('/');
@@ -43,11 +44,19 @@ export default function PlayOnline() {
                 console.log(message);
             }
         }
+
+        return () => {
+            if (socket.current) {
+                socket.current.close();
+                socket.current = null;
+            }
+        }
     }, []);
 
-    return (
-        <div className="play-page">
-            {load && (
+    return isLoaded && isSocketLoaded && (
+        <>
+            <Navigation />
+            <div className="play-page">
                 <GameProvider>
                     <ValidMovesProvider>
                         <Game
@@ -63,7 +72,7 @@ export default function PlayOnline() {
                         />
                     </ValidMovesProvider>
                 </GameProvider>
-            )}
-        </div>
+            </div>
+        </>
     );
 }

@@ -923,17 +923,33 @@
   align-items: center;
 }
 .play-page .matchmaking {
-  position: absolute;
-  display: flex;
-  margin-right: calc(50vw - 90px);
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  margin: 0px calc(50vw - 20vh - 351px + 100px);
   font-weight: 500;
-  background-color: rgb(13, 146, 13);
-  width: 180px;
-  height: 50px;
+  background-color: #323232;
+  border: 1px solid;
+  border-color: #383838;
+  padding: 15px 22px 15px 15px;
   border-radius: 25px;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
+}
+.play-page .matchmaking::before {
+  position: absolute;
+  right: 17px;
+  width: 5px;
+  content: "";
+  animation: dots 3s 0s infinite;
+}
+@keyframes dots {
+  33% {
+    content: ".";
+  }
+  66% {
+    content: "..";
+  }
+  99% {
+    content: "...";
+  }
 }
 
 .form-page {
