@@ -14,13 +14,11 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     }
 
     function handlePromote(type) {
-        const piece = data[0];
-        const oldRow = data[1];
-        const oldCol = data[2];
+        const [piece, oldRow, oldCol] = data;
         const newPositions = game.positions.slice();
         const capturedPiece = newPositions[row][col];
         const square = 'abcdefgh'[col] + '87654321'[row];
-        const move = square + '=' + type.toUpperCase() + (capturedPiece ? 'x' + capturedPiece[1].toUpperCase() + square : '');
+        const move = square + '=' + type.toUpperCase() + (capturedPiece && 'x' + capturedPiece[1].toUpperCase() + square);
 
         new Audio('/static/sounds/promote.mp3').play();
 
@@ -55,10 +53,7 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     return (
         <div
             className="promotion-menu"
-            style={{
-                top: `${((row - 1) * 90 + 25) + (window.innerHeight * 0.11)}px`,
-                left: `${((col - 1) * 90 + 25) + (window.innerWidth * 0.27)}px`
-            }}
+            style={{marginTop: `calc(-25px + ${row * 90}px)`, marginLeft: `calc(-70px + ${col * 90}px)`}}
         >
             {['q', 'r', 'b', 'n'].map((type) => (
                 <button

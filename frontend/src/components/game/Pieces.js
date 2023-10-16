@@ -1,79 +1,93 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Piece from './Piece';
-import { validateMove } from './Moves';
+import { validateMove, getViableMoves } from './Moves';
 import { useGame } from '../../contexts/GameContext';
 import calcPosition from '../../helpers/CalculatePosition';
 import { useValidMoves } from '../../contexts/ValidMovesContext';
 import { usePoints } from '../../contexts/PointsContext';
+import playSound from './Sounds';
 
 export default function Pieces({ setPromotionMenu }) {
     const { game, dispatchGame } = useGame();
     const { validMoves, setValidMoves } = useValidMoves();
     const { dispatchPoints } = usePoints();
-    const ref = useRef();
+    const kingCheck = useRef({ w: false, b: false });
+    const attackedSquares = useRef({ w: [], b: [] });
+    const piecesRef = useRef();
+
+    useEffect(() => {
+        kingCheck.current = { w: false, b: false };
+        attackedSquares.current = { w: [], b: [] };
+
+        for (const [i, row] of game.positions.entries()) {
+            for (const [j, piece] of row.entries()) {
+                if (!piece) continue;
+                const viableMoves = getViableMoves(game, piece, attackedSquares, i, j, kingCheck, true);
+
+                for (const move of viableMoves) {
+                    const position = game.positions[move[0]][move[1]];
+                    const oppositePlayerColor = piece[0] === 'w' ? 'b' : 'w';
+
+                    attackedSquares.current = {
+                        ...attackedSquares.current,
+                        [oppositePlayerColor]: [
+                            ...attackedSquares.current[oppositePlayerColor],
+                            `${move[0]}${move[1]}`
+                        ]
+                    };
+
+                    if (position[1] === 'k' && position[0] === oppositePlayerColor) {
+                        kingCheck.current = {
+                            ...kingCheck.current,
+                            [oppositePlayerColor]: true
+                        };
+                    }
+                }
+            }
+        }
+    }, [game, game.turn]);
 
     const handleDragOver = (event) => event.preventDefault();
 
     function handleDrop(event) {
-        const data = event.dataTransfer.getData('text').split(',');
-        const piece = data[0];
-        const oldRow = data[1];
-        const oldCol = data[2];
-        const { row, col } = calcPosition(ref, event);
+        const [piece, oldRow, oldCol] = event.dataTransfer.getData('text').split(',');
+        const { row, col } = calcPosition(piecesRef.current, event);
 
-        setPromotionMenu({show: false});
+        setPromotionMenu({ show: false });
 
-        if (validateMove(game, data, row, col)) {
+        if (validateMove(game, piece, attackedSquares, oldRow, oldCol, row, col, kingCheck)) {
             if ((piece === 'wp' && row === 0) || (piece === 'bp' && row === 7)) {
-                setPromotionMenu({
+                return setPromotionMenu({
                     show: true,
-                    data: data,
+                    data: [piece, oldRow, oldCol],
                     position: [row, col],
                 });
-
-                return;
             }
 
             const newPositions = game.positions.slice();
             const capturedPiece = newPositions[row][col];
             const square = 'abcdefgh'[col] + '87654321'[row];
             const markedSquares = [`${oldRow}${oldCol}`, `${row}${col}`];
-            const side = piece[0] === 'w' ? 7 : 0;
-            let move = (piece[1] === 'p' ? (capturedPiece ? 'abcdefgh'[oldCol] : '') : piece[1].toUpperCase()) + (capturedPiece ? 'x' : '') + square;
+            let move = (piece[1] === 'p' ? (capturedPiece && 'abcdefgh'[oldCol]) : piece[1].toUpperCase()) + (capturedPiece && 'x') + square;
             let newCastlingDirections = '';
-            let audio;
 
             if (piece[1] === 'k') {
-                if (col - oldCol === -2) {
-                    newPositions[side][3] = newPositions[side][0];
-                    newPositions[side][0] = '';
-                    move = 'O-O-O';
-                    audio = new Audio('/static/sounds/castle.mp3');
-                } else if (col - oldCol === 2) {
-                    newPositions[side][5] = newPositions[side][7];
-                    newPositions[side][7] = '';
-                    move = 'O-O';
-                    audio = new Audio('/static/sounds/castle.mp3');
+                const side = piece[0] === 'w' ? 7 : 0;
+                const direction = col - oldCol;
+
+                if (Math.abs(direction) === 2) {
+                    const rookPos = direction === 2 ? 7 : 0;
+                    const newRookPos = direction === 2 ? 5 : 3;
+
+                    newPositions[side][newRookPos] = newPositions[side][rookPos];
+                    newPositions[side][rookPos] = '';
+
+                    move = direction === 2 ? 'O-O' : 'O-O-O';
                 }
-            }
 
-            if (newPositions[row][col] && !audio) {
-                dispatchPoints({ 
-                    type: newPositions[row][col],
-                    turn: game.turn
-                });
-                audio = new Audio('/static/sounds/capture.mp3');
-            } else if (!audio) {
-                audio = new Audio('/static/sounds/move.mp3');
-            }
-
-            audio.play();
-
-            newPositions[oldRow][oldCol] = '';
-            newPositions[row][col] = data[0];
-
-            if (piece[1] === 'k' && game.castlingDirections[piece] !== 'none') {
-                newCastlingDirections = piece[0] === 'w' ? { wk: 'none' } : { bk: 'none' };
+                if (game.castlingDirections[piece] !== 'none') {
+                    newCastlingDirections = piece[0] === 'w' ? { wk: 'none' } : { bk: 'none' };
+                }
             } else if (piece[1] === 'r' && game.castlingDirections[piece[0] + 'k'] !== 'none') {
                 if (col === 0 && game.castlingDirections[piece[0] + 'k'] !== 'left') {
                     newCastlingDirections = piece[0] === 'w' ? { wk: 'right' } : { bk: 'right' };
@@ -81,6 +95,18 @@ export default function Pieces({ setPromotionMenu }) {
                     newCastlingDirections = piece[0] === 'w' ? { wk: 'left' } : { bk: 'left' };
                 }
             }
+
+            if (capturedPiece) {
+                dispatchPoints({ 
+                    type: capturedPiece,
+                    turn: game.turn
+                });
+            }
+
+            newPositions[oldRow][oldCol] = '';
+            newPositions[row][col] = piece;
+
+            playSound(move, capturedPiece);
 
             setValidMoves([]);
 
@@ -100,7 +126,7 @@ export default function Pieces({ setPromotionMenu }) {
 
     return (
         <div
-            ref={ref}
+            ref={piecesRef}
             className="pieces"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
@@ -126,6 +152,8 @@ export default function Pieces({ setPromotionMenu }) {
                             type={game.positions[i][j]}
                             row={i}
                             col={j}
+                            attackedSquares={attackedSquares}
+                            kingCheck={kingCheck}
                             key={i + '-' + j}
                         />
                     ))
