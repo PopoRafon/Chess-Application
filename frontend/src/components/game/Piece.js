@@ -3,19 +3,19 @@ import { useGame } from '../../contexts/GameContext';
 import { getViableMoves } from './Moves';
 import { useValidMoves } from '../../contexts/ValidMovesContext';
 
-export default function Piece({ type, row, col, attackedSquares, kingCheck }) {
+export default function Piece({ type, row, col, attackedSquares, kingCheckSquares }) {
     const [pos, setPos] = useState();
     const { game } = useGame();
     const { setValidMoves } = useValidMoves();
 
     function handleClick() {
-        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheck);
+        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares);
 
         setValidMoves(viableMoves);
     }
 
     function handleDragStart(event) {
-        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheck);
+        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares);
         const { left, top } = event.target.getBoundingClientRect();
 
         event.dataTransfer.setDragImage(event.target, window.outerWidth, window.outerHeight);

@@ -1,6 +1,30 @@
 import { queenDirections, rookDirections, bishopDirections, knightDirections, kingDirections } from '../../helpers/Directions';
 
-function calcQueenRookBishopMoves(directions, positions, row, col, isCheckingSquares) {
+function checkViableMoves(kingCheckSquares, viableMoves) {
+    if (kingCheckSquares.length === 1) {
+        let newViableMoves = [];
+
+        for (const checkPosition of kingCheckSquares[0]) {
+            for (const viablePosition of viableMoves) {
+                if (viablePosition.includes(checkPosition)) {
+                    newViableMoves.push(viablePosition);
+                }
+            }
+        }
+
+        return newViableMoves;
+    } else if (kingCheckSquares.length >= 2) {
+        return [];
+    }
+
+    return viableMoves;
+}
+
+function checkCastling(positions, castlingPositions, attackedSquares, playerColor) {
+    return castlingPositions.every((position) => !positions[position[0]][position[1]] && !attackedSquares.current[playerColor].includes(position));
+}
+
+function calcQueenRookBishopMoves(directions, positions, row, col, kingCheckSquares, isCheckingSquares) {
     let viableMoves = [];
 
     for (let i = 0; i < directions.length; i++) {
@@ -25,10 +49,10 @@ function calcQueenRookBishopMoves(directions, positions, row, col, isCheckingSqu
         }
     }
 
-    return viableMoves;
+    return checkViableMoves(kingCheckSquares, viableMoves);
 }
 
-function calcKnightMoves(directions, positions, row, col, isCheckingSquares) {
+function calcKnightMoves(directions, positions, row, col, kingCheckSquares, isCheckingSquares) {
     let viableMoves = [];
 
     for (const direction of directions) {
@@ -44,11 +68,7 @@ function calcKnightMoves(directions, positions, row, col, isCheckingSquares) {
         }
     }
 
-    return viableMoves;
-}
-
-function checkCastling(positions, castlingPositions, attackedSquares, playerColor) {
-    return castlingPositions.every((position) => !positions[position[0]][position[1]] && !attackedSquares.current[playerColor].includes(position));
+    return checkViableMoves(kingCheckSquares, viableMoves);
 }
 
 function calcKingMoves(directions, positions, attackedSquares, row, col, castlingDirections, isCheckingSquares) {
@@ -86,7 +106,7 @@ function calcKingMoves(directions, positions, attackedSquares, row, col, castlin
     return viableMoves;
 }
 
-function calcPawnMoves(positions, type, row, col, isCheckingSquares) {
+function calcPawnMoves(positions, type, row, col, kingCheckSquares, isCheckingSquares) {
     let viableMoves = [];
 
     const direction = type[0] === 'w' ? -1 : 1;
@@ -115,35 +135,34 @@ function calcPawnMoves(positions, type, row, col, isCheckingSquares) {
         }
     }
 
-    return viableMoves;
+    return checkViableMoves(kingCheckSquares, viableMoves);
 }
 
-function getViableMoves(game, piece, attackedSquares, row, col, kingCheck, isCheckingSquares) {
+function getViableMoves(game, piece, attackedSquares, row, col, kingCheckSquares, isCheckingSquares) {
     const { positions, turn, castlingDirections } = game;
 
     if (!isCheckingSquares && turn !== piece[0]) return [];
-    if (!isCheckingSquares && kingCheck.current[piece[0]] && piece[1] !== 'k') return [];
 
     switch (piece[1]) {
         case 'p':
-            return calcPawnMoves(positions, piece, row, col, isCheckingSquares);
+            return calcPawnMoves(positions, piece, row, col, kingCheckSquares.current[piece[0]], isCheckingSquares);
         case 'n':
-            return calcKnightMoves(knightDirections(), positions, row, col, isCheckingSquares);
+            return calcKnightMoves(knightDirections(), positions, row, col, kingCheckSquares.current[piece[0]], isCheckingSquares);
         case 'k':
             return calcKingMoves(kingDirections(), positions, attackedSquares, row, col, castlingDirections, isCheckingSquares);
         case 'r':
-            return calcQueenRookBishopMoves(rookDirections(), positions, row, col, isCheckingSquares);
+            return calcQueenRookBishopMoves(rookDirections(), positions, row, col, kingCheckSquares.current[piece[0]], isCheckingSquares);
         case 'b':
-            return calcQueenRookBishopMoves(bishopDirections(), positions, row, col, isCheckingSquares);
+            return calcQueenRookBishopMoves(bishopDirections(), positions, row, col, kingCheckSquares.current[piece[0]], isCheckingSquares);
         case 'q':
-            return calcQueenRookBishopMoves(queenDirections(), positions, row, col, isCheckingSquares);
+            return calcQueenRookBishopMoves(queenDirections(), positions, row, col, kingCheckSquares.current[piece[0]], isCheckingSquares);
         default:
             throw new Error();
     }
 }
 
-function validateMove(game, piece, attackedSquares, oldRow, oldCol, row, col, kingCheck) {
-    const viableMoves = getViableMoves(game, piece, attackedSquares, Number(oldRow), Number(oldCol), kingCheck);
+function validateMove(game, piece, attackedSquares, oldRow, oldCol, row, col, kingCheckSquares) {
+    const viableMoves = getViableMoves(game, piece, attackedSquares, Number(oldRow), Number(oldCol), kingCheckSquares);
 
     for (const move of viableMoves) {
         if (move.includes(`${row}${col}`)) {

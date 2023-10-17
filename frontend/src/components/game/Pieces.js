@@ -11,38 +11,60 @@ export default function Pieces({ setPromotionMenu }) {
     const { game, dispatchGame } = useGame();
     const { validMoves, setValidMoves } = useValidMoves();
     const { dispatchPoints } = usePoints();
-    const kingCheck = useRef({ w: false, b: false });
     const attackedSquares = useRef({ w: [], b: [] });
+    const kingCheckSquares = useRef({ w: [], b: [] });
     const piecesRef = useRef();
 
     useEffect(() => {
-        kingCheck.current = { w: false, b: false };
         attackedSquares.current = { w: [], b: [] };
+        kingCheckSquares.current = { w: [], b: [] };
 
-        for (const [i, row] of game.positions.entries()) {
-            for (const [j, piece] of row.entries()) {
+        for (const [rowIdx, row] of game.positions.entries()) {
+            for (const [colIdx, piece] of row.entries()) {
                 if (!piece) continue;
-                const viableMoves = getViableMoves(game, piece, attackedSquares, i, j, kingCheck, true);
+                const viableMoves = getViableMoves(game, piece, attackedSquares, rowIdx, colIdx, kingCheckSquares, true);
+                const oppositePlayerColor = piece[0] === 'w' ? 'b' : 'w';
+                let newAttackedSquares = [];
 
-                for (const move of viableMoves) {
+                for (let [moveIdx, move] of viableMoves.entries()) {
                     const position = game.positions[move[0]][move[1]];
-                    const oppositePlayerColor = piece[0] === 'w' ? 'b' : 'w';
 
-                    attackedSquares.current = {
-                        ...attackedSquares.current,
-                        [oppositePlayerColor]: [
-                            ...attackedSquares.current[oppositePlayerColor],
-                            `${move[0]}${move[1]}`
-                        ]
-                    };
+                    newAttackedSquares.push(`${move[0]}${move[1]}`);
 
                     if (position[1] === 'k' && position[0] === oppositePlayerColor) {
-                        kingCheck.current = {
-                            ...kingCheck.current,
-                            [oppositePlayerColor]: true
+                        let newKingCheckSquares = [`${rowIdx}${colIdx}`];
+
+                        if (piece[1] === 'r' || piece[1] === 'b' || piece[1] === 'q') {
+                            if (Math.abs(Number(move[0]) - Number(rowIdx)) > 1 || Math.abs(Number(move[1]) - Number(colIdx)) > 1) {
+                                while (true) {
+                                    moveIdx--;
+    
+                                    newKingCheckSquares.push(viableMoves[moveIdx]);
+    
+                                    if (Math.abs(Number(viableMoves[moveIdx][0]) - Number(rowIdx)) <= 1 && Math.abs(Number(viableMoves[moveIdx][1]) - Number(colIdx)) <= 1) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        kingCheckSquares.current = {
+                            ...kingCheckSquares.current,
+                            [oppositePlayerColor]: [
+                                ...kingCheckSquares.current[oppositePlayerColor],
+                                [...newKingCheckSquares]
+                            ]
                         };
                     }
                 }
+
+                attackedSquares.current = {
+                    ...attackedSquares.current,
+                    [oppositePlayerColor]: [
+                        ...attackedSquares.current[oppositePlayerColor],
+                        ...newAttackedSquares
+                    ]
+                };
             }
         }
     }, [game, game.turn]);
@@ -55,7 +77,7 @@ export default function Pieces({ setPromotionMenu }) {
 
         setPromotionMenu({ show: false });
 
-        if (validateMove(game, piece, attackedSquares, oldRow, oldCol, row, col, kingCheck)) {
+        if (validateMove(game, piece, attackedSquares, oldRow, oldCol, row, col, kingCheckSquares)) {
             if ((piece === 'wp' && row === 0) || (piece === 'bp' && row === 7)) {
                 return setPromotionMenu({
                     show: true,
@@ -153,7 +175,7 @@ export default function Pieces({ setPromotionMenu }) {
                             row={i}
                             col={j}
                             attackedSquares={attackedSquares}
-                            kingCheck={kingCheck}
+                            kingCheckSquares={kingCheckSquares}
                             key={i + '-' + j}
                         />
                     ))
