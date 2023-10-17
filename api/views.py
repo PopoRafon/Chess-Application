@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate
 from .models import Room
 
 
-class PlayOnline(RetrieveAPIView):
+class PlayOnlineView(RetrieveAPIView):
     lookup_field = 'hashed_url'
     lookup_url_kwarg = 'id'
     serializer_class = PlayOnlineSerializer
@@ -90,7 +90,7 @@ class LoginView(APIView):
                 'success': {
                     'access': str(refresh.access_token)
                 }
-            }, status=status.HTTP_201_CREATED)
+            }, status=status.HTTP_200_OK)
 
             response.set_cookie(
                 key='refresh',

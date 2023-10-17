@@ -42,19 +42,22 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
 class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['game']
-        self.room_group_name = f'game_{self.room_name}'
+        try:
+            self.room_name = self.scope['url_route']['kwargs']['game']
+            self.room_group_name = f'game_{self.room_name}'
 
-        if await self.check_room_exists(self.room_name):
-            self.room = await database_sync_to_async(Room.objects.get)(hashed_url=self.room_name)
+            if await self.check_room_exists(self.room_name):
+                self.room = await database_sync_to_async(Room.objects.get)(hashed_url=self.room_name)
 
-            await self.channel_layer.group_add(
-                self.room_group_name,
-                self.channel_name
-            )
+                await self.channel_layer.group_add(
+                    self.room_group_name,
+                    self.channel_name
+                )
 
-            await self.accept()
-        else:
+                await self.accept()
+            else:
+                await self.close()
+        except Exception:
             await self.close()
 
     @sync_to_async
