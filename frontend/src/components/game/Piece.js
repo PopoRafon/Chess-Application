@@ -3,26 +3,26 @@ import { useGame } from '../../contexts/GameContext';
 import { getViableMoves } from './Moves';
 import { useValidMoves } from '../../contexts/ValidMovesContext';
 
-export default function Piece({ type, row, col, attackedSquares, kingCheckSquares }) {
+export default function Piece({ type, row, col, attackedSquares, kingCheckSquares, pinnedSquares }) {
     const [pos, setPos] = useState();
     const { game } = useGame();
     const { setValidMoves } = useValidMoves();
 
     function handleClick() {
-        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares);
+        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares, pinnedSquares);
 
         setValidMoves(viableMoves);
     }
 
     function handleDragStart(event) {
-        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares);
+        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares, pinnedSquares);
         const { left, top } = event.target.getBoundingClientRect();
 
         event.dataTransfer.setDragImage(event.target, window.outerWidth, window.outerHeight);
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData('text/plain', [type, row, col]);
         event.target.style = 'z-index: 10;';
-        
+
         setValidMoves(viableMoves);
         setPos([left, top]);
     }
