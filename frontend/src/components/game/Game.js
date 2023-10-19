@@ -3,7 +3,7 @@ import PromotionMenu from './PromotionMenu';
 import GameSidebar from '../sidebars/GameSidebar';
 import { PointsProvider } from '../../contexts/PointsContext';
 
-export default function Game({ users, disableBoard, promotionMenu, setPromotionMenu }) {
+export default function Game({ users, disableBoard, setDisableBoard, promotionMenu, setPromotionMenu }) {
     return (
         <div className="game-container">
             <div className="game-content">
@@ -20,7 +20,9 @@ export default function Game({ users, disableBoard, promotionMenu, setPromotionM
                         rating={users[0].rating}
                     />
                     <ChessBoard
+                        users={users}
                         disableBoard={disableBoard}
+                        setDisableBoard={setDisableBoard}
                         setPromotionMenu={setPromotionMenu}
                     />
                     <GameSidebar

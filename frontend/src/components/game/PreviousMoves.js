@@ -94,7 +94,7 @@ export default function PrevMoves({ setDisableBoard, setPromotionMenu }) {
             setDisableBoard(true);
         }
 
-        if (game.prevMoves.length === index + 1) {
+        if (game.prevMoves.length === index + 1 && !game.result) {
             dispatchGame({
                 type: 'NEW_POSITIONS',
                 positions: refPositions.current,

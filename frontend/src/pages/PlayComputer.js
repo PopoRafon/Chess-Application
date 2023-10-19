@@ -24,6 +24,7 @@ export default function PlayComputer({ isLoaded }) {
                         <Game
                             users={users}
                             disableBoard={disableBoard}
+                            setDisableBoard={setDisableBoard}
                             promotionMenu={promotionMenu}
                             setPromotionMenu={setPromotionMenu}
                         />

@@ -1,4 +1,7 @@
 import Pieces from './Pieces';
+import { useGame } from '../../contexts/GameContext';
+import { useEffect, useState } from 'react';
+import GameResultAlert from './GameResultAlert';
 
 function RowLetters({ rows }) {
     return (
@@ -45,11 +48,19 @@ function DisableChessBoard() {
     );
 }
 
-export default function ChessBoard({ disableBoard, setPromotionMenu }) {
-    let board = [];
-
+export default function ChessBoard({ users, disableBoard, setDisableBoard, setPromotionMenu }) {
+    const [showResultAlert, setShowResultAlert] = useState(false);
+    const { game } = useGame();
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
     const cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    let board = [];
+
+    useEffect(() => {
+        if (game.result) {
+            setShowResultAlert(true);
+            setDisableBoard(true);
+        }
+    }, [game.result, setDisableBoard]);
     
     for (const row of rows) {
         for (const col of cols) {
@@ -67,6 +78,13 @@ export default function ChessBoard({ disableBoard, setPromotionMenu }) {
         <div className="chess-board">
             {disableBoard && (
                 <DisableChessBoard />
+            )}
+            {showResultAlert && (
+                <GameResultAlert
+                    users={users}
+                    result={game.result}
+                    setShowResultAlert={setShowResultAlert}
+                />
             )}
             <div className="board-squares">{board}</div>
             <Pieces

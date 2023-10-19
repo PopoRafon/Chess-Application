@@ -62,6 +62,7 @@ export default function PlayOnline({ isLoaded }) {
                         <Game
                             users={users}
                             disableBoard={disableBoard}
+                            setDisableBoard={setDisableBoard}
                             promotionMenu={promotionMenu}
                             setPromotionMenu={setPromotionMenu}
                         />

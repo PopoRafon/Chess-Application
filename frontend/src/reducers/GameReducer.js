@@ -3,7 +3,9 @@ export default function gameReducer(state, action) {
         case 'NEXT_ROUND':
             const newTurn = state.turn === 'w' ? 'b' : 'w';
             const newCastlingDirections = action.castlingDirections ? action.castlingDirections : {};
+
             return {
+                ...state,
                 positions: action.positions,
                 prevMoves: [
                     ...state.prevMoves,
@@ -22,6 +24,13 @@ export default function gameReducer(state, action) {
                 positions: action.positions,
                 markedSquares: action.markedSquares
             };
+        case 'GAME_END':
+            new Audio('/static/sounds/game_end.mp3').play();
+
+            return {
+                ...state,
+                result: action.result
+            }
         default:
             throw new Error();
     }

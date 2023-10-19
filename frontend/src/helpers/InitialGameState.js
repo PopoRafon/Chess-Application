@@ -9,6 +9,7 @@ export default function initGameState() {
         castlingDirections: {
             wk: 'both',
             bk: 'both'
-        }
+        },
+        result: ''
     };
 };
