@@ -1,21 +1,19 @@
 import { useState } from 'react';
-import { useGame } from '../../contexts/GameContext';
-import { getViableMoves } from './Moves';
 import { useValidMoves } from '../../contexts/ValidMovesContext';
 
-export default function Piece({ type, row, col, attackedSquares, kingCheckSquares, pinnedSquares }) {
+export default function Piece({ type, row, col, availableMoves }) {
     const [pos, setPos] = useState();
-    const { game } = useGame();
     const { setValidMoves } = useValidMoves();
+    const position = `${row}${col}`;
 
     function handleClick() {
-        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares, pinnedSquares);
+        const moves = availableMoves.current[type[0]][position];
 
-        setValidMoves(viableMoves);
+        setValidMoves(moves);
     }
 
     function handleDragStart(event) {
-        const viableMoves = getViableMoves(game, type, attackedSquares, row, col, kingCheckSquares, pinnedSquares);
+        const moves = availableMoves.current[type[0]][position];
         const { left, top } = event.target.getBoundingClientRect();
 
         event.dataTransfer.setDragImage(event.target, window.outerWidth, window.outerHeight);
@@ -23,7 +21,7 @@ export default function Piece({ type, row, col, attackedSquares, kingCheckSquare
         event.dataTransfer.setData('text/plain', [type, row, col]);
         event.target.style = 'z-index: 10;';
 
-        setValidMoves(viableMoves);
+        setValidMoves(moves);
         setPos([left, top]);
     }
 

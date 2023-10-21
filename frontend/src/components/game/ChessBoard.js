@@ -1,7 +1,7 @@
-import Pieces from './Pieces';
 import { useGame } from '../../contexts/GameContext';
 import { useEffect, useState } from 'react';
 import GameResultAlert from './GameResultAlert';
+import Arbiter from './Arbiter';
 
 function RowLetters({ rows }) {
     return (
@@ -87,7 +87,7 @@ export default function ChessBoard({ users, disableBoard, setDisableBoard, setPr
                 />
             )}
             <div className="board-squares">{board}</div>
-            <Pieces
+            <Arbiter
                 setPromotionMenu={setPromotionMenu}
             />
             <RowLetters

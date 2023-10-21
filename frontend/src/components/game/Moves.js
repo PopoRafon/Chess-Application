@@ -1,6 +1,5 @@
 import { queenDirections, rookDirections, bishopDirections, knightDirections, kingDirections } from '../../helpers/Directions';
-import checkPinnedSquares from '../../helpers/PinnedSquares';
-import checkKingCheckSquares from '../../helpers/KingCheckSquares';
+import { checkPinnedSquares, checkKingCheckSquares } from '../../helpers/SquaresCheck';
 import checkCastling from '../../helpers/Castling';
 
 function calcQueenRookBishopMoves(directions, positions, row, col, kingCheckSquares, pinnedSquares, isCheckingSquares) {
@@ -25,13 +24,9 @@ function calcQueenRookBishopMoves(directions, positions, row, col, kingCheckSqua
             } else if (positions[y][x]) {
                 viableMoves.push(`${y}${x} mark`);
 
-                if (positions[y][x][1] !== 'k') {
-                    attackedPiece = `${y}${x}`;
-                }
+                if (positions[y][x][1] !== 'k') attackedPiece = `${y}${x}`;
 
-                if (!isCheckingSquares) {
-                    break;
-                }
+                if (!isCheckingSquares) break;
             } else if (!attackedPiece) {
                 viableMoves.push(`${y}${x} valid-move`);
             }
@@ -64,7 +59,7 @@ function calcKnightMoves(directions, positions, row, col, kingCheckSquares, pinn
     return checkKingCheckSquares(kingCheckSquares, viableMoves);
 }
 
-function calcKingMoves(directions, positions, attackedSquares, row, col, castlingDirections, isCheckingSquares) {
+function calcKingMoves(directions, positions, row, col, attackedSquares, castlingDirections, isCheckingSquares) {
     const piece = positions[row][col];
     const side = piece[0] === 'w' ? '7' : '0';
     let viableMoves = [];
@@ -73,9 +68,10 @@ function calcKingMoves(directions, positions, attackedSquares, row, col, castlin
         const rowY = row + direction[0];
         const colX = col + direction[1];
 
-        if ((rowY < 0 || colX < 0 || rowY > 7 || colX > 7) || (positions[rowY][colX][0] === positions[row][col][0] && !isCheckingSquares)) {
-            continue;
-        } else if (!isCheckingSquares && attackedSquares.current[positions[row][col][0]].includes(`${rowY}${colX}`)) {
+        if ((rowY < 0 || colX < 0 || rowY > 7 || colX > 7) ||
+            (positions[rowY][colX][0] === positions[row][col][0] && !isCheckingSquares) ||
+            (!isCheckingSquares && attackedSquares.current[positions[row][col][0]].includes(`${rowY}${colX}`))
+        ) {
             continue;
         } else if (positions[rowY][colX][0]) {
             viableMoves.push(`${rowY}${colX} mark`);
@@ -126,8 +122,9 @@ function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquare
     return checkKingCheckSquares(kingCheckSquares, viableMoves);
 }
 
-function getViableMoves(game, piece, attackedSquares, row, col, kingCheckSquares, pinnedSquares, isCheckingSquares) {
+function getAvailableMoves(game, piece, row, col, squares, isCheckingSquares) {
     const { positions, turn, castlingDirections } = game;
+    const { attackedSquares, kingCheckSquares, pinnedSquares } = squares;
     const playersKingCheckSquares = kingCheckSquares.current[piece[0]];
     const playersPinnedSquares = pinnedSquares.current[piece[0]];
 
@@ -139,7 +136,7 @@ function getViableMoves(game, piece, attackedSquares, row, col, kingCheckSquares
         case 'n':
             return calcKnightMoves(knightDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'k':
-            return calcKingMoves(kingDirections(), positions, attackedSquares, row, col, castlingDirections, isCheckingSquares);
+            return calcKingMoves(kingDirections(), positions, row, col, attackedSquares, castlingDirections, isCheckingSquares);
         case 'r':
             return calcQueenRookBishopMoves(rookDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'b':
@@ -151,16 +148,4 @@ function getViableMoves(game, piece, attackedSquares, row, col, kingCheckSquares
     }
 }
 
-function validateMove(game, piece, attackedSquares, oldRow, oldCol, row, col, kingCheckSquares, pinnedSquares) {
-    const viableMoves = getViableMoves(game, piece, attackedSquares, Number(oldRow), Number(oldCol), kingCheckSquares, pinnedSquares);
-
-    for (const move of viableMoves) {
-        if (move.includes(`${row}${col}`)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-export { validateMove, getViableMoves };
+export { getAvailableMoves };

@@ -64,7 +64,7 @@ export default function LoginForm() {
                     refreshAccessToken();
                     setAlert({
                         show: true,
-                        message: 'You have been successfuly logged in to your account!'
+                        message: 'You have been successfully logged in to your account!'
                     });
                     navigate('/');
                 } else {

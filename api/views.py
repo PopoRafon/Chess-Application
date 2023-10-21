@@ -110,7 +110,7 @@ class LoginView(APIView):
 class LogoutView(APIView):
     def get(self, request):
         response = Response({
-            'success': 'You have been successfuly log off your account.'
+            'success': 'You have been successfully log off your account.'
         }, status=status.HTTP_200_OK)
 
         response.delete_cookie('refresh')

@@ -12,7 +12,7 @@ export default function GameSidebar({ player, user, rating }) {
     const formattedTimer = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
     useEffect(() => {
-        if (!game.result) {
+        if (!game.result && game.prevMoves.length !== 0) {
             let timerTimeout;
     
             if (timer === 0) {
@@ -32,7 +32,8 @@ export default function GameSidebar({ player, user, rating }) {
                 clearTimeout(timerTimeout);
             };
         }
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [game.result, game.turn, timer]);
 
     return (
         <div className="game-sidebar">

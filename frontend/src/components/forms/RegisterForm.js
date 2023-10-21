@@ -86,7 +86,7 @@ export default function RegisterForm() {
                     refreshAccessToken();
                     setAlert({
                         show: true,
-                        message: 'Your account has been successfuly created!'
+                        message: 'Your account has been successfully created!'
                     });
                     navigate('/');
                 } else {
