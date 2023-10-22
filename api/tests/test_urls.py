@@ -1,7 +1,7 @@
 from rest_framework.test import APISimpleTestCase
 from django.urls import resolve, reverse
 from rest_framework_simplejwt.views import TokenObtainPairView
-from api.views import TokenRefreshView, UserDataView, RegisterView, LoginView, LogoutView, PlayOnlineView
+from api.views import TokenRefreshView, UserDataView, RegisterView, LoginView, LogoutView, UserGameRoomView, GuestGameRoomView, ComputerGameRoomView
 
 
 class TestTokenUrls(APISimpleTestCase):
@@ -52,10 +52,21 @@ class TestUserAuthenticationUrls(APISimpleTestCase):
         self.assertEqual(resolver.func.view_class, LogoutView)
 
 
-class TestPlayUrls(APISimpleTestCase):
-    def test_play_online_url(self):
-        url = reverse('play-online', kwargs={'id': 1})
+class TestGameRoomUrls(APISimpleTestCase):
+    def test_user_game_room_url(self):
+        url = reverse('user-game-room', kwargs={'id': 1})
         resolver = resolve(url)
 
-        self.assertEqual(url, '/api/v1/play/online/1')
-        self.assertEqual(resolver.func.view_class, PlayOnlineView)
+        self.assertEqual(resolver.func.view_class, UserGameRoomView)
+
+    def test_guest_game_room_url(self):
+        url = reverse('guest-game-room', kwargs={'id': 1})
+        resolver = resolve(url)
+
+        self.assertEqual(resolver.func.view_class, GuestGameRoomView)
+
+    def test_computer_game_room_url(self):
+        url = reverse('computer-game-room', kwargs={'id': 1})
+        resolver = resolve(url)
+
+        self.assertEqual(resolver.func.view_class, ComputerGameRoomView)

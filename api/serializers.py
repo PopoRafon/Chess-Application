@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.models import User
-from .models import Room
+from .models import UserGameRoom, GuestGameRoom, ComputerGameRoom
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -43,7 +43,22 @@ class RegisterSerializer(serializers.Serializer):
         return attrs
 
 
-class PlayOnlineSerializer(serializers.ModelSerializer):
+class UserGameRoomSerializer(serializers.ModelSerializer):
+    white_player_username = serializers.CharField(source='white_player.username')
+    black_player_username = serializers.CharField(source='black_player.username')
+
     class Meta:
-        model = Room
-        fields = ['players']
+        model = UserGameRoom
+        fields = ['white_player_username', 'black_player_username', 'white_timer', 'black_timer', 'game_state', 'turn', 'result']
+
+
+class GuestGameRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuestGameRoom
+        fields = ['white_timer', 'black_timer', 'game_state', 'turn', 'result']
+
+
+class ComputerGameRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComputerGameRoom
+        fields = ['game_state', 'turn', 'result']

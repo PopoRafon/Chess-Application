@@ -1,10 +1,10 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from asgiref.sync import sync_to_async
-from .models import Room
+from .models import GuestGameRoom
 import json
 
-queue = []
+guest_queue = []
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -17,27 +17,27 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-        queue.append(self)
+        guest_queue.append(self)
 
-        await self.match_users()
+        await self.check_guest_queue()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
-        if self in queue:
-            queue.remove(self)
+        if self in guest_queue:
+            guest_queue.remove(self)
 
-    async def match_users(self):
-        if len(queue) >= 2:
-            user_one = queue.pop()
-            user_two = queue.pop()
+    async def check_guest_queue(self):
+        if len(guest_queue) >= 2:
+            user_one = guest_queue.pop()
+            user_two = guest_queue.pop()
 
-            room = await database_sync_to_async(Room.objects.create)()
+            room = await database_sync_to_async(GuestGameRoom.objects.create)()
 
-            await user_one.send(json.dumps({'url': room.hashed_url}))
-            await user_two.send(json.dumps({'url': room.hashed_url}))
+            await user_one.send(json.dumps({'url': str(room.id), 'guest_game_token': room.white_player}))
+            await user_two.send(json.dumps({'url': str(room.id), 'guest_game_token': room.black_player}))
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -47,7 +47,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.room_group_name = f'game_{self.room_name}'
 
             if await self.check_room_exists(self.room_name):
-                self.room = await database_sync_to_async(Room.objects.get)(hashed_url=self.room_name)
+                self.room = await database_sync_to_async(GuestGameRoom.objects.get)(id=self.room_name)
 
                 await self.channel_layer.group_add(
                     self.room_group_name,
@@ -61,8 +61,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.close()
 
     @sync_to_async
-    def check_room_exists(self, hashed_url):
-        return Room.objects.filter(hashed_url=hashed_url).exists()
+    def check_room_exists(self, id):
+        return GuestGameRoom.objects.filter(id=id).exists()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(

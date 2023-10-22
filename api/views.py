@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
-from .serializers import RegisterSerializer, PlayOnlineSerializer
+from .serializers import RegisterSerializer, UserGameRoomSerializer, GuestGameRoomSerializer, ComputerGameRoomSerializer
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,16 +8,60 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import timedelta
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.contrib.auth import authenticate
-from .models import Room
+from .models import UserGameRoom, GuestGameRoom, ComputerGameRoom
+from rest_framework.permissions import IsAuthenticated
 
 
-class PlayOnlineView(RetrieveAPIView):
-    lookup_field = 'hashed_url'
+class UserGameRoomView(RetrieveAPIView):
     lookup_url_kwarg = 'id'
-    serializer_class = PlayOnlineSerializer
+    serializer_class = UserGameRoomSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Room.objects.all()
+        return UserGameRoom.objects.all()
+
+    def perform_authentication(self, request):
+        user = request.user
+        game_object = self.get_object()
+
+        if game_object.white_player == user or game_object.black_player == user:
+            return super().perform_authentication(request)
+        else:
+            return self.permission_denied(request, 'You are not authorized to access this game.')
+
+
+class GuestGameRoomView(RetrieveAPIView):
+    lookup_url_kwarg = 'id'
+    serializer_class = GuestGameRoomSerializer
+
+    def get_queryset(self):
+        return GuestGameRoom.objects.all()
+
+    def perform_authentication(self, request):
+        game_token = request.COOKIES.get('guest_game_token')
+        game_object = self.get_object()
+
+        if game_object.white_player == game_token or game_object.black_player == game_token:
+            return super().perform_authentication(request)
+        else:
+            return self.permission_denied(request, 'Invalid game token provided.')
+
+
+class ComputerGameRoomView(RetrieveAPIView):
+    lookup_url_kwarg = 'id'
+    serializer_class = ComputerGameRoomSerializer
+
+    def get_queryset(self):
+        return ComputerGameRoom.objects.all()
+
+    def perform_authentication(self, request):
+        game_token = request.COOKIES.get('computer_game_token')
+        game_object = self.get_object()
+
+        if game_object.white_player == game_token or game_object.black_player == game_token:
+            return super().perform_authentication(request)
+        else:
+            return self.permission_denied(request, 'Invalid game token provided.')
 
 
 class TokenRefreshView(TokenRefreshView):

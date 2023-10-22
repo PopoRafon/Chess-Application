@@ -21,12 +21,12 @@ export default function PlayOnline({ isLoaded }) {
     ];
 
     useEffect(() => {
-        fetch(`/api/v1/play/online/${gameId}`, {
+        fetch(`/api/v1/guest/game/room/${gameId}`, {
             method: 'GET'
         })
         .then((response) => response.json())
         .then((data) => {
-            if (data.players) {
+            if (data.game_state) {
                 setIsSocketLoaded(true);
                 socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${gameId}/`);
             } else {

@@ -22,8 +22,10 @@ export default function Sidebar({ setMatchmaking }) {
 
             socket.current.onmessage = (message) => {
                 const data = JSON.parse(message.data);
+                const { url, guest_game_token } = data;
 
-                if (data.url) {
+                if (url) {
+                    document.cookie = `guest_game_token=${guest_game_token}`;
                     navigate(`online/${data.url}`);
                 }
             }

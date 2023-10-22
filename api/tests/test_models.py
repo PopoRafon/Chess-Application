@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from api.models import Profile, Room
+from api.models import Profile, GuestGameRoom, ComputerGameRoom
 
 
 class TestProfileModel(TestCase):
@@ -11,9 +11,16 @@ class TestProfileModel(TestCase):
         self.assertEqual(Profile.objects.get(id=1).user, user)
 
 
-class TestRoomModel(TestCase):
-    def test_hashed_url_created_post_room_creation(self):
-        room = Room.objects.create()
+class TestGuestGameRoomModel(TestCase):
+    def test_room_correct_setup_post_guest_game_room_creation(self):
+        room = GuestGameRoom.objects.create()
 
-        self.assertTrue(room.hashed_url)
-        self.assertEqual(len(room.hashed_url), 64)
+        self.assertTrue(room.white_player)
+        self.assertTrue(room.black_player)
+
+
+class TestComputerGameRoomModel(TestCase):
+    def test_room_correct_setup_post_computer_game_room_creation(self):
+        room = ComputerGameRoom.objects.create()
+
+        self.assertTrue(room.white_player)

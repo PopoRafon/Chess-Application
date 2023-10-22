@@ -2,7 +2,7 @@ from django.test import TestCase
 from channels.testing import WebsocketCommunicator
 from channels.routing import URLRouter
 from api.routing import websocket_urlpatterns
-from api.models import Room
+from api.models import GuestGameRoom
 
 
 class TestMatchmakingConsumer(TestCase):
@@ -20,12 +20,12 @@ class TestMatchmakingConsumer(TestCase):
 
 class TestGameConsumer(TestCase):
     def setUp(self):
-        self.room = Room.objects.create()
+        self.room = GuestGameRoom.objects.create()
 
     async def test_game_consumer_connection_valid_room(self):
         communicator = WebsocketCommunicator(
             URLRouter(websocket_urlpatterns),
-            f'ws/game/{self.room.hashed_url}/'
+            f'ws/game/{self.room.id}/'
         )
         connected, _ = await communicator.connect()
 
