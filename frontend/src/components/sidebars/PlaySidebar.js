@@ -1,8 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useRef, useEffect } from 'react';
+import { useUser } from '../../contexts/UserContext';
+import Cookies from 'js-cookie';
 
 export default function Sidebar({ setMatchmaking }) {
     const navigate = useNavigate();
+    const { user } = useUser();
     const socket = useRef();
 
     useEffect(() => {
@@ -25,7 +28,10 @@ export default function Sidebar({ setMatchmaking }) {
                 const { url, guest_game_token } = data;
 
                 if (url) {
-                    document.cookie = `guest_game_token=${guest_game_token}`;
+                    if (!user.isLoggedIn) {
+                        Cookies.set('guest_game_token', guest_game_token);
+                    }
+
                     navigate(`online/${data.url}`);
                 }
             }

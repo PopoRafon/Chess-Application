@@ -1,45 +1,80 @@
 from django.test import TestCase
-from channels.testing import WebsocketCommunicator
-from channels.routing import URLRouter
-from api.routing import websocket_urlpatterns
+from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
+from api.utils import websocket_communicator
 from api.models import GuestGameRoom
 
 
 class TestMatchmakingConsumer(TestCase):
-    async def test_matchmaking_consumer_connection(self):
-        communicator = WebsocketCommunicator(
-            URLRouter(websocket_urlpatterns),
-            'ws/matchmaking/'
-        )
-        connected, _ = await communicator.connect()
+    def setUp(self):
+        self.first_user = User.objects.create(username='first user')
+        self.second_user = User.objects.create(username='second user')
+        self.first_user_token = RefreshToken.for_user(self.first_user).access_token
+        self.second_user_token = RefreshToken.for_user(self.second_user).access_token
+        self.headers = lambda token: [(b'cookie', f'access={token}'.encode())]
+        self.url = 'ws/matchmaking/'
 
-        self.assertTrue(connected)
+    async def test_authenticated_users_receive_game_url(self):
+        first_comm = await websocket_communicator(self.url, self.headers(self.first_user_token))
+        second_comm = await websocket_communicator(self.url, self.headers(self.second_user_token))
 
-        await communicator.disconnect()
+        first_comm_data = await first_comm.receive_json_from()
+        second_comm_data = await second_comm.receive_json_from()
+
+        self.assertEqual(len(first_comm_data['url']), 36)
+        self.assertEqual(len(second_comm_data['url']), 36)
+
+        self.assertEqual(first_comm_data['url'], second_comm_data['url'])
+
+        await first_comm.disconnect()
+        await second_comm.disconnect()
+
+    async def test_unauthenticated_users_receive_game_url_with_game_token(self):
+        first_comm = await websocket_communicator(self.url)
+        second_comm = await websocket_communicator(self.url)
+
+        first_comm_data = await first_comm.receive_json_from()
+        second_comm_data = await second_comm.receive_json_from()
+
+        self.assertEqual(len(first_comm_data['url']), 36)
+        self.assertEqual(len(second_comm_data['url']), 36)
+
+        self.assertEqual(first_comm_data['url'], second_comm_data['url'])
+
+        self.assertEqual(len(second_comm_data['guest_game_token']), 64)
+        self.assertEqual(len(second_comm_data['guest_game_token']), 64)
+
+        self.assertNotEqual(first_comm_data['guest_game_token'], second_comm_data['guest_game_token'])
+
+        await first_comm.disconnect()
+        await second_comm.disconnect()
+
+    async def test_the_same_authenticated_users_receive_nothing(self):
+        first_comm = await websocket_communicator(self.url, self.headers(self.first_user_token))
+        second_comm = await websocket_communicator(self.url, self.headers(self.first_user_token))
+
+        self.assertTrue(await first_comm.receive_nothing())
+        self.assertTrue(await second_comm.receive_nothing())
+
+        await first_comm.disconnect()
+        await second_comm.disconnect()
+
+    async def test_authenticated_user_with_unauthenticated_user_receive_nothing(self):
+        first_comm = await websocket_communicator(self.url, self.headers(self.first_user_token))
+        second_comm = await websocket_communicator(self.url)
+
+        self.assertTrue(await first_comm.receive_nothing())
+        self.assertTrue(await second_comm.receive_nothing())
+
+        await first_comm.disconnect()
+        await second_comm.disconnect()
 
 
 class TestGameConsumer(TestCase):
     def setUp(self):
         self.room = GuestGameRoom.objects.create()
+        self.url = f'ws/game/{self.room.id}/'
 
-    async def test_game_consumer_connection_valid_room(self):
-        communicator = WebsocketCommunicator(
-            URLRouter(websocket_urlpatterns),
-            f'ws/game/{self.room.id}/'
-        )
-        connected, _ = await communicator.connect()
-
-        self.assertTrue(connected)
-
-        await communicator.disconnect()
-
-    async def test_game_consumer_connection_invalid_room(self):
-        communicator = WebsocketCommunicator(
-            URLRouter(websocket_urlpatterns),
-            'ws/game/1/'
-        )
-        connected, _ = await communicator.connect()
-
-        self.assertFalse(connected)
-
-        await communicator.disconnect()
+    async def test_connection_invalid_token(self):
+        with self.assertRaises(Exception):
+            await websocket_communicator(self.url, [(b'cookie', b'guest_game_token=invalid_token')])

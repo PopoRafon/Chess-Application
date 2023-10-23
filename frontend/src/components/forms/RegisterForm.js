@@ -81,13 +81,15 @@ export default function RegisterForm() {
             })
             .then((data) => {
                 if (data.success) {
-                    localStorage.setItem('access', data.success.access);
                     getUserData(setUser);
+
                     refreshAccessToken();
+
                     setAlert({
                         show: true,
-                        message: 'Your account has been successfully created!'
+                        message: data.success
                     });
+
                     navigate('/');
                 } else {
                     setErrors(data);

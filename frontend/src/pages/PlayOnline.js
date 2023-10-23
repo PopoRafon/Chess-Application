@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ValidMovesProvider } from '../contexts/ValidMovesContext';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { setupUserGame, setupGuestGame } from '../utils/GameRoom';
 
 export default function PlayOnline({ isLoaded }) {
     const { user } = useUser();
@@ -21,22 +22,12 @@ export default function PlayOnline({ isLoaded }) {
     ];
 
     useEffect(() => {
-        fetch(`/api/v1/guest/game/room/${gameId}`, {
-            method: 'GET'
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.game_state) {
-                setIsSocketLoaded(true);
-                socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${gameId}/`);
-            } else {
-                navigate('/');
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    }, [navigate, gameId]);
+        if (user.isLoggedIn) {
+            setupUserGame(gameId, socket, navigate, setIsSocketLoaded);
+        } else {
+            setupGuestGame(gameId, socket, navigate, setIsSocketLoaded);
+        }
+    }, [navigate, gameId, user.isLoggedIn]);
 
     useEffect(() => {
         if (socket.current) {

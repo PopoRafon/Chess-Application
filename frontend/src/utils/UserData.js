@@ -1,5 +1,7 @@
+import Cookie from 'js-cookie';
+
 export default async function getUserData(setUser) {
-    const token = localStorage.getItem('access');
+    const token = Cookie.get('access');
 
     if (token) {
         await fetch('/api/v1/user/data', {

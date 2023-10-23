@@ -59,13 +59,15 @@ export default function LoginForm() {
             })
             .then((data) => {
                 if (data.success) {
-                    localStorage.setItem('access', data.success.access);
                     getUserData(setUser);
+
                     refreshAccessToken();
+
                     setAlert({
                         show: true,
-                        message: 'You have been successfully logged in to your account!'
+                        message: data.success
                     });
+
                     navigate('/');
                 } else {
                     setErrors(data);

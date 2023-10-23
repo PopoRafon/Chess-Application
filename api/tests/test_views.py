@@ -139,12 +139,11 @@ class TestRegisterView(APITestCase):
             'password2': 'password',
             'checkbox': True
         })
-        response_json = response.json()
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(User.objects.count(), 1)
-        self.assertTrue(response_json['success']['access'])
         self.assertIn('refresh', response.cookies)
+        self.assertIn('access', response.cookies)
 
     def test_register_view_POST_invalid_data(self):
         response = self.client.post(self.url, data={
@@ -174,8 +173,8 @@ class TestLoginView(APITestCase):
         response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response_json['success']['access'])
         self.assertIn('refresh', response.cookies)
+        self.assertIn('access', response.cookies)
 
     def test_login_view_POST_invalid_data(self):
         response = self.client.post(self.url, data={

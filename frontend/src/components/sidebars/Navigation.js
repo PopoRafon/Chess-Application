@@ -33,8 +33,8 @@ export default function Navigation() {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
-                localStorage.removeItem('access');
                 setUser({ isLoggedIn: false });
+
                 setAlert({
                     show: true,
                     message: 'You have been successfuly logged out of your account!'

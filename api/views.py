@@ -102,17 +102,19 @@ class RegisterView(APIView):
 
             refresh = RefreshToken.for_user(user)
 
-            response = Response({
-                'success': {
-                    'access': str(refresh.access_token)
-                }
-            }, status=status.HTTP_201_CREATED)
+            response = Response({'success': 'Your account has been successfully created!'}, status=status.HTTP_201_CREATED)
 
             response.set_cookie(
                 key='refresh',
                 value=str(refresh),
                 max_age=timedelta(days=7),
                 httponly=True
+            )
+
+            response.set_cookie(
+                key='access',
+                value=str(refresh.access_token),
+                max_age=timedelta(minutes=10)
             )
 
             return response
@@ -130,17 +132,19 @@ class LoginView(APIView):
         if user:
             refresh = RefreshToken.for_user(user)
 
-            response = Response({
-                'success': {
-                    'access': str(refresh.access_token)
-                }
-            }, status=status.HTTP_200_OK)
+            response = Response({'success': 'You have been successfully logged in to your account!'}, status=status.HTTP_200_OK)
 
             response.set_cookie(
                 key='refresh',
                 value=str(refresh),
                 max_age=timedelta(days=7),
                 httponly=True
+            )
+
+            response.set_cookie(
+                key='access',
+                value=str(refresh.access_token),
+                max_age=timedelta(minutes=10)
             )
 
             return response
@@ -158,5 +162,6 @@ class LogoutView(APIView):
         }, status=status.HTTP_200_OK)
 
         response.delete_cookie('refresh')
+        response.delete_cookie('access')
 
         return response

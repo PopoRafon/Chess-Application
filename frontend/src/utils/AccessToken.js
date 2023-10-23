@@ -1,3 +1,5 @@
+import Cookie from 'js-cookie';
+
 let tokenRefresh;
 
 async function createAccessToken() {
@@ -7,10 +9,10 @@ async function createAccessToken() {
     .then((response) => response.json())
     .then((data) => {
         if (data.access) {
-            localStorage.setItem('access', data.access);
+            Cookie.set('access', data.access);
             refreshAccessToken();
         } else {
-            localStorage.removeItem('access');
+            Cookie.remove('access');
         }
     })
     .catch((err) => {
@@ -20,7 +22,7 @@ async function createAccessToken() {
 
 function refreshAccessToken() {
     clearInterval(tokenRefresh);
-    const token = localStorage.getItem('access');
+    const token = Cookie.get('access');
 
     if (token) {
         tokenRefresh = setInterval(() => {
@@ -30,7 +32,7 @@ function refreshAccessToken() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.access) {
-                    localStorage.setItem('access', data.access);
+                    Cookie.set('access', data.access);
                 } else {
                     clearInterval(tokenRefresh);
                 }
