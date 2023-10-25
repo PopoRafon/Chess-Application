@@ -1,6 +1,6 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from django.contrib.auth.models import User
 from .models import UserGameRoom, GuestGameRoom, ComputerGameRoom
 
 
@@ -44,12 +44,14 @@ class RegisterSerializer(serializers.Serializer):
 
 
 class UserGameRoomSerializer(serializers.ModelSerializer):
-    white_player_username = serializers.CharField(source='white_player.username')
-    black_player_username = serializers.CharField(source='black_player.username')
+    white_username = serializers.CharField(source='white_player.username')
+    black_username = serializers.CharField(source='black_player.username')
+    white_rating = serializers.IntegerField(source='white_player.profile.rating')
+    black_rating = serializers.IntegerField(source='black_player.profile.rating')
 
     class Meta:
         model = UserGameRoom
-        fields = ['white_player_username', 'black_player_username', 'white_timer', 'black_timer', 'game_state', 'turn', 'result']
+        fields = ['white_username', 'black_username', 'white_timer', 'black_timer', 'white_rating', 'black_rating', 'game_state', 'turn', 'result']
 
 
 class GuestGameRoomSerializer(serializers.ModelSerializer):
@@ -58,7 +60,13 @@ class GuestGameRoomSerializer(serializers.ModelSerializer):
         fields = ['white_timer', 'black_timer', 'game_state', 'turn', 'result']
 
 
-class ComputerGameRoomSerializer(serializers.ModelSerializer):
+class ComputerGameRoomRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComputerGameRoom
         fields = ['game_state', 'turn', 'result']
+
+
+class ComputerGameRoomCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComputerGameRoom
+        fields = ['id', 'player']

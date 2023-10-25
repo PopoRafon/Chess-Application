@@ -1,5 +1,5 @@
-import { useGame } from '../../contexts/GameContext';
 import { useEffect, useRef, useState } from 'react';
+import { useGame } from '../../contexts/GameContext';
 import { useValidMoves } from '../../contexts/ValidMovesContext';
 
 function PrevMovesButtons({ changePositions, currentMoveIndex }) {

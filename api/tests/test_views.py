@@ -1,8 +1,8 @@
-from rest_framework.test import APITestCase
-from django.urls import reverse
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
 from http.cookies import SimpleCookie
+from django.contrib.auth.models import User
+from django.urls import reverse
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.test import APITestCase
 from api.models import UserGameRoom, GuestGameRoom, ComputerGameRoom
 
 
@@ -21,7 +21,7 @@ class TestUserGameRoomView(APITestCase):
         response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response_json), 7)
+        self.assertEqual(len(response_json), 9)
 
     def test_user_game_room_GET_authenticated_user(self):
         third_user = User.objects.create(username='third user')
@@ -60,13 +60,13 @@ class TestGuestGameRoomView(APITestCase):
         self.assertEqual(response.status_code, 401)
 
 
-class TestComputerGameRoomView(APITestCase):
+class TestComputerGameRoomRetrieveView(APITestCase):
     def setUp(self):
         self.room = ComputerGameRoom.objects.create()
-        self.url = reverse('computer-game-room', kwargs={'id': self.room.id})
+        self.url = reverse('computer-game-room-retrieve', kwargs={'id': self.room.id})
 
     def test_computer_game_room_GET_valid_data(self):
-        self.client.cookies = SimpleCookie({'computer_game_token': self.room.white_player})
+        self.client.cookies = SimpleCookie({'computer_game_token': self.room.player})
         response = self.client.get(self.url)
         response_json = response.json()
 
@@ -78,6 +78,17 @@ class TestComputerGameRoomView(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 401)
+
+
+class TestComputerGameRoomCreateView(APITestCase):
+    def test_computer_game_room_create_POST(self):
+        url = reverse('computer-game-room-create')
+        response = self.client.post(url)
+        response_json = response.json()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(response_json), 2)
+        self.assertEqual(ComputerGameRoom.objects.count(), 1)
 
 
 class TestTokenRefreshView(APITestCase):

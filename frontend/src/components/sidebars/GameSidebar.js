@@ -1,12 +1,19 @@
+import { useEffect, useState } from 'react';
 import { usePoints } from '../../contexts/PointsContext';
 import { useGame } from '../../contexts/GameContext';
-import { useEffect, useState } from 'react';
+import { useUsers } from '../../contexts/UsersContext';
 import checkGameResult from '../../helpers/GameResult';
 
-export default function GameSidebar({ player, user, rating }) {
+function convertToSeconds(timer) {
+    const [hours, minutes, seconds] = timer.split(':').map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
+export default function GameSidebar({ player }) {
     const { game, dispatchGame } = useGame();
+    const { users } = useUsers();
     const { points } = usePoints();
-    const [timer, setTimer] = useState(600);
+    const [timer, setTimer] = useState(users[player].timer !== undefined && convertToSeconds(users[player].timer));
     const minutes = Math.floor(timer / 60);
     const seconds = timer % 60;
     const formattedTimer = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -14,7 +21,7 @@ export default function GameSidebar({ player, user, rating }) {
     useEffect(() => {
         if (!game.result && game.prevMoves.length !== 0) {
             let timerTimeout;
-    
+
             if (timer === 0) {
                 const gameResult = checkGameResult(game.positions, player);
 
@@ -27,7 +34,7 @@ export default function GameSidebar({ player, user, rating }) {
                     setTimer(prevTimer => prevTimer - 1);
                 }, 1000);
             }
-    
+
             return () => {
                 clearTimeout(timerTimeout);
             };
@@ -43,17 +50,19 @@ export default function GameSidebar({ player, user, rating }) {
                 alt="Avatar"
             />
             <div className="player-information">
-                <span>{user}</span>
-                {rating && (
-                    <span className="game-user-rating">({rating})</span>
+                <span>{users[player].username}</span>
+                {users[player].rating && (
+                    <span className="game-user-rating">({users[player].rating})</span>
                 )}
                 <div className="game-points">Points: +{points[player] ? points[player] : '0'}</div>
             </div>
-            <div
-                className={`game-timer ${(game.turn === player && !game.result) ? 'game-timer-on' : ''}`}
-            >
-                {formattedTimer}
-            </div>
+            {users[player].timer !== undefined && (
+                <div
+                    className={`game-timer ${(game.turn === player && !game.result) ? 'game-timer-on' : ''}`}
+                >
+                    {formattedTimer}
+                </div>
+            )}
         </div>
     );
 }

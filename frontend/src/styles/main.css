@@ -1,77 +1,3 @@
-.nav {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  text-align: center;
-  background-color: #2c2c2c;
-  border-right: 1px solid;
-  border-color: #363636;
-  height: 100vh;
-  width: 20vh;
-  box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.15);
-}
-.nav .nav-logo {
-  display: flex;
-  width: 100%;
-  height: 5vh;
-  justify-content: center;
-  align-items: center;
-}
-.nav .nav-link {
-  display: flex;
-  width: 100%;
-  height: 4vh;
-  justify-content: center;
-  align-items: center;
-}
-.nav .nav-link:hover {
-  background-color: #262626;
-}
-.nav .nav-footer {
-  display: flex;
-  border-top: 1px solid;
-  border-color: #363636;
-  position: absolute;
-  align-items: center;
-  bottom: 0px;
-  height: 5%;
-  width: 100%;
-  overflow: hidden;
-}
-.nav .nav-footer .nav-footer-user {
-  display: flex;
-  position: relative;
-  text-align: left;
-  align-items: center;
-  width: calc(100% - 25px - 15px);
-  margin-left: 10px;
-  overflow: hidden;
-}
-.nav .nav-footer .nav-footer-user .nav-footer-avatar {
-  width: 25px;
-  height: 25px;
-  margin-right: 5px;
-}
-.nav .nav-footer .nav-footer-user .nav-footer-username {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-}
-.nav .nav-footer .nav-footer-logout-button {
-  cursor: pointer;
-  position: absolute;
-  background-color: transparent;
-  border: 0px;
-  background-image: url("../../public/static/images/icons/logout_icon.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 20px;
-  height: 20px;
-  background-size: 20px;
-  right: 5px;
-}
-
 .error-page {
   display: flex;
   justify-content: center;
@@ -643,12 +569,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 85px;
+  height: 85px;
 }
 .chess-board .game-result-alert .game-result-body .game-result-user .game-result-avatar {
   width: 60px;
   height: 60px;
-  margin-left: 10px;
-  margin-right: 10px;
   border-radius: 100%;
 }
 .chess-board .game-result-alert .game-result-body .game-result-user .game-result-winner {
@@ -663,6 +591,13 @@
     outline: 2px solid;
     outline-color: rgb(19, 160, 19);
   }
+}
+.chess-board .game-result-alert .game-result-body .game-result-user .game-result-username {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  width: 100%;
 }
 .chess-board .game-result-alert .game-result-footer {
   display: flex;
@@ -1038,6 +973,80 @@
   99% {
     content: "...";
   }
+}
+
+.nav {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  text-align: center;
+  background-color: #2c2c2c;
+  border-right: 1px solid;
+  border-color: #363636;
+  height: 100vh;
+  width: 20vh;
+  box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.15);
+}
+.nav .nav-logo {
+  display: flex;
+  width: 100%;
+  height: 5vh;
+  justify-content: center;
+  align-items: center;
+}
+.nav .nav-link {
+  display: flex;
+  width: 100%;
+  height: 4vh;
+  justify-content: center;
+  align-items: center;
+}
+.nav .nav-link:hover {
+  background-color: #262626;
+}
+.nav .nav-footer {
+  display: flex;
+  border-top: 1px solid;
+  border-color: #363636;
+  position: absolute;
+  align-items: center;
+  bottom: 0px;
+  height: 5%;
+  width: 100%;
+  overflow: hidden;
+}
+.nav .nav-footer .nav-footer-user {
+  display: flex;
+  position: relative;
+  text-align: left;
+  align-items: center;
+  width: calc(100% - 25px - 15px);
+  margin-left: 10px;
+  overflow: hidden;
+}
+.nav .nav-footer .nav-footer-user .nav-footer-avatar {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+.nav .nav-footer .nav-footer-user .nav-footer-username {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+.nav .nav-footer .nav-footer-logout-button {
+  cursor: pointer;
+  position: absolute;
+  background-color: transparent;
+  border: 0px;
+  background-image: url("../../public/static/images/icons/logout_icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 20px;
+  height: 20px;
+  background-size: 20px;
+  right: 5px;
 }
 
 .form-page {

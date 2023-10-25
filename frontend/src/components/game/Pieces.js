@@ -1,9 +1,9 @@
 import { useRef } from 'react';
-import Piece from './Piece';
 import { useGame } from '../../contexts/GameContext';
-import calcPosition from '../../helpers/CalculatePosition';
 import { useValidMoves } from '../../contexts/ValidMovesContext';
 import { usePoints } from '../../contexts/PointsContext';
+import Piece from './Piece';
+import calcPosition from '../../helpers/CalculatePosition';
 import playSound from './Sounds';
 
 export default function Pieces({ setPromotionMenu, availableMoves }) {

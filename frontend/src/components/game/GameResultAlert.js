@@ -1,4 +1,10 @@
-export default function GameResultAlert({ users, result, setShowResultAlert }) {
+import { useUsers } from '../../contexts/UsersContext';
+import { useGame } from '../../contexts/GameContext';
+
+export default function GameResultAlert({ setShowResultAlert }) {
+    const { users } = useUsers();
+    const { game } = useGame();
+
     function handleClick() {
         setShowResultAlert(false);
     }
@@ -10,24 +16,24 @@ export default function GameResultAlert({ users, result, setShowResultAlert }) {
                 onClick={handleClick}
             >
             </button>
-            <span className="game-result-header">{result}</span>
+            <span className="game-result-header">{game.result}</span>
             <div className="game-result-body">
                 <div className="game-result-user">
                     <img
                         src='/static/images/avatar.png'
-                        className={`game-result-avatar ${result.includes('Black') ? 'game-result-winner' : ''}`}
+                        className={`game-result-avatar ${game.result.includes('Black') ? 'game-result-winner' : ''}`}
                         alt="Avatar"
                     />
-                    <span>{users[0].username}</span>
+                    <span className="game-result-username">{users.b.username}</span>
                 </div>
                 VS
                 <div className="game-result-user">
                     <img
                         src='/static/images/avatar.png'
-                        className={`game-result-avatar ${result.includes('White') ? 'game-result-winner' : ''}`}
+                        className={`game-result-avatar ${game.result.includes('White') ? 'game-result-winner' : ''}`}
                         alt="Avatar"
                     />
-                    <span>{users[1].username}</span>
+                    <span className="game-result-username">{users.w.username}</span>
                 </div>
             </div>
             <div className="game-result-footer">

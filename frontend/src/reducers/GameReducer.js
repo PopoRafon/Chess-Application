@@ -1,5 +1,12 @@
 export default function gameReducer(state, action) {
     switch (action.type) {
+        case 'GAME_START':
+            return {
+                ...state,
+                positions: action.positions,
+                turn: action.turn,
+                result: action.result
+            }
         case 'NEXT_ROUND':
             const newTurn = state.turn === 'w' ? 'b' : 'w';
             const newCastlingDirections = action.castlingDirections ? action.castlingDirections : {};

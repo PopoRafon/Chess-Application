@@ -1,9 +1,9 @@
 import { useRef, useEffect } from 'react';
-import Pieces from './Pieces';
 import { useGame } from '../../contexts/GameContext';
-import updateSquares from '../../helpers/SquaresUpdate';
 import checkThreefoldRepetition from '../../helpers/ThreefoldRepetition';
 import updateAvailableMoves from '../../helpers/AvailableMoves';
+import updateSquares from '../../helpers/SquaresUpdate';
+import Pieces from './Pieces';
 
 export default function Arbiter({ setPromotionMenu }) {
     const { game, dispatchGame } = useGame();

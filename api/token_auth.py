@@ -1,11 +1,11 @@
+from jwt import decode
+from django.contrib.auth.models import User, AnonymousUser
+from django.conf import settings
+from rest_framework_simplejwt.tokens import UntypedToken
 from channels.middleware import BaseMiddleware
 from channels.consumer import database_sync_to_async
-from django.contrib.auth.models import User, AnonymousUser
-from rest_framework_simplejwt.tokens import UntypedToken
 from channels.auth import AuthMiddlewareStack
-from http.cookies import SimpleCookie
-from django.conf import settings
-from jwt import decode
+from api.utils import get_cookie
 
 @database_sync_to_async
 def get_user(validated_token):
@@ -22,7 +22,7 @@ class JWTAuthMiddleware(BaseMiddleware):
 
     async def __call__(self, scope, receive, send):
         try:
-            token = SimpleCookie(dict(scope['headers']).get(b'cookie').decode('utf8')).get('access').value
+            token = get_cookie(scope, 'access')
 
             UntypedToken(token)
         except Exception:

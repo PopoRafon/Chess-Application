@@ -1,19 +1,8 @@
+import uuid
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import timedelta
-import uuid
-
-def default_game_state():
-    return str([
-        ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
-        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
-        ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
-    ])
+from .utils import default_game_state
 
 
 class Profile(models.Model):
@@ -51,9 +40,7 @@ class GuestGameRoom(models.Model):
 
 class ComputerGameRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    white_player = models.CharField(max_length=64, blank=True)
-    black_player = models.CharField(max_length=64, blank=True)
+    player = models.CharField(max_length=64, blank=True)
     game_state = models.JSONField(blank=True, default=default_game_state)
     turn = models.CharField(max_length=1, blank=True, default='w')
     result = models.CharField(max_length=10, blank=True)
-    game_started = models.BooleanField(default=False)

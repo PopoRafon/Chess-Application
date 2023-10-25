@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
 import { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import Cookies from 'js-cookie';
 
@@ -17,7 +17,7 @@ export default function Sidebar({ setMatchmaking }) {
         }
     }, []);
 
-    function handleClick() {
+    function handleMatchmaking() {
         if (!socket.current) {
             socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/matchmaking/`);
 
@@ -38,12 +38,29 @@ export default function Sidebar({ setMatchmaking }) {
         }
     }
 
+    function handleGameCreation() {
+        fetch('/api/v1/computer/game/room', {
+            method: 'POST'
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.id) {
+                Cookies.set('computer_game_token', data.player);
+                Cookies.set('computer_game_url', data.id);
+                navigate('/play/computer');
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
     return (
         <div className="play-page-sidebar">
             <ul style={{width: '100%'}}>
                 <li>
                     <button
-                        onClick={handleClick}
+                        onClick={handleMatchmaking}
                         className="sidebar-play-button"
                     >
                         <span className="sidebar-play-button-title">Play Online</span>
@@ -52,7 +69,7 @@ export default function Sidebar({ setMatchmaking }) {
                 </li>
                 <li>
                     <button
-                        onClick={() => navigate('/play/computer')}
+                        onClick={handleGameCreation}
                         className="sidebar-play-button"
                     >
                         <span className="sidebar-play-button-title">Computer</span>

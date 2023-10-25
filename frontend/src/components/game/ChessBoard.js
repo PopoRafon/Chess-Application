@@ -1,5 +1,5 @@
-import { useGame } from '../../contexts/GameContext';
 import { useEffect, useState } from 'react';
+import { useGame } from '../../contexts/GameContext';
 import GameResultAlert from './GameResultAlert';
 import Arbiter from './Arbiter';
 
@@ -48,7 +48,7 @@ function DisableChessBoard() {
     );
 }
 
-export default function ChessBoard({ users, disableBoard, setDisableBoard, setPromotionMenu }) {
+export default function ChessBoard({ disableBoard, setDisableBoard, setPromotionMenu }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
     const { game } = useGame();
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -81,8 +81,6 @@ export default function ChessBoard({ users, disableBoard, setDisableBoard, setPr
             )}
             {showResultAlert && (
                 <GameResultAlert
-                    users={users}
-                    result={game.result}
                     setShowResultAlert={setShowResultAlert}
                 />
             )}

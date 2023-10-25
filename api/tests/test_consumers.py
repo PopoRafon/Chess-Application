@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from api.utils import websocket_communicator
-from api.models import GuestGameRoom
+from api.testing import websocket_communicator
+from api.models import UserGameRoom, GuestGameRoom, ComputerGameRoom
 
 
 class TestMatchmakingConsumer(TestCase):
@@ -70,11 +70,53 @@ class TestMatchmakingConsumer(TestCase):
         await second_comm.disconnect()
 
 
-class TestGameConsumer(TestCase):
+class TestUserGameConsumer(TestCase):
+    def setUp(self):
+        self.first_user = User.objects.create(username='first user')
+        self.second_user = User.objects.create(username='second user')
+        self.first_user_token = RefreshToken.for_user(self.first_user)
+        self.second_user_token = RefreshToken.for_user(self.second_user)
+        self.room = UserGameRoom.objects.create(white_player=self.first_user, black_player=self.second_user)
+        self.url = f'ws/user/game/{self.room.id}/'
+        self.headers = [(b'cookie', f'access={self.first_user_token}'.encode())]
+
+    async def test_user_game_connection_valid_token(self):
+        communicator = await websocket_communicator(self.url, self.headers)
+
+        await communicator.disconnect()
+
+    async def test_user_game_connection_invalid_token(self):
+        with self.assertRaises(Exception):
+            await websocket_communicator(self.url, [(b'cookie', b'access=invalid_token')])
+
+
+class TestGuestGameConsumer(TestCase):
     def setUp(self):
         self.room = GuestGameRoom.objects.create()
-        self.url = f'ws/game/{self.room.id}/'
+        self.url = f'ws/guest/game/{self.room.id}/'
+        self.headers = [(b'cookie', f'guest_game_token={self.room.white_player}'.encode())]
 
-    async def test_connection_invalid_token(self):
+    async def test_guest_game_connection_valid_token(self):
+        communicator = await websocket_communicator(self.url, self.headers)
+
+        await communicator.disconnect()
+
+    async def test_guest_game_connection_invalid_token(self):
         with self.assertRaises(Exception):
             await websocket_communicator(self.url, [(b'cookie', b'guest_game_token=invalid_token')])
+
+
+class TestComputerGameConsumer(TestCase):
+    def setUp(self):
+        self.room = ComputerGameRoom.objects.create()
+        self.url = f'ws/computer/game/{self.room.id}/'
+        self.headers = [(b'cookie', f'computer_game_token={self.room.player}'.encode())]
+
+    async def test_computer_game_connection_valid_token(self):
+        communicator = await websocket_communicator(self.url, self.headers)
+
+        await communicator.disconnect()
+
+    async def test_computer_game_connection_invalid_token(self):
+        with self.assertRaises(Exception):
+            await websocket_communicator(self.url, [(b'cookie', b'computer_game_token=invalid_token')])

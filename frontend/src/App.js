@@ -1,17 +1,17 @@
 import './styles/main.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useUser } from './contexts/UserContext';
-import getUserData from './utils/UserData';
 import { createAccessToken } from './utils/AccessToken';
 import { AlertProvider } from './contexts/AlertContext';
+import getUserData from './utils/UserData';
 import Alert from './components/Alert';
 import Page404 from './pages/Page404';
 import Home from './pages/Home';
-import Play from './pages/Play';
-import PlayOnline from './pages/PlayOnline';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Play from './pages/Play';
+import PlayOnline from './pages/PlayOnline';
 import PlayComputer from './pages/PlayComputer';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchData = async() => {
+    const fetchData = async () => {
       await createAccessToken();
       await getUserData(setUser);
 

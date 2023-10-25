@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
-import getUserData from '../../utils/UserData';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { FormInput, FormCheckbox } from './Form';
 import { useAlert } from '../../contexts/AlertContext';
+import getUserData from '../../utils/UserData';
 
 export default function RegisterForm() {
     const { setUser } = useUser();

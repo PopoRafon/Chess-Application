@@ -1,19 +1,15 @@
+import { useState } from 'react';
+import { UsersProvider } from '../contexts/UsersContext';
+import { GameProvider } from '../contexts/GameContext';
+import { ValidMovesProvider } from '../contexts/ValidMovesContext';
+import { setupComputerGame } from '../utils/GameRoom';
 import Sidebar from '../components/sidebars/PlayOnlineSidebar';
 import Game from '../components/game/Game';
 import Navigation from '../components/sidebars/Navigation';
-import { GameProvider } from '../contexts/GameContext';
-import { useState } from 'react';
-import { ValidMovesProvider } from '../contexts/ValidMovesContext';
-import { useUser } from '../contexts/UserContext';
 
 export default function PlayComputer({ isLoaded }) {
     const [disableBoard, setDisableBoard] = useState(false);
     const [promotionMenu, setPromotionMenu] = useState({ show: false });
-    const { user } = useUser();
-    const users = [
-        {username: 'Bot', rating: 800},
-        user.isLoggedIn ? {username: user.username, rating: user.rating} : {username: 'Guest', rating: ''}
-    ];
 
     return isLoaded && (
         <>
@@ -21,13 +17,16 @@ export default function PlayComputer({ isLoaded }) {
             <div className="play-page">
                 <GameProvider>
                     <ValidMovesProvider>
-                        <Game
-                            users={users}
-                            disableBoard={disableBoard}
-                            setDisableBoard={setDisableBoard}
-                            promotionMenu={promotionMenu}
-                            setPromotionMenu={setPromotionMenu}
-                        />
+                        <UsersProvider>
+                            <Game
+                                gameSetup={setupComputerGame}
+                                isLoaded={isLoaded}
+                                disableBoard={disableBoard}
+                                setDisableBoard={setDisableBoard}
+                                promotionMenu={promotionMenu}
+                                setPromotionMenu={setPromotionMenu}
+                            />
+                        </UsersProvider>
                         <Sidebar
                             messages={[]}
                             setDisableBoard={setDisableBoard}

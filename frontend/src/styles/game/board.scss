@@ -69,12 +69,14 @@ $board-white-color: rgb(233, 237, 204);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                margin-left: 10px;
+                margin-right: 10px;
+                width: 85px;
+                height: 85px;
 
                 .game-result-avatar {
                     width: 60px;
                     height: 60px;
-                    margin-left: 10px;
-                    margin-right: 10px;
                     border-radius: 100%;
                 }
 
@@ -91,6 +93,14 @@ $board-white-color: rgb(233, 237, 204);
                             outline-color: rgb(19, 160, 19);
                         }
                     }
+                }
+
+                .game-result-username {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    text-align: center;
+                    width: 100%;
                 }
             }
         }

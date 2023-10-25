@@ -1,5 +1,5 @@
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
 from api.models import Profile, GuestGameRoom, ComputerGameRoom
 
 
@@ -15,12 +15,12 @@ class TestGuestGameRoomModel(TestCase):
     def test_room_correct_setup_post_guest_game_room_creation(self):
         room = GuestGameRoom.objects.create()
 
-        self.assertTrue(room.white_player)
-        self.assertTrue(room.black_player)
+        self.assertEqual(len(room.white_player), 64)
+        self.assertEqual(len(room.black_player), 64)
 
 
 class TestComputerGameRoomModel(TestCase):
     def test_room_correct_setup_post_computer_game_room_creation(self):
         room = ComputerGameRoom.objects.create()
 
-        self.assertTrue(room.white_player)
+        self.assertEqual(len(room.player), 64)

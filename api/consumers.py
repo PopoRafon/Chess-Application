@@ -1,9 +1,8 @@
+import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import GuestGameRoom, UserGameRoom
-from asgiref.sync import sync_to_async
-from http.cookies import SimpleCookie
-import json
+from .models import GuestGameRoom, UserGameRoom, ComputerGameRoom
+from .utils import get_cookie
 
 user_queue = []
 guest_queue = []
@@ -70,6 +69,19 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
 
 class GameConsumer(AsyncWebsocketConsumer):
+    """
+    Parent Consumer class for all Game Consumers.
+    Provides all needed methods for game compliance.
+    """
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+
+class UserGameConsumer(GameConsumer):
     async def connect(self):
         try:
             self.room_name = self.scope['url_route']['kwargs']['game']
@@ -77,24 +89,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             user = self.scope['user']
 
             if user.is_authenticated:
-                self.room = await database_sync_to_async(UserGameRoom.objects.get)(id=self.room_name)
+                self.room = await database_sync_to_async(UserGameRoom.objects.prefetch_related('white_player', 'black_player').get)(id=self.room_name)
 
-                await self.get_players()
-
-                if self.white_player == user or self.black_player == user:
-                    await self.channel_layer.group_add(
-                        self.room_group_name,
-                        self.channel_name
-                    )
-
-                    return await self.accept()
-            else:
-                game_token = SimpleCookie(dict(self.scope['headers']).get(b'cookie').decode('utf8')).get('guest_game_token').value
-                self.room = await database_sync_to_async(GuestGameRoom.objects.get)(id=self.room_name)
-
-                await self.get_players()
-
-                if game_token and (self.white_player == game_token or self.black_player == game_token):
+                if self.room.white_player == user or self.room.black_player == user:
                     await self.channel_layer.group_add(
                         self.room_group_name,
                         self.channel_name
@@ -106,13 +103,46 @@ class GameConsumer(AsyncWebsocketConsumer):
         except Exception:
             await self.close()
 
-    @sync_to_async
-    def get_players(self):
-        self.white_player = self.room.white_player
-        self.black_player = self.room.black_player
 
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
+class GuestGameConsumer(GameConsumer):
+    async def connect(self):
+        try:
+            self.room_name = self.scope['url_route']['kwargs']['game']
+            self.room_group_name = f'game_{self.room_name}'
+
+            game_token = get_cookie(self.scope, 'guest_game_token')
+            self.room = await database_sync_to_async(GuestGameRoom.objects.get)(id=self.room_name)
+
+            if game_token and (self.room.white_player == game_token or self.room.black_player == game_token):
+                await self.channel_layer.group_add(
+                    self.room_group_name,
+                    self.channel_name
+                )
+
+                return await self.accept()
+
+            await self.close()
+        except Exception:
+            await self.close()
+
+
+class ComputerGameConsumer(GameConsumer):
+    async def connect(self):
+        try:
+            self.room_name = self.scope['url_route']['kwargs']['game']
+            self.room_group_name = f'game_{self.room_name}'
+
+            game_token = get_cookie(self.scope, 'computer_game_token')
+            self.room = await database_sync_to_async(ComputerGameRoom.objects.get)(id=self.room_name)
+
+            if game_token and self.room.player == game_token:
+                await self.channel_layer.group_add(
+                    self.room_group_name,
+                    self.channel_name
+                )
+
+                return await self.accept()
+
+            await self.close()
+        except Exception:
+            await self.close()
