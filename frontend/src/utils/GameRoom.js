@@ -13,7 +13,7 @@ async function setupUserGame(socket, navigate) {
     .then((response) => response.json())
     .then((data) => {
         if (data.game_state) {
-            socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/user/game/${gameId}/`);
+            socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/user/game/${gameId}/`);
 
             return data;
         } else {
@@ -34,7 +34,7 @@ async function setupGuestGame(socket, navigate) {
     .then((response) => response.json())
     .then((data) => {
         if (data.game_state) {
-            socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`);
+            socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`);
 
             data.white_username = 'Guest';
             data.black_username = 'Guest';
@@ -58,7 +58,7 @@ async function setupComputerGame(socket, navigate, user) {
     .then((response) => response.json())
     .then((data) => {
         if (data.game_state) {
-            socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`);
+            socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`);
 
             data.white_username = user.isLoggedIn ? user.username : 'Guest';
             data.black_username = 'Bot';

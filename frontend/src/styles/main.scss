@@ -1,10 +1,10 @@
-@import 'pages/home';
+@import 'core/navigation';
+@import 'core/authentication_alert';
+@import 'core/tooltip';
+@import 'core/scrollbar';
 @import 'pages/page404';
 @import 'pages/play';
-@import 'components/navigation';
-@import 'components/form';
-@import 'components/alert';
-@import 'components/tooltip';
+@import 'forms/form';
 
 .app {
   display: flex;
@@ -38,24 +38,4 @@ ul {
 a {
   text-decoration: none;
   color: white;
-}
-
-.scrollbar {
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #333333;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #363636;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #2b2b2bf0;
-    border-radius: 10px;
-  }
 }

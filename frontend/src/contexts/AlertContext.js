@@ -3,7 +3,7 @@ import { useState, useContext, createContext } from 'react';
 const AlertContext = createContext();
 
 function AlertProvider({ children }) {
-    const [alert, setAlert] = useState({ show: false, message: '' });
+    const [alert, setAlert] = useState('');
 
     return (
         <AlertContext.Provider value={{ alert, setAlert }}>

@@ -63,10 +63,7 @@ export default function LoginForm() {
 
                     refreshAccessToken();
 
-                    setAlert({
-                        show: true,
-                        message: data.success
-                    });
+                    setAlert(data.success);
 
                     navigate('/');
                 } else {

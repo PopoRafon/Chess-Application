@@ -1,0 +1,105 @@
+.game-result-alert {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    background-color: #3d3d3d;
+    border: 1px solid;
+    border-color: #535353;
+    border-radius: 10px;
+    padding: 25px 0px;
+    width: 250px;
+    height: 210px;
+    box-shadow: 4px 4px 6px rgb(0, 0, 0, 0.20);
+    z-index: 25;
+
+    .game-result-exit-button {
+        cursor: pointer;
+        position: absolute;
+        display: flex;
+        top: 5px;
+        right: 5px;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+        background-image: url('../../public/static/images/icons/close_icon.png');
+        background-repeat: no-repeat;
+        height: 20px;
+        width: 20px;
+        background-size: 20px 20px;
+        border: 0px;
+    }
+
+    .game-result-header {
+        font-size: large;
+        font-weight: 700;
+    }
+
+    .game-result-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+
+        .game-result-user {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+            margin-right: 10px;
+            width: 85px;
+            height: 85px;
+
+            .game-result-avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 100%;
+            }
+
+            .game-result-winner {
+                animation: win-circle 1.25s ease 0s 1 forwards;
+
+                @keyframes win-circle {
+                    0% {
+                        outline: 2px solid;
+                        outline-color: white;
+                    }
+                    100% {
+                        outline: 2px solid;
+                        outline-color: rgb(19, 160, 19);
+                    }
+                }
+            }
+
+            .game-result-username {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                text-align: center;
+                width: 100%;
+            }
+        }
+    }
+
+    .game-result-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .game-result-new-game-button {
+            cursor: pointer;
+            padding: 10px 15px;
+            color: white;
+            border: 1px solid;
+            background-color: #333333;
+            border-color: #3d3d3d;
+            border-radius: 5px;
+            box-shadow: 3px 3px 6px 0px rgb(0, 0, 0, 0.2);
+
+            &:hover {
+                background-color: #353535;
+            }
+        }
+    }
+}

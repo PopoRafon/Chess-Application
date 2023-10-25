@@ -85,10 +85,7 @@ export default function RegisterForm() {
 
                     refreshAccessToken();
 
-                    setAlert({
-                        show: true,
-                        message: data.success
-                    });
+                    setAlert(data.success);
 
                     navigate('/');
                 } else {

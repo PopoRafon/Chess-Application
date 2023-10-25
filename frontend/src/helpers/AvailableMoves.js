@@ -1,4 +1,4 @@
-import { getAvailableMoves } from '../components/game/Moves';
+import { getAvailableMoves } from './Moves';
 
 export default function updateAvailableMoves(game, squares, availableMoves, dispatchGame) {
     const { turn, positions } = game;

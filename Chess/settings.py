@@ -73,9 +73,12 @@ WSGI_APPLICATION = 'Chess.wsgi.application'
 ASGI_APPLICATION = 'Chess.asgi.application'
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    },
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.01', 6379)]
+        }
+    }
 }
 
 REST_FRAMEWORK = {

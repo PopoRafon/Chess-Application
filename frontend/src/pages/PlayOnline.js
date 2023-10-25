@@ -4,9 +4,9 @@ import { GameProvider } from '../contexts/GameContext';
 import { ValidMovesProvider } from '../contexts/ValidMovesContext';
 import { setupUserGame, setupGuestGame } from '../utils/GameRoom';
 import { useUser } from '../contexts/UserContext';
-import Sidebar from '../components/sidebars/PlayOnlineSidebar';
-import Game from '../components/game/Game';
-import Navigation from '../components/sidebars/Navigation';
+import Sidebar from '../components/game/sidebar/GameSidebar';
+import Game from '../components/game/board/Game';
+import Navigation from '../components/core/Navigation';
 
 export default function PlayOnline({ isLoaded }) {
     const [disableBoard, setDisableBoard] = useState(false);

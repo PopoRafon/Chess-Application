@@ -1,0 +1,72 @@
+@import 'pieces';
+@import '../extra/game_result';
+
+@mixin board-cols-rows-mixin {
+    font-weight: 500;
+    font-size: large;
+    position: absolute;
+    display: grid;
+}
+
+$board-black-color: rgb(119, 153, 84);
+
+$board-white-color: rgb(233, 237, 204);
+
+.chess-board {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #262626;
+    overflow: hidden;
+
+    .disable-board {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 20;
+    }
+
+    .board-cols {
+        @include board-cols-rows-mixin;
+        grid-template-columns: repeat(8, 90px);
+        bottom: 0px;
+        left: 75px;
+    }
+
+    .board-rows {
+        @include board-cols-rows-mixin;
+        grid-template-rows: repeat(8, 90px);
+        top: 0px;
+        left: 2px;
+    }
+
+    .black-letter {
+        color: $board-black-color;
+    }
+
+    .white-letter {
+        color: $board-white-color;
+    }
+
+    .board-squares {
+        display: grid;
+        grid-template-columns: repeat(8, 90px);
+        grid-template-rows: repeat(8, 90px);
+
+        .black-square {
+            background-color: $board-black-color;
+            border-color: rgb(208, 219, 195);
+        }
+
+        .white-square {
+            background-color: $board-white-color;
+            border-color: rgb(247, 249, 237);
+        }
+    }
+}

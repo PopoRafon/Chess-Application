@@ -1,4 +1,4 @@
-import { getAvailableMoves } from '../components/game/Moves';
+import { getAvailableMoves } from './Moves';
 
 export default function updateSquares(squares, game) {
     const { attackedSquares, kingCheckSquares, pinnedSquares } = squares;

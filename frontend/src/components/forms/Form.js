@@ -11,7 +11,7 @@ function FormInput({ id, label, type, value, handleChange, error }) {
                 autoComplete="off"
                 className={error ? "invalid-form-input" : "form-input"}
             />
-            {error && (<div className="invalid-field">{error}</div>)}
+            {error && <div className="invalid-field">{error}</div>}
         </div>
     );
 }
@@ -28,7 +28,7 @@ function FormCheckbox({ checked, handleChange, label, error }) {
                 />
                 {label}
             </label>
-            {error && (<div className="invalid-field">{error}</div>)}
+            {error && <div className="invalid-field">{error}</div>}
         </div>
     );
 }
