@@ -1,6 +1,6 @@
 import { getAvailableMoves } from './Moves';
 
-export default function updateSquares(squares, game) {
+export default function updateSquares(game, squares, player) {
     const { attackedSquares, kingCheckSquares, pinnedSquares } = squares;
     const { positions } = game;
     attackedSquares.current = { w: [], b: [] };
@@ -10,7 +10,7 @@ export default function updateSquares(squares, game) {
     for (const [rowIdx, row] of positions.entries()) {
         for (const [colIdx, piece] of row.entries()) {
             if (!piece) continue;
-            const viableMoves = getAvailableMoves(game, piece, rowIdx, colIdx, squares, true);
+            const viableMoves = getAvailableMoves(game, piece, rowIdx, colIdx, squares, player, true);
             const oppositePlayerColor = piece[0] === 'w' ? 'b' : 'w';
             let newAttackedSquares = [];
 

@@ -1,12 +1,14 @@
 import { useGame } from '../../../contexts/GameContext';
 import { useValidMoves } from '../../../contexts/ValidMovesContext';
 import { usePoints } from '../../../contexts/PointsContext';
+import { useUsers } from '../../../contexts/UsersContext';
 
 export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     const { game, dispatchGame } = useGame();
     const { setValidMoves } = useValidMoves();
     const { data, position } = promotionMenu;
     const { dispatchPoints } = usePoints();
+    const { users } = useUsers();
     const [row, col] = position;
 
     function handleExit() {
@@ -14,10 +16,13 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     }
 
     function handlePromote(type) {
+        const isPlayerWhite = users.player.color === 'w';
         const [piece, oldRow, oldCol] = data;
         const newPositions = game.positions.slice();
         const capturedPiece = newPositions[row][col];
-        const square = 'abcdefgh'[col] + '87654321'[row];
+        const colLetters = (isPlayerWhite ? 'abcdefgh' : 'hgfedcba');
+        const rowLetters = (isPlayerWhite ? '87654321' : '12345678');
+        const square = colLetters[col] + rowLetters[row];
         const move = square + '=' + type.toUpperCase() + (capturedPiece && 'x' + capturedPiece[1].toUpperCase() + square);
 
         new Audio('/static/sounds/promote.mp3').play();

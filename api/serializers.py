@@ -48,16 +48,18 @@ class UserGameRoomSerializer(serializers.ModelSerializer):
     black_username = serializers.CharField(source='black_player.username')
     white_rating = serializers.IntegerField(source='white_player.profile.rating')
     black_rating = serializers.IntegerField(source='black_player.profile.rating')
+    white_avatar = serializers.ImageField(source='white_player.profile.avatar')
+    black_avatar = serializers.ImageField(source='black_player.profile.avatar')
 
     class Meta:
         model = UserGameRoom
-        fields = ['white_username', 'black_username', 'white_timer', 'black_timer', 'white_rating', 'black_rating', 'game_state', 'turn', 'result']
+        exclude = ['id', 'black_player', 'white_player', 'game_started']
 
 
 class GuestGameRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestGameRoom
-        fields = ['white_timer', 'black_timer', 'game_state', 'turn', 'result']
+        exclude = ['id', 'game_started', 'black_player', 'white_player']
 
 
 class ComputerGameRoomRetrieveSerializer(serializers.ModelSerializer):

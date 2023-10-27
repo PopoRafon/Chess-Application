@@ -27,6 +27,14 @@ class UserGameRoomView(RetrieveAPIView):
     def get_queryset(self):
         return UserGameRoom.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        game_object = self.get_object()
+        user = request.user
+        response.data['player'] = 'w' if game_object.white_player == user else 'b'
+
+        return response
+
 
 class GuestGameRoomView(RetrieveAPIView):
     lookup_url_kwarg = 'id'
@@ -35,6 +43,14 @@ class GuestGameRoomView(RetrieveAPIView):
 
     def get_queryset(self):
         return GuestGameRoom.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        game_object = self.get_object()
+        token = request.COOKIES.get('guest_game_token')
+        response.data['player'] = 'w' if game_object.white_player == token else 'b'
+
+        return response
 
 
 class ComputerGameRoomRetrieveView(RetrieveAPIView):

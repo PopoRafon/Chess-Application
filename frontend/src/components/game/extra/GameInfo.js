@@ -23,13 +23,13 @@ export default function GameInfo({ player }) {
             let timerTimeout;
 
             if (timer === 0) {
-                const gameResult = checkGameResult(game.positions, player);
+                const gameResult = checkGameResult(game.positions, users[player].color);
 
                 dispatchGame({
                     type: 'GAME_END',
                     result: `Timeout! ${gameResult === 'draw' ? 'Draw!' : (gameResult === 'w' ? 'White wins!' : 'Black wins!')}`
                 });
-            } else if (game.turn === player) {
+            } else if (game.turn === users[player].color) {
                 timerTimeout = setTimeout(() => {
                     setTimer(prevTimer => prevTimer - 1);
                 }, 1000);
@@ -52,7 +52,7 @@ export default function GameInfo({ player }) {
             <div className="player-info">
                 <span>{users[player].username}</span>
                 {users[player].rating && <span className="game-user-rating">({users[player].rating})</span>}
-                <div className="game-points">Points: +{points[player]}</div>
+                <div className="game-points">Points: +{points[users[player].color]}</div>
             </div>
             {users[player].timer !== undefined && (
                 <div

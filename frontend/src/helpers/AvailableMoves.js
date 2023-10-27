@@ -1,6 +1,6 @@
 import { getAvailableMoves } from './Moves';
 
-export default function updateAvailableMoves(game, squares, availableMoves, dispatchGame) {
+export default function updateAvailableMoves(game, squares, availableMoves, dispatchGame, player) {
     const { turn, positions } = game;
     const { kingCheckSquares } = squares;
     let availableMovesLength = 0;
@@ -9,7 +9,7 @@ export default function updateAvailableMoves(game, squares, availableMoves, disp
     for (const [rowIdx, row] of positions.entries()) {
         for (const [colIdx, piece] of row.entries()) {
             if (!piece) continue;
-            const viableMoves = getAvailableMoves(game, piece, rowIdx, colIdx, squares, false);
+            const viableMoves = getAvailableMoves(game, piece, rowIdx, colIdx, squares, player, false);
             const piecePosition = `${rowIdx}${colIdx}`;
 
             availableMoves.current = {

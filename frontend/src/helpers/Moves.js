@@ -59,9 +59,10 @@ function calcKnightMoves(directions, positions, row, col, kingCheckSquares, pinn
     return checkKingCheckSquares(kingCheckSquares, viableMoves);
 }
 
-function calcKingMoves(directions, positions, row, col, attackedSquares, castlingDirections, isCheckingSquares) {
+function calcKingMoves(directions, positions, row, col, attackedSquares, castlingDirections, player, isCheckingSquares) {
     const piece = positions[row][col];
-    const side = piece[0] === 'w' ? '7' : '0';
+    const isPlayerWhite = player.color === 'w';
+    const side = piece[0] === 'w' ? (isPlayerWhite ? 7 : 0) : (!isPlayerWhite ? 7 : 0);
     let viableMoves = [];
 
     for (const direction of directions) {
@@ -81,26 +82,31 @@ function calcKingMoves(directions, positions, row, col, attackedSquares, castlin
     }
 
     if (!isCheckingSquares) {
-        const leftCastlingPositions = [`${row}${col - 1}`, `${row}${col - 2}`, `${row}${col - 3}`];
-        const rightCastlingPositions = [`${row}${col + 1}`, `${row}${col + 2}`];
+        const leftCastlingPositions = isPlayerWhite ? [`${row}${col - 1}`, `${row}${col - 2}`, `${row}${col - 3}`] : [`${row}${col + 1}`, `${row}${col + 2}`, `${row}${col + 3}`];
+        const rightCastlingPositions = isPlayerWhite ? [`${row}${col + 1}`, `${row}${col + 2}`] : [`${row}${col - 1}`, `${row}${col - 2}`];
 
-        if ((castlingDirections[piece] === 'left' || castlingDirections[piece] === 'both') && checkCastling(positions, leftCastlingPositions, attackedSquares, piece[0])) {
-            viableMoves.push(`${side}2 valid-move`);
+        if ((castlingDirections[piece] === (isPlayerWhite ? 'left' : 'right') || castlingDirections[piece] === 'both') &&
+            checkCastling(positions, (isPlayerWhite ? leftCastlingPositions : rightCastlingPositions), attackedSquares, piece[0])
+        ) {
+            viableMoves.push(`${side}${isPlayerWhite ? 2 : 1} valid-move`);
         }
-        if ((castlingDirections[piece] === 'right' || castlingDirections[piece] === 'both') && checkCastling(positions, rightCastlingPositions, attackedSquares, piece[0])) {
-            viableMoves.push(`${side}6 valid-move`);
+        if ((castlingDirections[piece] === (isPlayerWhite ? 'right' : 'left') || castlingDirections[piece] === 'both') &&
+            checkCastling(positions, (isPlayerWhite ? rightCastlingPositions : leftCastlingPositions), attackedSquares, piece[0])
+        ) {
+            viableMoves.push(`${side}${isPlayerWhite ? 6 : 5} valid-move`);
         }
     }
 
     return viableMoves;
 }
 
-function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquares, isCheckingSquares) {
-    let viableMoves = [];
-    const direction = type[0] === 'w' ? -1 : 1;
-    const startingPos = type[0] === 'w' ? 6 : 1;
+function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquares, player, isCheckingSquares) {
+    const isPlayerWhite = player.color === 'w';
+    const direction = type[0] === 'w' ? (isPlayerWhite ? -1 : 1) : (!isPlayerWhite ? -1 : 1);
+    const startingPos = type[0] === 'w' ? (isPlayerWhite ? 6 : 1) : (!isPlayerWhite ? 6 : 1);
     const topLeftSquare = positions[row + direction][col - 1];
     const topRightSquare = positions[row + direction][col + 1];
+    let viableMoves = [];
 
     if (!isCheckingSquares) {
         if (!positions[row + direction][col]) {
@@ -122,7 +128,7 @@ function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquare
     return checkKingCheckSquares(kingCheckSquares, viableMoves);
 }
 
-function getAvailableMoves(game, piece, row, col, squares, isCheckingSquares) {
+function getAvailableMoves(game, piece, row, col, squares, player, isCheckingSquares) {
     const { positions, turn, castlingDirections } = game;
     const { attackedSquares, kingCheckSquares, pinnedSquares } = squares;
     const playersKingCheckSquares = kingCheckSquares.current[piece[0]];
@@ -132,11 +138,11 @@ function getAvailableMoves(game, piece, row, col, squares, isCheckingSquares) {
 
     switch (piece[1]) {
         case 'p':
-            return calcPawnMoves(positions, piece, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
+            return calcPawnMoves(positions, piece, row, col, playersKingCheckSquares, playersPinnedSquares, player, isCheckingSquares);
         case 'n':
             return calcKnightMoves(knightDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'k':
-            return calcKingMoves(kingDirections(), positions, row, col, attackedSquares, castlingDirections, isCheckingSquares);
+            return calcKingMoves(kingDirections(), positions, row, col, attackedSquares, castlingDirections, player, isCheckingSquares);
         case 'r':
             return calcQueenRookBishopMoves(rookDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'b':

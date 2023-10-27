@@ -1,14 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
+import { useUsers } from '../../../contexts/UsersContext';
 import GameResultAlert from '../extra/GameResultAlert';
 import Arbiter from './Arbiter';
 
 function RowLetters({ rows }) {
+    const { users } = useUsers();
+    const indexShift = useRef(users.player.color === 'b' ? 1 : 0);
+
     return (
         <div className="board-rows">
             {rows.map((row, index) => (
                 <span
-                    className={index % 2 === 0 ? 'black-letter' : 'white-letter'}
+                    className={(index + indexShift.current) % 2 === 0 ? 'black-letter' : 'white-letter'}
                     key={index}
                 >
                     {row}
@@ -19,11 +23,14 @@ function RowLetters({ rows }) {
 }
 
 function ColLetters({ columns }) {
+    const { users } = useUsers();
+    const indexShift = useRef(users.player.color === 'b' ? 1 : 0);
+
     return (
         <div className="board-cols">
             {columns.map((col, index) => (
                 <span
-                    className={index % 2 === 0 ? 'white-letter' : 'black-letter'}
+                    className={(index + indexShift.current) % 2 === 0 ? 'white-letter' : 'black-letter'}
                     key={index}
                 >
                     {col}
@@ -34,6 +41,10 @@ function ColLetters({ columns }) {
 }
 
 function Square({ colIdx, rowIdx }) {
+    const { users } = useUsers();
+
+    if (users.player.color === 'b') colIdx++;
+
     return <div className={(colIdx + rowIdx) % 2 === 0 ? 'white-square' : 'black-square'}></div>;
 }
 
@@ -43,6 +54,7 @@ function DisableChessBoard() {
 
 export default function ChessBoard({ disableBoard, setDisableBoard, setPromotionMenu }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
+    const { users } = useUsers();
     const { game } = useGame();
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
     const cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -79,10 +91,10 @@ export default function ChessBoard({ disableBoard, setDisableBoard, setPromotion
                 setPromotionMenu={setPromotionMenu}
             />
             <RowLetters
-                rows={rows}
+                rows={users.player.color === 'w' ? rows : rows.reverse()}
             />
             <ColLetters
-                columns={cols}
+                columns={users.player.color === 'w' ? cols : cols.reverse()}
             />
         </div>
     );

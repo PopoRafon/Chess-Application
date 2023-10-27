@@ -22,13 +22,22 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                 const setup = await gameSetup(socket, navigate, user);
 
                 if (setup) {
+                    let positions = JSON.parse(setup.game_state.replace(/'/g, '"'));
+
+                    if (setup.player === 'b') {
+                        positions.map((row) => row.reverse());
+                        positions.reverse();
+                    }
+
                     setUsers({
-                        w: {
+                        [setup.player === 'w' ? 'player' : 'enemy']: {
+                            color: 'w',
                             username: setup.white_username,
                             rating: setup.white_rating,
                             timer: setup.white_timer
                         },
-                        b: {
+                        [setup.player === 'b' ? 'player' : 'enemy']: {
+                            color: 'b',
                             username: setup.black_username,
                             rating: setup.black_rating,
                             timer: setup.black_timer
@@ -37,7 +46,7 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
 
                     dispatchGame({
                         type: 'GAME_START',
-                        positions: JSON.parse(setup.game_state.replace(/'/g, '"')),
+                        positions: positions,
                         turn: setup.turn,
                         result: setup.result
                     });
@@ -76,7 +85,7 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                         />
                     )}
                     <GameInfo
-                        player='b'
+                        player='enemy'
                     />
                     <ChessBoard
                         disableBoard={disableBoard}
@@ -84,7 +93,7 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                         setPromotionMenu={setPromotionMenu}
                     />
                     <GameInfo
-                        player='w'
+                        player='player'
                     />
                 </PointsProvider>
             </div>

@@ -62,6 +62,7 @@ async function setupComputerGame(socket, navigate, user) {
 
             data.white_username = user.isLoggedIn ? user.username : 'Guest';
             data.black_username = 'Bot';
+            data.player = 'w';
 
             return data;
         } else {
