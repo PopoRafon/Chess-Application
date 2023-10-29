@@ -1,42 +1,43 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PointsProvider } from '../../../contexts/PointsContext';
 import { useUsers } from '../../../contexts/UsersContext';
 import { useGame } from '../../../contexts/GameContext';
 import { useUser } from '../../../contexts/UserContext';
 import ChessBoard from './ChessBoard';
 import PromotionMenu from './PromotionMenu';
 import GameInfo from '../extra/GameInfo';
+import playSound from '../../../helpers/GameSounds';
+import pointsReducer from '../../../reducers/PointsReducer';
 
 export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoard, promotionMenu, setPromotionMenu }) {
-    const [isSocketLoaded, setIsSocketLoaded] = useState(false);
-    const { setUsers } = useUsers();
-    const { dispatchGame } = useGame();
-    const navigate = useNavigate();
+    const [socket, setSocket] = useState();
+    const [points, dispatchPoints] = useReducer(pointsReducer, { w: 0, b: 0 });
+    const { users, setUsers } = useUsers();
+    const { game, dispatchGame } = useGame();
     const { user } = useUser();
-    const socket = useRef();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isLoaded) {
             const getGameData = async () => {
-                const setup = await gameSetup(socket, navigate, user);
+                const setup = await gameSetup(setSocket, navigate, user);
 
                 if (setup) {
-                    let positions = JSON.parse(setup.game_state.replace(/'/g, '"'));
+                    const isPlayerWhite = setup.player === 'w';
 
                     if (setup.player === 'b') {
-                        positions.map((row) => row.reverse());
-                        positions.reverse();
+                        setup.positions.map((row) => row.reverse());
+                        setup.positions.reverse();
                     }
 
                     setUsers({
-                        [setup.player === 'w' ? 'player' : 'enemy']: {
+                        [isPlayerWhite ? 'player' : 'enemy']: {
                             color: 'w',
                             username: setup.white_username,
                             rating: setup.white_rating,
                             timer: setup.white_timer
                         },
-                        [setup.player === 'b' ? 'player' : 'enemy']: {
+                        [!isPlayerWhite ? 'player' : 'enemy']: {
                             color: 'b',
                             username: setup.black_username,
                             rating: setup.black_rating,
@@ -46,12 +47,10 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
 
                     dispatchGame({
                         type: 'GAME_START',
-                        positions: positions,
+                        positions: setup.positions,
                         turn: setup.turn,
                         result: setup.result
                     });
-    
-                    setIsSocketLoaded(true);
                 }
             }
 
@@ -60,42 +59,70 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
     }, [navigate, isLoaded, setUsers, dispatchGame, gameSetup, user]);
 
     useEffect(() => {
-        if (socket.current) {
-            socket.current.onmessage = (message) => {
-                console.log(message);
-            }
-        }
+        if (socket) {
+            socket.onmessage = (message) => {
+                const data = JSON.parse(message.data);
 
-        return () => {
-            if (socket.current) {
-                socket.current.close();
-                socket.current = null;
-            }
-        }
-    }, []);
+                if (!data.error) {
+                    const { newPos: [newRow, newCol], oldPos: [oldRow, oldCol], promotionType, turn } = data;
+                    const newPositions = game.positions.slice();
+                    const isPlayerWhite = users.player.color === 'w';
+                    const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
+                    const piece = newPositions[lines[oldRow]][lines[oldCol]];
+                    const pieceCaptured = newPositions[lines[newRow]][lines[newCol]];
 
-    return isSocketLoaded && (
+                    newPositions[lines[newRow]][lines[newCol]] = data.type === 'promotion' ? piece[0] + promotionType : piece;
+                    newPositions[lines[oldRow]][lines[oldCol]] = '';
+
+                    dispatchGame({
+                        type: 'NEXT_ROUND',
+                        turn: turn,
+                        positions: newPositions,
+                        prevMoves: [''],
+                        markedSquares: [
+                            `${lines[oldRow]}${lines[oldCol]}`,
+                            `${lines[newRow]}${lines[newCol]}`
+                        ]
+                    });
+
+                    playSound(pieceCaptured);
+                    dispatchPoints({ type: pieceCaptured });
+                }
+            }
+
+            return () => {
+                if (socket) {
+                    socket.close();
+                }
+            };
+        }
+        // eslint-disable-next-line
+    }, [socket]);
+
+    return socket && (
         <div className="game-container">
             <div className="game-content">
-                <PointsProvider>
-                    {promotionMenu.show && (
-                        <PromotionMenu
-                            promotionMenu={promotionMenu}
-                            setPromotionMenu={setPromotionMenu}
-                        />
-                    )}
-                    <GameInfo
-                        player='enemy'
-                    />
-                    <ChessBoard
-                        disableBoard={disableBoard}
-                        setDisableBoard={setDisableBoard}
+                {promotionMenu.show && (
+                    <PromotionMenu
+                        socket={socket}
+                        promotionMenu={promotionMenu}
                         setPromotionMenu={setPromotionMenu}
                     />
-                    <GameInfo
-                        player='player'
-                    />
-                </PointsProvider>
+                )}
+                <GameInfo
+                    player='enemy'
+                    points={points}
+                />
+                <ChessBoard
+                    socket={socket}
+                    disableBoard={disableBoard}
+                    setDisableBoard={setDisableBoard}
+                    setPromotionMenu={setPromotionMenu}
+                />
+                <GameInfo
+                    player='player'
+                    points={points}
+                />
             </div>
         </div>
     );

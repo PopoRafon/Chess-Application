@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class UserGameRoomObjectPermissions(BasePermission):
+class RankingGameRoomObjectPermissions(BasePermission):
     def has_object_permission(self, request, view, obj):
         user = request.user
 

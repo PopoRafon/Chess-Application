@@ -3,17 +3,17 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.test import APITestCase
-from api.models import UserGameRoom, GuestGameRoom, ComputerGameRoom
+from api.models import RankingGameRoom, GuestGameRoom, ComputerGameRoom
 
 
-class TestUserGameRoomView(APITestCase):
+class TestRankingGameRoomView(APITestCase):
     def setUp(self):
         self.first_user = User.objects.create(username='first user')
         self.second_user = User.objects.create(username='second user')
-        self.room = UserGameRoom.objects.create(white_player=self.first_user, black_player=self.second_user)
-        self.url = reverse('user-game-room', kwargs={'id': self.room.id})
+        self.room = RankingGameRoom.objects.create(white_player=self.first_user, black_player=self.second_user)
+        self.url = reverse('ranking-game-room', kwargs={'id': self.room.id})
 
-    def test_user_game_room_GET_user_authorized(self):
+    def test_ranking_game_room_GET_user_authorized(self):
         refresh = RefreshToken.for_user(self.first_user)
         access = refresh.access_token
 
@@ -23,7 +23,7 @@ class TestUserGameRoomView(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response_json), 12)
 
-    def test_user_game_room_GET_authenticated_user(self):
+    def test_ranking_game_room_GET_authenticated_user(self):
         third_user = User.objects.create(username='third user')
         refresh = RefreshToken.for_user(third_user)
         access = refresh.access_token
@@ -34,7 +34,7 @@ class TestUserGameRoomView(APITestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(len(response_json), 1)
 
-    def test_user_game_room_GET_unauthenticated_user(self):
+    def test_ranking_game_room_GET_unauthenticated_user(self):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 401)

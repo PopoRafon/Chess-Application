@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.testing import websocket_communicator
-from api.models import UserGameRoom, GuestGameRoom, ComputerGameRoom
+from api.models import RankingGameRoom, GuestGameRoom, ComputerGameRoom
 
 
 class TestMatchmakingConsumer(TestCase):
@@ -70,14 +70,14 @@ class TestMatchmakingConsumer(TestCase):
         await second_comm.disconnect()
 
 
-class TestUserGameConsumer(TestCase):
+class TestRankingGameConsumer(TestCase):
     def setUp(self):
         self.first_user = User.objects.create(username='first user')
         self.second_user = User.objects.create(username='second user')
         self.first_user_token = RefreshToken.for_user(self.first_user)
         self.second_user_token = RefreshToken.for_user(self.second_user)
-        self.room = UserGameRoom.objects.create(white_player=self.first_user, black_player=self.second_user)
-        self.url = f'ws/user/game/{self.room.id}/'
+        self.room = RankingGameRoom.objects.create(white_player=self.first_user, black_player=self.second_user)
+        self.url = f'ws/ranking/game/{self.room.id}/'
         self.headers = [(b'cookie', f'access={self.first_user_token}'.encode())]
 
     async def test_user_game_connection_valid_token(self):

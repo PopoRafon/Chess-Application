@@ -7,7 +7,7 @@ from api.views import (
     RegisterView,
     LoginView,
     LogoutView,
-    UserGameRoomView,
+    RankingGameRoomView,
     GuestGameRoomView,
     ComputerGameRoomRetrieveView,
     ComputerGameRoomCreateView
@@ -62,11 +62,11 @@ class TestUserAuthenticationUrls(APISimpleTestCase):
 
 
 class TestGameRoomUrls(APISimpleTestCase):
-    def test_user_game_room_url(self):
-        url = reverse('user-game-room', kwargs={'id': 1})
+    def test_ranking_game_room_url(self):
+        url = reverse('ranking-game-room', kwargs={'id': 1})
         resolver = resolve(url)
 
-        self.assertEqual(resolver.func.view_class, UserGameRoomView)
+        self.assertEqual(resolver.func.view_class, RankingGameRoomView)
 
     def test_guest_game_room_url(self):
         url = reverse('guest-game-room', kwargs={'id': 1})

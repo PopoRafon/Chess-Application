@@ -11,18 +11,18 @@ def get_cookie(scope, cookie):
     except Exception:
         return ''
 
-def default_game_state():
+def default_game_positions():
     """
-    Function for creating default game state used in Game Room models.
+    Function for creating default game positions used in Game model.
     """
 
-    return str([
-        ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
-        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
-        ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
-    ])
+    return [
+        ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"],
+        ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
+        ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"]
+    ]

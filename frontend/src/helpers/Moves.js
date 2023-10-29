@@ -102,8 +102,8 @@ function calcKingMoves(directions, positions, row, col, attackedSquares, castlin
 
 function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquares, player, isCheckingSquares) {
     const isPlayerWhite = player.color === 'w';
-    const direction = type[0] === 'w' ? (isPlayerWhite ? -1 : 1) : (!isPlayerWhite ? -1 : 1);
-    const startingPos = type[0] === 'w' ? (isPlayerWhite ? 6 : 1) : (!isPlayerWhite ? 6 : 1);
+    const direction = type === 'w' ? (isPlayerWhite ? -1 : 1) : (!isPlayerWhite ? -1 : 1);
+    const startingPos = type === 'w' ? (isPlayerWhite ? 6 : 1) : (!isPlayerWhite ? 6 : 1);
     const topLeftSquare = positions[row + direction][col - 1];
     const topRightSquare = positions[row + direction][col + 1];
     let viableMoves = [];
@@ -116,8 +116,8 @@ function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquare
             }
         }
 
-        if (col - 1 >= 0 && topLeftSquare && topLeftSquare[0] !== type[0]) viableMoves.push(`${row + direction}${col - 1} mark`);
-        if (col + 1 <= 7 && topRightSquare && topRightSquare[0] !== type[0]) viableMoves.push(`${row + direction}${col + 1} mark`);
+        if (col - 1 >= 0 && topLeftSquare && topLeftSquare[0] !== type) viableMoves.push(`${row + direction}${col - 1} mark`);
+        if (col + 1 <= 7 && topRightSquare && topRightSquare[0] !== type) viableMoves.push(`${row + direction}${col + 1} mark`);
     } else {
         if (col - 1 >= 0) viableMoves.push(`${row + direction}${col - 1} mark`);
         if (col + 1 <= 7) viableMoves.push(`${row + direction}${col + 1} mark`);
@@ -134,11 +134,12 @@ function getAvailableMoves(game, piece, row, col, squares, player, isCheckingSqu
     const playersKingCheckSquares = kingCheckSquares.current[piece[0]];
     const playersPinnedSquares = pinnedSquares.current[piece[0]];
 
+    if (player.color !== turn) return [];
     if (!isCheckingSquares && turn !== piece[0]) return [];
 
     switch (piece[1]) {
         case 'p':
-            return calcPawnMoves(positions, piece, row, col, playersKingCheckSquares, playersPinnedSquares, player, isCheckingSquares);
+            return calcPawnMoves(positions, piece[0], row, col, playersKingCheckSquares, playersPinnedSquares, player, isCheckingSquares);
         case 'n':
             return calcKnightMoves(knightDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'k':

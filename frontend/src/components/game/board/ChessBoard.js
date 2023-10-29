@@ -52,7 +52,7 @@ function DisableChessBoard() {
     return <div className="disable-board"></div>;
 }
 
-export default function ChessBoard({ disableBoard, setDisableBoard, setPromotionMenu }) {
+export default function ChessBoard({ socket, disableBoard, setDisableBoard, setPromotionMenu }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
     const { users } = useUsers();
     const { game } = useGame();
@@ -88,6 +88,7 @@ export default function ChessBoard({ disableBoard, setDisableBoard, setPromotion
                 ))}
             </div>
             <Arbiter
+                socket={socket}
                 setPromotionMenu={setPromotionMenu}
             />
             <RowLetters

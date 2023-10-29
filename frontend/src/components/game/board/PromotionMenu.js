@@ -1,56 +1,29 @@
 import { useGame } from '../../../contexts/GameContext';
 import { useValidMoves } from '../../../contexts/ValidMovesContext';
-import { usePoints } from '../../../contexts/PointsContext';
 import { useUsers } from '../../../contexts/UsersContext';
 
-export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
-    const { game, dispatchGame } = useGame();
+export default function PromotionMenu({ socket, promotionMenu, setPromotionMenu }) {
+    const { game } = useGame();
     const { setValidMoves } = useValidMoves();
-    const { data, position } = promotionMenu;
-    const { dispatchPoints } = usePoints();
+    const { data: [oldRow, oldCol], position: [newRow, newCol] } = promotionMenu;
     const { users } = useUsers();
-    const [row, col] = position;
 
     function handleExit() {
         setPromotionMenu({show: false});
     }
 
-    function handlePromote(type) {
+    function handlePromote(piecePromotionType) {
         const isPlayerWhite = users.player.color === 'w';
-        const [piece, oldRow, oldCol] = data;
-        const newPositions = game.positions.slice();
-        const capturedPiece = newPositions[row][col];
-        const colLetters = (isPlayerWhite ? 'abcdefgh' : 'hgfedcba');
-        const rowLetters = (isPlayerWhite ? '87654321' : '12345678');
-        const square = colLetters[col] + rowLetters[row];
-        const move = square + '=' + type.toUpperCase() + (capturedPiece && 'x' + capturedPiece[1].toUpperCase() + square);
+        const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
 
-        new Audio('/static/sounds/promote.mp3').play();
-
-        if (newPositions[row][col]) {
-            dispatchPoints({
-                type: newPositions[row][col],
-                turn: game.turn
-            });
-        }
-
-        newPositions[oldRow][oldCol] = '';
-        newPositions[row][col] = piece[0] + type;
-
-        const markedSquares = [`${oldRow}${oldCol}`, `${row}${col}`];
+        socket.send(JSON.stringify({
+            type: 'promotion',
+            promotionType: piecePromotionType,
+            oldPos: [lines[oldRow], lines[oldCol]],
+            newPos: [lines[newRow], lines[newCol]]
+        }));
 
         setValidMoves([]);
-
-        dispatchGame({
-            type: 'NEXT_ROUND',
-            positions: newPositions,
-            prevMove: [
-                move,
-                newPositions.map(row => row.slice()),
-                markedSquares
-            ],
-            markedSquares: markedSquares
-        });
 
         setPromotionMenu({show: false});
     }
@@ -58,13 +31,13 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     return (
         <div
             className="promotion-menu"
-            style={{marginTop: `calc(-25px + ${row * 90}px)`, marginLeft: `calc(-70px + ${col * 90}px)`}}
+            style={{marginTop: `calc(-25px + ${newRow * 90}px)`, marginLeft: `calc(-70px + ${newCol * 90}px)`}}
         >
             {['q', 'r', 'b', 'n'].map((type) => (
                 <button
                     key={type}
                     className={`promotion-${type}-field promotion-field-${game.turn}`}
-                    onClick={() => handlePromote(`${type}`)}
+                    onClick={() => handlePromote(type)}
                     >
                     <div className={`promotion-${type}-piece ${game.turn}${type}`}></div>
                 </button>

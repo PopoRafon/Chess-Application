@@ -1,10 +1,10 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import GuestGameRoom, UserGameRoom, ComputerGameRoom
+from .models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Game
 from .utils import get_cookie
 
-user_queue = []
+ranking_queue = []
 guest_queue = []
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
@@ -21,9 +21,9 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await self.accept()
 
             if self.user.is_authenticated:
-                user_queue.append(self)
+                ranking_queue.append(self)
 
-                await self.check_user_queue()
+                await self.check_ranking_queue()
             else:
                 guest_queue.append(self)
 
@@ -36,18 +36,18 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        if self in user_queue:
-            user_queue.remove(self)
+        if self in ranking_queue:
+            ranking_queue.remove(self)
         elif self in guest_queue:
             guest_queue.remove(self)
 
-    async def check_user_queue(self):
-        if len(user_queue) >= 2:
-            user_one = user_queue.pop()
-            user_two = user_queue.pop()
+    async def check_ranking_queue(self):
+        if len(ranking_queue) >= 2:
+            user_one = ranking_queue.pop()
+            user_two = ranking_queue.pop()
 
             if user_one.user != user_two.user:
-                room = await database_sync_to_async(UserGameRoom.objects.create)(
+                room = await database_sync_to_async(RankingGameRoom.objects.create)(
                     white_player=user_one.scope['user'],
                     black_player=user_two.scope['user']
                 )
@@ -55,7 +55,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 await user_one.send(json.dumps({'url': str(room.id)}))
                 await user_two.send(json.dumps({'url': str(room.id)}))
             else:
-                user_queue.append(user_one)
+                ranking_queue.append(user_one)
 
     async def check_guest_queue(self):
         if len(guest_queue) >= 2:
@@ -80,8 +80,86 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        action_type = text_data_json.get('type')
 
-class UserGameConsumer(GameConsumer):
+        if action_type == 'move':
+            await self.receive_move(text_data_json)
+        elif action_type == 'promotion':
+            await self.receive_promotion(text_data_json)
+        else:
+            await self.send_error()
+
+    async def send_error(self):
+        await self.send(json.dumps({
+            'error': 'Message you sent was invalid.'
+        }))
+
+    async def receive_promotion(self, data):
+        game = await database_sync_to_async(Game.objects.get)(id=self.game_id)
+        _, promotion_type, (oldRow, oldCol), (newRow, newCol) = data.values()
+
+        piece = game.positions[oldRow][oldCol]
+
+        game.positions[newRow][newCol] = piece[0] + promotion_type
+        game.positions[oldRow][oldCol] = ''
+
+        game.turn = 'w' if game.turn == 'b' else 'b'
+
+        await game.asave()
+
+        await self.channel_layer.group_send(self.room_group_name, {
+            'type': 'send_promotion',
+            'turn': game.turn,
+            'promotionType': promotion_type,
+            'oldPos': [oldRow, oldCol],
+            'newPos': [newRow, newCol]
+        })
+
+    async def send_promotion(self, event):
+        _, turn, promotion_type, oldPos, newPos = event.values()
+
+        await self.send(json.dumps({
+            'type': 'promotion',
+            'turn': turn,
+            'promotionType': promotion_type,
+            'oldPos': oldPos,
+            'newPos': newPos
+        }))
+
+    async def receive_move(self, data):
+        game = await database_sync_to_async(Game.objects.get)(id=self.game_id)
+        _, (oldRow, oldCol), (newRow, newCol) = data.values()
+
+        piece = game.positions[oldRow][oldCol]
+
+        game.positions[newRow][newCol] = piece
+        game.positions[oldRow][oldCol] = ''
+
+        game.turn = 'w' if game.turn == 'b' else 'b'
+
+        await game.asave()
+
+        await self.channel_layer.group_send(self.room_group_name, {
+            'type': 'send_move',
+            'turn': game.turn,
+            'oldPos': [oldRow, oldCol],
+            'newPos': [newRow, newCol]
+        })
+
+    async def send_move(self, event):
+        _, turn, oldPos, newPos = event.values()
+
+        await self.send(json.dumps({
+            'type': 'move',
+            'turn': turn,
+            'oldPos': oldPos,
+            'newPos': newPos
+        }))
+
+
+class RankingGameConsumer(GameConsumer):
     async def connect(self):
         try:
             self.room_name = self.scope['url_route']['kwargs']['game']
@@ -89,9 +167,10 @@ class UserGameConsumer(GameConsumer):
             user = self.scope['user']
 
             if user.is_authenticated:
-                self.room = await database_sync_to_async(UserGameRoom.objects.prefetch_related('white_player', 'black_player').get)(id=self.room_name)
+                room = await database_sync_to_async(RankingGameRoom.objects.prefetch_related('white_player', 'black_player', 'game').get)(id=self.room_name)
+                self.game_id = room.game.id
 
-                if self.room.white_player == user or self.room.black_player == user:
+                if room.white_player == user or room.black_player == user:
                     await self.channel_layer.group_add(
                         self.room_group_name,
                         self.channel_name
@@ -111,9 +190,10 @@ class GuestGameConsumer(GameConsumer):
             self.room_group_name = f'game_{self.room_name}'
 
             game_token = get_cookie(self.scope, 'guest_game_token')
-            self.room = await database_sync_to_async(GuestGameRoom.objects.get)(id=self.room_name)
+            room = await database_sync_to_async(GuestGameRoom.objects.prefetch_related('game').get)(id=self.room_name)
+            self.game_id = room.game.id
 
-            if game_token and (self.room.white_player == game_token or self.room.black_player == game_token):
+            if game_token and (room.white_player == game_token or room.black_player == game_token):
                 await self.channel_layer.group_add(
                     self.room_group_name,
                     self.channel_name
@@ -133,9 +213,10 @@ class ComputerGameConsumer(GameConsumer):
             self.room_group_name = f'game_{self.room_name}'
 
             game_token = get_cookie(self.scope, 'computer_game_token')
-            self.room = await database_sync_to_async(ComputerGameRoom.objects.get)(id=self.room_name)
+            room = await database_sync_to_async(ComputerGameRoom.objects.prefetch_related('game').get)(id=self.room_name)
+            self.game_id = room.game.id
 
-            if game_token and self.room.player == game_token:
+            if game_token and room.player == game_token:
                 await self.channel_layer.group_add(
                     self.room_group_name,
                     self.channel_name

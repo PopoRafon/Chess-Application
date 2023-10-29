@@ -1,10 +1,10 @@
 import Cookies from 'js-cookie';
 
-async function setupUserGame(socket, navigate) {
+async function setupUserGame(setSocket, navigate) {
     const accessToken = Cookies.get('access');
     const gameId = window.location.pathname.split('/')[3];
 
-    return await fetch(`/api/v1/user/game/room/${gameId}`, {
+    return await fetch(`/api/v1/ranking/game/room/${gameId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${accessToken}`
@@ -12,8 +12,8 @@ async function setupUserGame(socket, navigate) {
     })
     .then((response) => response.json())
     .then((data) => {
-        if (data.game_state) {
-            socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/user/game/${gameId}/`);
+        if (data.positions) {
+            setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/ranking/game/${gameId}/`));
 
             return data;
         } else {
@@ -25,7 +25,7 @@ async function setupUserGame(socket, navigate) {
     });
 }
 
-async function setupGuestGame(socket, navigate) {
+async function setupGuestGame(setSocket, navigate) {
     const gameId = window.location.pathname.split('/')[3];
 
     return await fetch(`/api/v1/guest/game/room/${gameId}`, {
@@ -33,8 +33,8 @@ async function setupGuestGame(socket, navigate) {
     })
     .then((response) => response.json())
     .then((data) => {
-        if (data.game_state) {
-            socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`);
+        if (data.positions) {
+            setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`));
 
             data.white_username = 'Guest';
             data.black_username = 'Guest';
@@ -49,7 +49,7 @@ async function setupGuestGame(socket, navigate) {
     });
 }
 
-async function setupComputerGame(socket, navigate, user) {
+async function setupComputerGame(setSocket, navigate, user) {
     const gameId = Cookies.get('computer_game_url');
 
     return await fetch(`/api/v1/computer/game/room/${gameId}`, {
@@ -57,8 +57,8 @@ async function setupComputerGame(socket, navigate, user) {
     })
     .then((response) => response.json())
     .then((data) => {
-        if (data.game_state) {
-            socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`);
+        if (data.positions) {
+            setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`));
 
             data.white_username = user.isLoggedIn ? user.username : 'Guest';
             data.black_username = 'Bot';

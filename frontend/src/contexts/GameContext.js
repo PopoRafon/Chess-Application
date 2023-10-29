@@ -1,6 +1,6 @@
 import { createContext, useReducer, useContext } from 'react';
 import gameReducer from '../reducers/GameReducer';
-import initGameState from '../helpers/InitialGameState';
+import initGameState from '../helpers/InitGameState';
 
 const GameContext = createContext();
 

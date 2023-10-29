@@ -8,24 +8,24 @@ from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import UserGameRoom, GuestGameRoom, ComputerGameRoom
-from .permissions import UserGameRoomObjectPermissions, GuestGameRoomObjectPermissions, ComputerGameRoomObjectPermissions
+from .models import RankingGameRoom, GuestGameRoom, ComputerGameRoom
+from .permissions import RankingGameRoomObjectPermissions, GuestGameRoomObjectPermissions, ComputerGameRoomObjectPermissions
 from .serializers import (
     RegisterSerializer,
-    UserGameRoomSerializer,
+    RankingGameRoomSerializer,
     GuestGameRoomSerializer,
     ComputerGameRoomRetrieveSerializer,
     ComputerGameRoomCreateSerializer
 )
 
 
-class UserGameRoomView(RetrieveAPIView):
+class RankingGameRoomView(RetrieveAPIView):
     lookup_url_kwarg = 'id'
-    serializer_class = UserGameRoomSerializer
-    permission_classes = [IsAuthenticated, UserGameRoomObjectPermissions]
+    serializer_class = RankingGameRoomSerializer
+    permission_classes = [IsAuthenticated, RankingGameRoomObjectPermissions]
 
     def get_queryset(self):
-        return UserGameRoom.objects.all()
+        return RankingGameRoom.objects.all()
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)

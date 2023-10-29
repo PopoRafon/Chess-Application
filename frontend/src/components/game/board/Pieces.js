@@ -1,16 +1,13 @@
 import { useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useValidMoves } from '../../../contexts/ValidMovesContext';
-import { usePoints } from '../../../contexts/PointsContext';
 import { useUsers } from '../../../contexts/UsersContext';
 import calcPosition from '../../../helpers/CalculatePosition';
-import playSound from '../../../helpers/GameSounds';
 import Piece from './Piece';
 
-export default function Pieces({ setPromotionMenu, availableMoves }) {
-    const { game, dispatchGame } = useGame();
+export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
+    const { game } = useGame();
     const { validMoves, setValidMoves } = useValidMoves();
-    const { dispatchPoints } = usePoints();
     const { users } = useUsers();
     const piecesRef = useRef();
 
@@ -18,84 +15,30 @@ export default function Pieces({ setPromotionMenu, availableMoves }) {
 
     function handleDrop(event) {
         const [piece, oldRow, oldCol] = event.dataTransfer.getData('text').split(',');
-        const { row, col } = calcPosition(piecesRef.current, event);
+        const [newRow, newCol] = calcPosition(piecesRef.current, event);
         const position = `${oldRow}${oldCol}`;
         const playerMoves = availableMoves.current[piece[0]][position];
         const isPlayerWhite = users.player.color === 'w';
-        const castlingDirections = game.castlingDirections[piece[0] + 'k'];
+        const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
 
         setPromotionMenu({ show: false });
 
-        if (playerMoves.some((move) => move.includes(`${row}${col}`))) {
-            if ((piece === 'wp' && row === (isPlayerWhite ? 0 : 7)) || (piece === 'bp' && row === (isPlayerWhite ? 7 : 0))) {
+        if (playerMoves.some((move) => move.includes(`${newRow}${newCol}`))) {
+            if ((piece === 'wp' && newRow === (isPlayerWhite ? 0 : 7)) || (piece === 'bp' && newRow === (isPlayerWhite ? 7 : 0))) {
                 return setPromotionMenu({
                     show: true,
-                    data: [piece, oldRow, oldCol],
-                    position: [row, col],
+                    data: [oldRow, oldCol],
+                    position: [newRow, newCol],
                 });
             }
 
-            const newPositions = game.positions.slice();
-            const capturedPiece = newPositions[row][col];
-            const colLetters = (isPlayerWhite ? 'abcdefgh' : 'hgfedcba');
-            const rowLetters = (isPlayerWhite ? '87654321' : '12345678');
-            const square = colLetters[col] + rowLetters[row];
-            const markedSquares = [`${oldRow}${oldCol}`, `${row}${col}`];
-            let move = (piece[1] === 'p' ? (capturedPiece && colLetters[oldCol]) : piece[1].toUpperCase()) + (capturedPiece && 'x') + square;
-            let newCastlingDirections = '';
-
-            if (piece[1] === 'k') {
-                const side = piece[0] === 'w' ? (isPlayerWhite ? 7 : 0) : (!isPlayerWhite ? 7 : 0);
-                const direction = col - oldCol;
-
-                if (Math.abs(direction) === 2) {
-                    const rookPos = direction === 2 ? 7 : 0;
-                    const newRookPos = direction === 2 ? (isPlayerWhite ? 5 : 4) : (!isPlayerWhite ? 2 : 3);
-
-                    newPositions[side][newRookPos] = newPositions[side][rookPos];
-                    newPositions[side][rookPos] = '';
-
-                    move = direction === 2 ? (isPlayerWhite ? 'O-O' : 'O-O-O') : (!isPlayerWhite ? 'O-O' : 'O-O-O');
-                }
-
-                if (game.castlingDirections[piece] !== 'none') {
-                    newCastlingDirections = piece[0] === 'w' ? { wk: 'none' } : { bk: 'none' };
-                }
-            } else if (piece[1] === 'r' && castlingDirections !== 'none') {
-                if (oldCol === (isPlayerWhite ? '0' : '7') && castlingDirections !== 'left') {
-                    newCastlingDirections = piece[0] === 'w' ? { wk: 'right' } : { bk: 'right' };
-                } else if (oldCol === (isPlayerWhite ? '7' : '0') && castlingDirections !== 'right') {
-                    newCastlingDirections = piece[0] === 'w' ? { wk: 'left' } : { bk: 'left' };
-                } else if ((oldCol === (isPlayerWhite ? '7' : '0') && castlingDirections === 'right') || (oldCol === (isPlayerWhite ? '0' : '7') && castlingDirections === 'left')) {
-                    newCastlingDirections = piece[0] === 'w' ? { wk: 'none' } : { bk: 'none' };
-                }
-            }
-
-            if (capturedPiece) {
-                dispatchPoints({ 
-                    type: capturedPiece,
-                    turn: game.turn
-                });
-            }
-
-            newPositions[oldRow][oldCol] = '';
-            newPositions[row][col] = piece;
-
-            playSound(move, capturedPiece);
+            socket.send(JSON.stringify({
+                type: 'move',
+                oldPos: [lines[oldRow], lines[oldCol]],
+                newPos: [lines[newRow], lines[newCol]]
+            }));
 
             setValidMoves([]);
-
-            dispatchGame({
-                type: 'NEXT_ROUND',
-                positions: newPositions,
-                prevMove: [
-                    move,
-                    newPositions.map(row => row.slice()),
-                    markedSquares
-                ],
-                markedSquares: markedSquares,
-                castlingDirections: newCastlingDirections
-            });
         }
     }
 

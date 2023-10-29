@@ -4,5 +4,5 @@ export default function calcPosition(pieces, event) {
     const row = Math.floor((event.clientY - y) / squareSize);
     const col = Math.floor((event.clientX - x) / squareSize);
 
-    return { row, col };
+    return [row, col];
 }

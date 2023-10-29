@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { usePoints } from '../../../contexts/PointsContext';
 import { useGame } from '../../../contexts/GameContext';
 import { useUsers } from '../../../contexts/UsersContext';
 import checkGameResult from '../../../helpers/GameResult';
@@ -9,10 +8,9 @@ function convertToSeconds(timer) {
     return hours * 3600 + minutes * 60 + seconds;
 }
 
-export default function GameInfo({ player }) {
+export default function GameInfo({ player, points }) {
     const { game, dispatchGame } = useGame();
     const { users } = useUsers();
-    const { points } = usePoints();
     const [timer, setTimer] = useState(users[player].timer !== undefined && convertToSeconds(users[player].timer));
     const minutes = Math.floor(timer / 60);
     const seconds = timer % 60;
@@ -39,7 +37,7 @@ export default function GameInfo({ player }) {
                 clearTimeout(timerTimeout);
             };
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line
     }, [game.result, game.turn, timer]);
 
     return (
@@ -51,7 +49,9 @@ export default function GameInfo({ player }) {
             />
             <div className="player-info">
                 <span>{users[player].username}</span>
-                {users[player].rating && <span className="game-user-rating">({users[player].rating})</span>}
+                {users[player].rating && (
+                    <span className="game-user-rating">({users[player].rating})</span>
+                )}
                 <div className="game-points">Points: +{points[users[player].color]}</div>
             </div>
             {users[player].timer !== undefined && (

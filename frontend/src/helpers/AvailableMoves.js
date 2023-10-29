@@ -28,7 +28,7 @@ export default function updateAvailableMoves(game, squares, availableMoves, disp
         availableMovesLength += piecePositions.length;
     }
 
-    if (availableMovesLength === 0) {
+    if (player.color === turn && availableMovesLength === 0) {
         if (kingCheckSquares.current[turn].length > 0) {
             dispatchGame({
                 type: 'GAME_END',
