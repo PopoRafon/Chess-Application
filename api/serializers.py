@@ -45,6 +45,7 @@ class RegisterSerializer(serializers.Serializer):
 
 class RankingGameRoomSerializer(serializers.ModelSerializer):
     positions = serializers.JSONField(source='game.positions')
+    castling = serializers.CharField(source='game.castling')
     result = serializers.CharField(source='game.result')
     turn = serializers.CharField(source='game.turn')
     white_username = serializers.CharField(source='white_player.username')
@@ -61,6 +62,7 @@ class RankingGameRoomSerializer(serializers.ModelSerializer):
 
 class GuestGameRoomSerializer(serializers.ModelSerializer):
     positions = serializers.JSONField(source='game.positions')
+    castling = serializers.CharField(source='game.castling')
     result = serializers.CharField(source='game.result')
     turn = serializers.CharField(source='game.turn')
 
@@ -71,6 +73,7 @@ class GuestGameRoomSerializer(serializers.ModelSerializer):
 
 class ComputerGameRoomRetrieveSerializer(serializers.ModelSerializer):
     positions = serializers.JSONField(source='game.positions')
+    castling = serializers.CharField(source='game.castling')
     result = serializers.CharField(source='game.result')
     turn = serializers.CharField(source='game.turn')
 

@@ -20,11 +20,12 @@ export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
         const playerMoves = availableMoves.current[piece[0]][position];
         const isPlayerWhite = users.player.color === 'w';
         const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
+        let action;
 
         setPromotionMenu({ show: false });
 
         if (playerMoves.some((move) => move.includes(`${newRow}${newCol}`))) {
-            if ((piece === 'wp' && newRow === (isPlayerWhite ? 0 : 7)) || (piece === 'bp' && newRow === (isPlayerWhite ? 7 : 0))) {
+            if (piece[1] === 'p' && newRow === (isPlayerWhite ? lines[0] : lines[7])) {
                 return setPromotionMenu({
                     show: true,
                     data: [oldRow, oldCol],
@@ -32,8 +33,14 @@ export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
                 });
             }
 
+            if (piece[1] === 'k' && Math.abs(oldCol - newCol) === 2) {
+                action = 'castle';
+            } else {
+                action = 'move';
+            }
+
             socket.send(JSON.stringify({
-                type: 'move',
+                type: action,
                 oldPos: [lines[oldRow], lines[oldCol]],
                 newPos: [lines[newRow], lines[newCol]]
             }));

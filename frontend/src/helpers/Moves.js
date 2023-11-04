@@ -59,7 +59,7 @@ function calcKnightMoves(directions, positions, row, col, kingCheckSquares, pinn
     return checkKingCheckSquares(kingCheckSquares, viableMoves);
 }
 
-function calcKingMoves(directions, positions, row, col, attackedSquares, castlingDirections, player, isCheckingSquares) {
+function calcKingMoves(directions, positions, row, col, attackedSquares, castling, player, isCheckingSquares) {
     const piece = positions[row][col];
     const isPlayerWhite = player.color === 'w';
     const side = piece[0] === 'w' ? (isPlayerWhite ? 7 : 0) : (!isPlayerWhite ? 7 : 0);
@@ -82,18 +82,14 @@ function calcKingMoves(directions, positions, row, col, attackedSquares, castlin
     }
 
     if (!isCheckingSquares) {
-        const leftCastlingPositions = isPlayerWhite ? [`${row}${col - 1}`, `${row}${col - 2}`, `${row}${col - 3}`] : [`${row}${col + 1}`, `${row}${col + 2}`, `${row}${col + 3}`];
-        const rightCastlingPositions = isPlayerWhite ? [`${row}${col + 1}`, `${row}${col + 2}`] : [`${row}${col - 1}`, `${row}${col - 2}`];
+        const kingSideCastling = isPlayerWhite ? [`${row}${col + 1}`, `${row}${col + 2}`] : [`${row}${col - 1}`, `${row}${col - 2}`];
+        const queenSideCastling = isPlayerWhite ? [`${row}${col - 1}`, `${row}${col - 2}`, `${row}${col - 3}`] : [`${row}${col + 1}`, `${row}${col + 2}`, `${row}${col + 3}`];
 
-        if ((castlingDirections[piece] === (isPlayerWhite ? 'left' : 'right') || castlingDirections[piece] === 'both') &&
-            checkCastling(positions, (isPlayerWhite ? leftCastlingPositions : rightCastlingPositions), attackedSquares, piece[0])
-        ) {
-            viableMoves.push(`${side}${isPlayerWhite ? 2 : 1} valid-move`);
+        if (castling.includes(isPlayerWhite ? 'K' : 'k') && checkCastling(positions, kingSideCastling, attackedSquares, piece[0])) {
+            viableMoves.push(`${side}${isPlayerWhite ? 6 : 1} valid-move`);
         }
-        if ((castlingDirections[piece] === (isPlayerWhite ? 'right' : 'left') || castlingDirections[piece] === 'both') &&
-            checkCastling(positions, (isPlayerWhite ? rightCastlingPositions : leftCastlingPositions), attackedSquares, piece[0])
-        ) {
-            viableMoves.push(`${side}${isPlayerWhite ? 6 : 5} valid-move`);
+        if (castling.includes(isPlayerWhite ? 'Q' : 'q') && checkCastling(positions, queenSideCastling, attackedSquares, piece[0])) {
+            viableMoves.push(`${side}${isPlayerWhite ? 2 : 5} valid-move`);
         }
     }
 
@@ -129,7 +125,7 @@ function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquare
 }
 
 function getAvailableMoves(game, piece, row, col, squares, player, isCheckingSquares) {
-    const { positions, turn, castlingDirections } = game;
+    const { positions, turn, castling } = game;
     const { attackedSquares, kingCheckSquares, pinnedSquares } = squares;
     const playersKingCheckSquares = kingCheckSquares.current[piece[0]];
     const playersPinnedSquares = pinnedSquares.current[piece[0]];
@@ -143,7 +139,7 @@ function getAvailableMoves(game, piece, row, col, squares, player, isCheckingSqu
         case 'n':
             return calcKnightMoves(knightDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'k':
-            return calcKingMoves(kingDirections(), positions, row, col, attackedSquares, castlingDirections, player, isCheckingSquares);
+            return calcKingMoves(kingDirections(), positions, row, col, attackedSquares, castling, player, isCheckingSquares);
         case 'r':
             return calcQueenRookBishopMoves(rookDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'b':

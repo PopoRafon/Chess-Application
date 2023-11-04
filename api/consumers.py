@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Game
+from .models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Game, Move
 from .utils import get_cookie
 
 ranking_queue = []
@@ -88,6 +88,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.receive_move(text_data_json)
         elif action_type == 'promotion':
             await self.receive_promotion(text_data_json)
+        elif action_type == 'castle':
+            await self.receive_castle(text_data_json)
         else:
             await self.send_error()
 
@@ -96,78 +98,159 @@ class GameConsumer(AsyncWebsocketConsumer):
             'error': 'Message you sent was invalid.'
         }))
 
-    async def receive_promotion(self, data):
-        game = await database_sync_to_async(Game.objects.get)(id=self.game_id)
-        _, promotion_type, oldPos, newPos = data.values()
+    async def receive_castle(self, data):
+        _, oldPos, newPos = data.values()
+        game = await self.get_game()
 
-        if len(promotion_type) == 1 and await self.perform_move_validation(game, oldPos, newPos, promotion_type):
-            await self.perform_move_creation(game, oldPos, newPos, promotion_type)
+        if await self.perform_move_validation(game, oldPos, newPos, castle=True):
+            move = await self.perform_move_creation(game, oldPos, newPos, castle=True)
+
+            await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'send_castle',
+                'turn': game.turn,
+                'castling': game.castling,
+                'oldPos': oldPos,
+                'newPos': newPos,
+                'move': move
+            })
+        else:
+            await self.send_error()
+
+    async def receive_promotion(self, data):
+        _, promotion_type, oldPos, newPos = data.values()
+        game = await self.get_game()
+
+        if len(promotion_type) == 1 and await self.perform_move_validation(game, oldPos, newPos, promotion=promotion_type):
+            move = await self.perform_move_creation(game, oldPos, newPos, promotion=promotion_type)
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'send_promotion',
                 'turn': game.turn,
                 'promotionType': promotion_type,
                 'oldPos': oldPos,
-                'newPos': newPos
+                'newPos': newPos,
+                'move': move
             })
         else:
             await self.send_error()
 
     async def receive_move(self, data):
-        game = await database_sync_to_async(Game.objects.get)(id=self.game_id)
         _, oldPos, newPos = data.values()
+        game = await self.get_game()
 
         if await self.perform_move_validation(game, oldPos, newPos):
-            await self.perform_move_creation(game, oldPos, newPos)
+            move = await self.perform_move_creation(game, oldPos, newPos)
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'send_move',
                 'turn': game.turn,
+                'castling': game.castling,
                 'oldPos': oldPos,
-                'newPos': newPos
+                'newPos': newPos,
+                'move': move
             })
         else:
             await self.send_error()
 
     async def send_promotion(self, event):
-        _, turn, promotion_type, oldPos, newPos = event.values()
+        _, turn, promotion_type, oldPos, newPos, move = event.values()
 
         await self.send(json.dumps({
             'type': 'promotion',
             'turn': turn,
             'promotionType': promotion_type,
             'oldPos': oldPos,
-            'newPos': newPos
+            'newPos': newPos,
+            'move': move
         }))
 
     async def send_move(self, event):
-        _, turn, oldPos, newPos = event.values()
+        _, turn, castling, oldPos, newPos, move = event.values()
 
         await self.send(json.dumps({
             'type': 'move',
             'turn': turn,
+            'castling': castling,
             'oldPos': oldPos,
-            'newPos': newPos
+            'newPos': newPos,
+            'move': move
         }))
 
-    async def perform_move_creation(self, game, oldPos, newPos, promotion_type=''):
+    async def send_castle(self, event):
+        _, turn, castling, oldPos, newPos, move = event.values()
+
+        await self.send(json.dumps({
+            'type': 'castle',
+            'turn': turn,
+            'castling': castling,
+            'oldPos': oldPos,
+            'newPos': newPos,
+            'move': move
+        }))
+
+    async def perform_move_creation(self, game, oldPos, newPos, promotion='', castle=False):
         """
         Add move to the Database and update current game state.
+        Returns move in form of classic chess notation.
         """
 
         oldRow, oldCol = oldPos
         newRow, newCol = newPos
 
         piece = game.positions[oldRow][oldCol]
+        newPosPiece = game.positions[newRow][newCol]
 
-        game.positions[newRow][newCol] = piece[0] + promotion_type if promotion_type else piece
-        game.positions[oldRow][oldCol] = ''
+        colLetters = 'abcdefgh'
+        rowLetters = '87654321'
+
+        if castle:
+            game.castling = '--' + game.castling[2:4] if piece[0] == 'w' else game.castling[0:2] + '--'
+            game.positions[newRow][newCol] = piece
+            game.positions[oldRow][oldCol] = ''
+
+            if newCol - oldCol == 2:
+                move = 'O-O'
+
+                game.positions[newRow][newCol - 1] = piece[0] + 'r'
+                game.positions[newRow][7] = ''
+            else:
+                move = 'O-O-O'
+
+                game.positions[newRow][newCol + 1] = piece[0] + 'r'
+                game.positions[newRow][0] = ''
+        else:
+            if piece[1] == 'r':
+                if oldCol == 0:
+                    game.castling = game.castling.replace('Q' if piece[0] == 'w' else 'q', '-')
+                if oldCol == 7:
+                    game.castling = game.castling.replace('K' if piece[0] == 'w' else 'k', '-')
+            elif piece[1] == 'k':
+                game.castling = '--' + game.castling[2:4] if piece[0] == 'w' else game.castling[0:2] + '--'
+
+            move = piece[1].upper() if piece[1] != 'p' else ''
+
+            if newPosPiece:
+                if not move:
+                    move += colLetters[oldCol]
+                move += 'x'
+
+            move += f'{colLetters[newCol]}{rowLetters[newRow]}'
+
+            if promotion:
+                move += f'={promotion.upper()}'
+
+            game.positions[newRow][newCol] = piece[0] + promotion if promotion else piece
+            game.positions[oldRow][oldCol] = ''
+
+        await database_sync_to_async(Move.objects.create)(game=game, turn=game.turn, positions=game.positions, move=move)
 
         game.turn = 'w' if game.turn == 'b' else 'b'
 
         await game.asave()
 
-    async def perform_move_validation(self, game, oldPos, newPos, promotion_type=''):
+        return move
+
+    async def perform_move_validation(self, game, oldPos, newPos, promotion='', castle=False):
         """
         Perform every validation needed for received move.
         Returns True if all validations pass.
@@ -187,8 +270,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             return False
         elif newRow < 0 or newRow > 7 or newCol < 0 or newCol > 7:
             return False
-        elif promotion_type and promotion_type != 'q' and promotion_type != 'r' and promotion_type != 'b' and promotion_type != 'n':
+        elif promotion and promotion != 'q' and promotion != 'r' and promotion != 'b' and promotion != 'n':
             return False
+        elif piece[1] == 'p':
+            if not promotion and ((piece[0] == 'w' and newRow == 0) or (piece[0] == 'b' and newRow == 7)):
+                return False
+            elif promotion and ((piece[0] == 'w' and newRow != 0) or (piece[0] == 'b' and newRow != 7)):
+                return False
 
         match piece[1]:
             case 'p':
@@ -202,7 +290,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             case 'q':
                 return await self.validate_queen(game.positions, oldPos, newPos)
             case 'k':
-                return await self.validate_king(oldPos, newPos)
+                return await self.validate_king(game.castling, piece, castle, oldPos, newPos)
             case _:
                 return await self.send_error()
 
@@ -252,13 +340,21 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         return await self.validate_directions(positions, oldPos, newPos, directions)
 
-    async def validate_king(self, oldPos, newPos):
+    async def validate_king(self, castling, piece, castle, oldPos, newPos):
         oldRow, oldCol = oldPos
         newRow, newCol = newPos
 
         row_diff = abs(newRow - oldRow)
         col_diff = abs(newCol - oldCol)
 
+        # Check for castling
+        if col_diff == 2 and row_diff == 0 and castle:
+            if newCol == 2 and ('Q' if piece[0] == 'w' else 'q') in castling:
+                return True
+            if newCol == 6 and ('K' if piece[0] == 'w' else 'k') in castling:
+                return True
+
+        # Check for one square move
         if (row_diff == 1 and col_diff == 0) or (row_diff == 1 and col_diff == 1) or (row_diff == 0 and col_diff == 1):
             return True
 
@@ -303,6 +399,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         """
 
         return 'w' if self.room.white_player == self.user else 'b'
+
+    async def get_game(self):
+        """
+        Method used for getting game object.
+        """
+
+        return await database_sync_to_async(Game.objects.get)(id=self.game_id)
 
 
 class RankingGameConsumer(GameConsumer):

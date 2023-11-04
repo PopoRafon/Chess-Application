@@ -16,6 +16,7 @@ class Profile(models.Model):
 
 class Game(models.Model):
     positions = models.JSONField(blank=True, default=default_game_positions)
+    castling = models.CharField(max_length=4, blank=True, default='KQkq')
     turn = models.CharField(max_length=1, blank=True, default='w')
     result = models.CharField(max_length=10, blank=True)
 

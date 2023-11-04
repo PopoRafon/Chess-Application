@@ -24,10 +24,14 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
 
                 if (setup) {
                     const isPlayerWhite = setup.player === 'w';
+                    let castling;
 
                     if (setup.player === 'b') {
+                        castling = setup.castling[2] + setup.castling[3];
                         setup.positions.map((row) => row.reverse());
                         setup.positions.reverse();
+                    } else {
+                        castling = setup.castling[0] + setup.castling[1];
                     }
 
                     setUsers({
@@ -49,7 +53,8 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                         type: 'GAME_START',
                         positions: setup.positions,
                         turn: setup.turn,
-                        result: setup.result
+                        result: setup.result,
+                        castling: castling
                     });
                 }
             }
@@ -64,28 +69,39 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                 const data = JSON.parse(message.data);
 
                 if (!data.error) {
-                    const { newPos: [newRow, newCol], oldPos: [oldRow, oldCol], promotionType, turn } = data;
+                    const { type, newPos: [newRow, newCol], oldPos: [oldRow, oldCol], promotionType, turn, move, castling } = data;
                     const newPositions = game.positions.slice();
                     const isPlayerWhite = users.player.color === 'w';
                     const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
                     const piece = newPositions[lines[oldRow]][lines[oldCol]];
                     const pieceCaptured = newPositions[lines[newRow]][lines[newCol]];
+                    const newMarkedSquares = [
+                        `${lines[oldRow]}${lines[oldCol]}`,
+                        `${lines[newRow]}${lines[newCol]}`
+                    ];
 
-                    newPositions[lines[newRow]][lines[newCol]] = data.type === 'promotion' ? piece[0] + promotionType : piece;
+                    newPositions[lines[newRow]][lines[newCol]] = type === 'promotion' ? piece[0] + promotionType : piece;
                     newPositions[lines[oldRow]][lines[oldCol]] = '';
+
+                    if (type === 'castle') {
+                        newPositions[lines[newRow]][lines[newCol - (move === 'O-O' ? 1 : -1)]] = piece[0] + 'r';
+                        newPositions[lines[newRow]][lines[move === 'O-O' ? 7 : 0]] = '';
+                    }
 
                     dispatchGame({
                         type: 'NEXT_ROUND',
                         turn: turn,
                         positions: newPositions,
-                        prevMoves: [''],
-                        markedSquares: [
-                            `${lines[oldRow]}${lines[oldCol]}`,
-                            `${lines[newRow]}${lines[newCol]}`
-                        ]
+                        prevMoves: [
+                            move,
+                            newPositions.map(row => row.slice()),
+                            newMarkedSquares
+                        ],
+                        markedSquares: newMarkedSquares,
+                        castling: castling
                     });
 
-                    playSound(pieceCaptured);
+                    playSound(pieceCaptured, type);
                     dispatchPoints({ type: pieceCaptured });
                 }
             }
