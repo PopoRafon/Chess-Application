@@ -16,7 +16,7 @@ async def websocket_communicator(url, headers=[]):
         url,
         headers=headers
     )
-    connected,_ = await communicator.connect()
+    connected, _ = await communicator.connect()
 
     assert connected
 

@@ -80,12 +80,12 @@ class TestRankingGameConsumer(TestCase):
         self.url = f'ws/ranking/game/{self.room.id}/'
         self.headers = [(b'cookie', f'access={self.first_user_token}'.encode())]
 
-    async def test_user_game_connection_valid_token(self):
+    async def test_ranking_game_connection_valid_token(self):
         communicator = await websocket_communicator(self.url, self.headers)
 
         await communicator.disconnect()
 
-    async def test_user_game_connection_invalid_token(self):
+    async def test_ranking_game_connection_invalid_token(self):
         with self.assertRaises(Exception):
             await websocket_communicator(self.url, [(b'cookie', b'access=invalid_token')])
 

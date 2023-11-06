@@ -79,7 +79,7 @@ class ComputerGameRoomRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComputerGameRoom
-        fields = ['positions', 'result', 'turn']
+        fields = ['positions', 'result', 'turn', 'castling']
 
 
 class ComputerGameRoomCreateSerializer(serializers.ModelSerializer):
