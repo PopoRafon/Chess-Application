@@ -6,7 +6,8 @@ export default function gameReducer(state, action) {
                 positions: action.positions,
                 turn: action.turn,
                 result: action.result,
-                castling: action.castling
+                castling: action.castling,
+                enPassant: action.enPassant
             }
         case 'NEXT_ROUND':
             return {
@@ -18,6 +19,7 @@ export default function gameReducer(state, action) {
                     ...state.prevMoves,
                     [...action.prevMoves]
                 ],
+                enPassant: action.enPassant,
                 castling: action.castling || state.castling
             };
         case 'NEW_POSITIONS':

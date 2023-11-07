@@ -10,7 +10,6 @@ async def websocket_communicator(url, headers=[]):
     Uses WebsocketCommunicator with JWTAuthMiddlewareStack middleware.
     Raises an exception if connection fails.
     """
-
     communicator = WebsocketCommunicator(
         JWTAuthMiddlewareStack(URLRouter(websocket_urlpatterns)),
         url,

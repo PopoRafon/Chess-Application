@@ -43,11 +43,19 @@ class RegisterSerializer(serializers.Serializer):
         return attrs
 
 
-class RankingGameRoomSerializer(serializers.ModelSerializer):
+class GameRoomSerializer(serializers.ModelSerializer):
+    """
+    Parent serializer for all Game Room Serializers.
+    Provides all basic fields for game to work.
+    """
+    en_passant = serializers.CharField(source='game.en_passant')
     positions = serializers.JSONField(source='game.positions')
     castling = serializers.CharField(source='game.castling')
     result = serializers.CharField(source='game.result')
     turn = serializers.CharField(source='game.turn')
+
+
+class RankingGameRoomSerializer(GameRoomSerializer):
     white_username = serializers.CharField(source='white_player.username')
     black_username = serializers.CharField(source='black_player.username')
     white_rating = serializers.IntegerField(source='white_player.profile.rating')
@@ -60,26 +68,16 @@ class RankingGameRoomSerializer(serializers.ModelSerializer):
         exclude = ['id', 'game_started', 'black_player', 'white_player', 'game']
 
 
-class GuestGameRoomSerializer(serializers.ModelSerializer):
-    positions = serializers.JSONField(source='game.positions')
-    castling = serializers.CharField(source='game.castling')
-    result = serializers.CharField(source='game.result')
-    turn = serializers.CharField(source='game.turn')
-
+class GuestGameRoomSerializer(GameRoomSerializer):
     class Meta:
         model = GuestGameRoom
         exclude = ['id', 'game_started', 'black_player', 'white_player', 'game']
 
 
-class ComputerGameRoomRetrieveSerializer(serializers.ModelSerializer):
-    positions = serializers.JSONField(source='game.positions')
-    castling = serializers.CharField(source='game.castling')
-    result = serializers.CharField(source='game.result')
-    turn = serializers.CharField(source='game.turn')
-
+class ComputerGameRoomRetrieveSerializer(GameRoomSerializer):
     class Meta:
         model = ComputerGameRoom
-        fields = ['positions', 'result', 'turn', 'castling']
+        exclude = ['id', 'player', 'game']
 
 
 class ComputerGameRoomCreateSerializer(serializers.ModelSerializer):

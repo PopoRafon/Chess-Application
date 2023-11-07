@@ -1,11 +1,10 @@
 import { createContext, useReducer, useContext } from 'react';
 import gameReducer from '../reducers/GameReducer';
-import initGameState from '../helpers/InitGameState';
 
 const GameContext = createContext();
 
 function GameProvider({ children }) {
-    const [game, dispatchGame] = useReducer(gameReducer, initGameState());
+    const [game, dispatchGame] = useReducer(gameReducer, { prevMoves: [], markedSquares: [] });
 
     return (
         <GameContext.Provider value={{ game, dispatchGame }}>

@@ -96,8 +96,9 @@ function calcKingMoves(directions, positions, row, col, attackedSquares, castlin
     return viableMoves;
 }
 
-function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquares, player, isCheckingSquares) {
+function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquares, enPassant, player, isCheckingSquares) {
     const isPlayerWhite = player.color === 'w';
+    const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
     const direction = type === 'w' ? (isPlayerWhite ? -1 : 1) : (!isPlayerWhite ? -1 : 1);
     const startingPos = type === 'w' ? (isPlayerWhite ? 6 : 1) : (!isPlayerWhite ? 6 : 1);
     const topLeftSquare = positions[row + direction][col - 1];
@@ -112,8 +113,12 @@ function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquare
             }
         }
 
-        if (col - 1 >= 0 && topLeftSquare && topLeftSquare[0] !== type) viableMoves.push(`${row + direction}${col - 1} mark`);
-        if (col + 1 <= 7 && topRightSquare && topRightSquare[0] !== type) viableMoves.push(`${row + direction}${col + 1} mark`);
+        if (col - 1 >= 0 && ((topLeftSquare && topLeftSquare[0] !== type) || `${lines[row + direction]}${lines[col - 1]}` === enPassant)) {
+            viableMoves.push(`${row + direction}${col - 1} mark`);
+        }
+        if (col + 1 <= 7 && ((topRightSquare && topRightSquare[0] !== type) || `${lines[row + direction]}${lines[col + 1]}` === enPassant)) {
+            viableMoves.push(`${row + direction}${col + 1} mark`);
+        }
     } else {
         if (col - 1 >= 0) viableMoves.push(`${row + direction}${col - 1} mark`);
         if (col + 1 <= 7) viableMoves.push(`${row + direction}${col + 1} mark`);
@@ -125,7 +130,7 @@ function calcPawnMoves(positions, type, row, col, kingCheckSquares, pinnedSquare
 }
 
 function getAvailableMoves(game, piece, row, col, squares, player, isCheckingSquares) {
-    const { positions, turn, castling } = game;
+    const { positions, turn, castling, enPassant } = game;
     const { attackedSquares, kingCheckSquares, pinnedSquares } = squares;
     const playersKingCheckSquares = kingCheckSquares.current[piece[0]];
     const playersPinnedSquares = pinnedSquares.current[piece[0]];
@@ -135,7 +140,7 @@ function getAvailableMoves(game, piece, row, col, squares, player, isCheckingSqu
 
     switch (piece[1]) {
         case 'p':
-            return calcPawnMoves(positions, piece[0], row, col, playersKingCheckSquares, playersPinnedSquares, player, isCheckingSquares);
+            return calcPawnMoves(positions, piece[0], row, col, playersKingCheckSquares, playersPinnedSquares, enPassant, player, isCheckingSquares);
         case 'n':
             return calcKnightMoves(knightDirections(), positions, row, col, playersKingCheckSquares, playersPinnedSquares, isCheckingSquares);
         case 'k':

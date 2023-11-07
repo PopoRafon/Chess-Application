@@ -54,7 +54,8 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                         positions: setup.positions,
                         turn: setup.turn,
                         result: setup.result,
-                        castling: castling
+                        castling: castling,
+                        enPassant: setup.en_passant
                     });
                 }
             }
@@ -69,23 +70,30 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                 const data = JSON.parse(message.data);
 
                 if (!data.error) {
-                    const { type, newPos: [newRow, newCol], oldPos: [oldRow, oldCol], promotionType, turn, move, castling } = data;
+                    const { type, newPos, oldPos, promotionType, turn, move, castling, enPassant } = data;
                     const newPositions = game.positions.slice();
                     const isPlayerWhite = users.player.color === 'w';
                     const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
-                    const piece = newPositions[lines[oldRow]][lines[oldCol]];
-                    const pieceCaptured = newPositions[lines[newRow]][lines[newCol]];
+                    const [oldRow, oldCol, newRow, newCol] = [lines[oldPos[0]], lines[oldPos[1]], lines[newPos[0]], lines[newPos[1]]];
+                    const piece = newPositions[oldRow][oldCol];
+                    const direction = piece[0] === 'w' ? 1 : -1;
+                    let pieceCaptured = newPositions[newRow][newCol];
                     const newMarkedSquares = [
-                        `${lines[oldRow]}${lines[oldCol]}`,
-                        `${lines[newRow]}${lines[newCol]}`
+                        `${oldRow}${oldCol}`,
+                        `${newRow}${newCol}`
                     ];
 
-                    newPositions[lines[newRow]][lines[newCol]] = type === 'promotion' ? piece[0] + promotionType : piece;
-                    newPositions[lines[oldRow]][lines[oldCol]] = '';
+                    if (piece[1] === 'p' && oldCol !== newCol && !pieceCaptured) {
+                        pieceCaptured = newPositions[lines[newPos[0] + direction]][newCol];
+                        newPositions[lines[newPos[0] + direction]][newCol] = '';
+                    }
+
+                    newPositions[newRow][newCol] = type === 'promotion' ? piece[0] + promotionType : piece;
+                    newPositions[oldRow][oldCol] = '';
 
                     if (type === 'castle') {
-                        newPositions[lines[newRow]][lines[newCol - (move === 'O-O' ? 1 : -1)]] = piece[0] + 'r';
-                        newPositions[lines[newRow]][lines[move === 'O-O' ? 7 : 0]] = '';
+                        newPositions[newRow][lines[newPos[1] - (move === 'O-O' ? 1 : -1)]] = piece[0] + 'r';
+                        newPositions[newRow][lines[move === 'O-O' ? 7 : 0]] = '';
                     }
 
                     dispatchGame({
@@ -98,7 +106,8 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
                             newMarkedSquares
                         ],
                         markedSquares: newMarkedSquares,
-                        castling: castling
+                        castling: castling,
+                        enPassant: enPassant
                     });
 
                     playSound(pieceCaptured, type);
