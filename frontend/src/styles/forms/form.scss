@@ -43,6 +43,7 @@ $invalid-field-color: rgb(221, 16, 16);
             width: 100%;
 
             .form-input-container {
+                position: relative;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -61,23 +62,69 @@ $invalid-field-color: rgb(221, 16, 16);
                         border-color: #454545;
                     }
                 }
+
+                .form-input-tooltip {
+                    color: white;
+                    background-color: #292929;
+                    font-size: small;
+                    font-weight: 500;
+                    border-radius: 5px;
+                    border: 1px solid;
+                    border-color: #363636;
+                    position: absolute;
+                    padding: 4px 8px;
+                    z-index: 10;
+                    bottom: 55px;
+                    pointer-events: none;
+                    box-shadow: 4px 4px 6px 0px rgb(0, 0, 0, 0.1);
+                    animation: tooltip-appear 0.35s ease 0s 1;
+                
+                    &::after {
+                        content: " ";
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        margin-left: -5px;
+                        border-width: 5px;
+                        border-style: solid;
+                        border-color: #363636 transparent transparent transparent;
+                    }
+                }
             }
 
-            .form-submit-button {
-                cursor: pointer;
-                color: white;
-                background-color: #313131;
-                border: 1px solid;
-                border-color: #454545;
-                border-radius: 25px;
-                padding: 8px 16px;
+            .form-buttons {
+                display: flex;
+                width: 60%;
+                justify-content: space-between;
+                align-items: center;
                 margin-top: 20px;
-                font-size: 16px;
-                box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
-                text-shadow: 3px 3px 6px rgb(0, 0, 0, 0.30);
-            
-                &:hover {
-                    background-color: #353535;
+
+                .form-link-button {
+                    color: rgb(69, 146, 233);
+                    padding: 3px 5px;
+                    border-radius: 5px;
+
+                    &:hover {
+                        background-color: rgb(255, 255, 255, 0.02);
+                        box-shadow: 1px 1px 4px rgb(0, 0, 0, 0.1);
+                    }
+                }
+
+                .form-submit-button {
+                    cursor: pointer;
+                    color: white;
+                    background-color: #313131;
+                    border: 1px solid;
+                    border-color: #454545;
+                    border-radius: 25px;
+                    padding: 8px 16px;
+                    font-size: 16px;
+                    box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
+                    text-shadow: 3px 3px 6px rgb(0, 0, 0, 0.30);
+
+                    &:hover {
+                        background-color: #353535;
+                    }
                 }
             }
 

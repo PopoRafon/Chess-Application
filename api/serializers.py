@@ -84,3 +84,14 @@ class ComputerGameRoomCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComputerGameRoom
         fields = ['id', 'player']
+
+
+class RankingSerializer(serializers.ModelSerializer):
+    rating = serializers.CharField(source='profile.rating')
+    avatar = serializers.CharField(source='profile.avatar.url')
+    wins = serializers.IntegerField(source='profile.wins')
+    loses = serializers.IntegerField(source='profile.loses')
+
+    class Meta:
+        model = User
+        fields = ['username', 'rating', 'avatar', 'wins', 'loses']

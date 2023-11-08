@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import { refreshAccessToken } from '../../utils/AccessToken';
-import { FormInput, FormCheckbox } from './Form';
 import { useAlert } from '../../contexts/AlertContext';
+import { emailReq, usernameReq, passwordReq, confirmPasswordReq } from '../../helpers/FormsRequirements';
+import FormInput from './FormInput';
+import FormCheckbox from './FormCheckbox';
 import getUserData from '../../utils/UserData';
 
 export default function RegisterForm() {
     const { setUser } = useUser();
     const { setAlert } = useAlert();
     const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         email: '',
         username: '',
@@ -17,22 +20,14 @@ export default function RegisterForm() {
         password2: '',
         checkbox: false
     });
-    const [errors, setErrors] = useState({});
 
     function handleChange(event) {
-        const { name, value, type, checked } = event.target;
+        const { name, value } = event.target;
 
-        if (type === 'checkbox') {
-            setFormData({
-                ...formData,
-                [name]: checked
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [name]: value
-            });
-        }
+        setFormData({
+            ...formData,
+            [name]: value
+        });
     }
 
     function validation() {
@@ -52,7 +47,7 @@ export default function RegisterForm() {
         if (password1.length < 8) newErrors['password1'] = 'Ensure this field has at least 8 characters.';
 
         if (password1 !== password2) newErrors['password2'] = 'Passwords must be the same.';
-        
+
         if (password2.length < 8) newErrors['password2'] = 'Ensure this field has at least 8 characters.';
 
         if (!checkbox) newErrors['checkbox'] = 'Terms of Service must be accepted.';
@@ -111,6 +106,7 @@ export default function RegisterForm() {
                 value={formData.email}
                 handleChange={handleChange}
                 error={errors.email}
+                requirements={emailReq}
             />
             <FormInput
                 id="username"
@@ -119,6 +115,7 @@ export default function RegisterForm() {
                 value={formData.username}
                 handleChange={handleChange}
                 error={errors.username}
+                requirements={usernameReq}
             />
             <FormInput
                 id="password1"
@@ -127,6 +124,7 @@ export default function RegisterForm() {
                 value={formData.password1}
                 handleChange={handleChange}
                 error={errors.password1}
+                requirements={passwordReq}
             />
             <FormInput
                 id="password2"
@@ -135,18 +133,27 @@ export default function RegisterForm() {
                 value={formData.password2}
                 handleChange={handleChange}
                 error={errors.password2}
+                requirements={confirmPasswordReq}
             />
             <FormCheckbox
                 checked={formData.checkbox}
-                handleChange={handleChange}
+                handleChange={(event) => setFormData({ ...formData, checkbox: event.target.checked })}
                 label="Agree to Terms of Service"
                 error={errors.checkbox}
             />
-            <input
-                type="submit"
-                value="Register"
-                className="form-submit-button"
-            />
+            <div className="form-buttons">
+                <Link
+                    to="/login"
+                    className="form-link-button"
+                >
+                    Sign In
+                </Link>
+                <input
+                    type="submit"
+                    value="Register"
+                    className="form-submit-button"
+                />
+            </div>
         </form>
     );
 }

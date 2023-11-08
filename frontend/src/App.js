@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import Play from './pages/Play';
 import PlayOnline from './pages/PlayOnline';
 import PlayComputer from './pages/PlayComputer';
+import Ranking from './pages/Ranking';
 
 function App() {
   const { setUser } = useUser();
@@ -39,6 +40,7 @@ function App() {
               <Route index element={<Home isLoaded={isLoaded} />} />
               <Route path='register' element={<Register isLoaded={isLoaded} />} />
               <Route path='login' element={<Login isLoaded={isLoaded} />} />
+              <Route path='ranking' element={<Ranking isLoaded={isLoaded} />} />
               <Route path='play'>
                 <Route index element={<Play isLoaded={isLoaded} />} />
                 <Route path='online/:id' element={<PlayOnline isLoaded={isLoaded} />} />

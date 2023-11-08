@@ -12,5 +12,6 @@ urlpatterns = [
     path('ranking/game/room/<id>', views.RankingGameRoomView.as_view(), name='ranking-game-room'),
     path('guest/game/room/<id>', views.GuestGameRoomView.as_view(), name='guest-game-room'),
     path('computer/game/room/<id>', views.ComputerGameRoomRetrieveView.as_view(), name='computer-game-room-retrieve'),
-    path('computer/game/room', views.ComputerGameRoomCreateView.as_view(), name='computer-game-room-create')
+    path('computer/game/room', views.ComputerGameRoomCreateView.as_view(), name='computer-game-room-create'),
+    path('ranking', views.RankingView.as_view(), name='ranking')
 ]

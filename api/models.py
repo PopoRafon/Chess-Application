@@ -9,6 +9,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(default='avatar.png', upload_to='avatars/', null=True)
     rating = models.IntegerField(default=800)
+    wins = models.IntegerField(blank=True, default=0)
+    loses = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.user.username

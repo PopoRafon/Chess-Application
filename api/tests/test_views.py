@@ -181,7 +181,6 @@ class TestLoginView(APITestCase):
             'username': 'username',
             'password': 'password'
         })
-        response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('refresh', response.cookies)
@@ -212,3 +211,16 @@ class TestLogoutView(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response_json['success'])
         self.assertFalse(response.cookies['refresh'].value)
+
+
+class TestRankingView(APITestCase):
+    def test_ranking_view_GET(self):
+        url = reverse('ranking')
+        User.objects.create(username='user')
+
+        response = self.client.get(url)
+        response_json = response.json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response_json), 1)
+        self.assertEqual(len(response_json[0]), 5)

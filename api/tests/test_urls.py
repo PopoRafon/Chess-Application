@@ -10,7 +10,8 @@ from api.views import (
     RankingGameRoomView,
     GuestGameRoomView,
     ComputerGameRoomRetrieveView,
-    ComputerGameRoomCreateView
+    ComputerGameRoomCreateView,
+    RankingView
 )
 
 class TestTokenUrls(APISimpleTestCase):
@@ -85,3 +86,11 @@ class TestGameRoomUrls(APISimpleTestCase):
         resolver = resolve(url)
 
         self.assertEqual(resolver.func.view_class, ComputerGameRoomCreateView)
+
+
+class TestRankingUrls(APISimpleTestCase):
+    def test_ranking_url(self):
+        url = reverse('ranking')
+        resolver = resolve(url)
+
+        self.assertEqual(resolver.func.view_class, RankingView)

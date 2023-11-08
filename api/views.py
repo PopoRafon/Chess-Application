@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import RetrieveAPIView, CreateAPIView
+from rest_framework.generics import RetrieveAPIView, CreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -15,7 +15,8 @@ from .serializers import (
     RankingGameRoomSerializer,
     GuestGameRoomSerializer,
     ComputerGameRoomRetrieveSerializer,
-    ComputerGameRoomCreateSerializer
+    ComputerGameRoomCreateSerializer,
+    RankingSerializer
 )
 
 
@@ -167,3 +168,10 @@ class LogoutView(APIView):
         response.delete_cookie('access')
 
         return response
+
+
+class RankingView(ListAPIView):
+    serializer_class = RankingSerializer
+
+    def get_queryset(self):
+        return User.objects.prefetch_related('profile').all().order_by('-profile__rating')[0:25]

@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import { refreshAccessToken } from '../../utils/AccessToken';
-import { FormInput } from './Form';
 import { useAlert } from '../../contexts/AlertContext';
+import { usernameReq, passwordReq } from '../../helpers/FormsRequirements';
+import FormInput from './FormInput';
 import getUserData from '../../utils/UserData';
 
 export default function LoginForm() {
     const { setUser } = useUser();
     const { setAlert } = useAlert();
     const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         username: '',
         password: ''
     });
-    const [errors, setErrors] = useState({});
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -89,6 +90,7 @@ export default function LoginForm() {
                 value={formData.username}
                 handleChange={handleChange}
                 error={errors.username}
+                requirements={usernameReq}
             />
             <FormInput
                 id="password"
@@ -97,12 +99,21 @@ export default function LoginForm() {
                 value={formData.password}
                 handleChange={handleChange}
                 error={errors.password}
+                requirements={passwordReq}
             />
-            <input
-                type="submit"
-                value="Login"
-                className="form-submit-button"
-            />
+            <div className="form-buttons">
+                <Link
+                    to="/register"
+                    className="form-link-button"
+                >
+                    Sign Up
+                </Link>
+                <input
+                    type="submit"
+                    value="Login"
+                    className="form-submit-button"
+                />
+            </div>
         </form>
     );
 }

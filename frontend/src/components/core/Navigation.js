@@ -68,7 +68,7 @@ export default function Navigation() {
                 <div className="nav-footer">
                     <div className="nav-footer-user">
                         <img
-                            src='/static/images/avatar.png'
+                            src="/static/images/avatar.png"
                             className="nav-footer-avatar"
                             alt="Avatar"
                         />
