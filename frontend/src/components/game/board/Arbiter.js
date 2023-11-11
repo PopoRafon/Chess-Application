@@ -6,7 +6,7 @@ import updateAvailableMoves from '../../../helpers/AvailableMoves';
 import updateSquares from '../../../helpers/SquaresUpdate';
 import Pieces from './Pieces';
 
-export default function Arbiter({ socket, setPromotionMenu }) {
+export default function Arbiter() {
     const { game, dispatchGame } = useGame();
     const { users } = useUsers();
     const availableMoves = useRef({ w: {}, b: {} });
@@ -27,8 +27,6 @@ export default function Arbiter({ socket, setPromotionMenu }) {
 
     return (
         <Pieces
-            socket={socket}
-            setPromotionMenu={setPromotionMenu}
             availableMoves={availableMoves}
         />
     );

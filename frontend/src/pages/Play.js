@@ -9,7 +9,9 @@ export default function Play({ isLoaded }) {
         <>
             <Navigation />
             <div className="play-page">
-                {matchmaking && <div className="matchmaking">Searching for match</div>}
+                <div className="play-page-container">
+                    {matchmaking && <div className="matchmaking">Searching for match</div>}
+                </div>
                 <Sidebar
                     setMatchmaking={setMatchmaking}
                 />

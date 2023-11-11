@@ -1,23 +1,30 @@
 import { useState } from 'react';
+import { useSurrenderMenu } from '../../../contexts/SurrenderMenuContext';
 
-export default function PrevMovesButtons({ changePositions, currentMoveIndex }) {
+export default function PrevMovesButtons({ changePositions, currentMoveIdx }) {
+    const { setSurrenderMenu } = useSurrenderMenu();
     const [newGame, setNewGame] = useState(false);
     const [prevMove, setPrevMove] = useState(false);
     const [nextMove, setNextMove] = useState(false);
 
     function handleMoveShift(shift) {
-        return () => changePositions(currentMoveIndex + shift);
+        return () => changePositions(currentMoveIdx + shift);
+    }
+
+    function handleSurrender() {
+        setSurrenderMenu(true);
     }
 
     return (
         <div className="prev-moves-buttons-container">
             <button
                 className="prev-moves-button"
+                onClick={handleSurrender}
                 onMouseEnter={() => setNewGame(true)}
                 onMouseLeave={() => setNewGame(false)}
             >
-                <img src="/static/images/icons/new_game_icon.png" alt="New Game" />
-                {newGame && <div className="tooltip">New game</div>}
+                <img style={{ width: '25px', height: '25px' }} src="/static/images/icons/surrender_icon.png" alt="Surrender" />
+                {newGame && <div className="tooltip">Surrender</div>}
             </button>
             <button
                 className="prev-moves-button"

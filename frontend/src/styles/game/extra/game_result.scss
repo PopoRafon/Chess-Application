@@ -4,14 +4,14 @@
     align-items: center;
     position: absolute;
     background-color: #3d3d3d;
-    border: 1px solid;
-    border-color: #535353;
+    border: 1px solid #535353;
     border-radius: 10px;
     padding: 25px 0px;
     width: 250px;
     height: 210px;
     box-shadow: 4px 4px 6px rgb(0, 0, 0, 0.20);
     z-index: 25;
+    animation: scale-animation 0.75s ease 0s 1;
 
     .game-result-exit-button {
         cursor: pointer;
@@ -28,6 +28,10 @@
         width: 20px;
         background-size: 20px 20px;
         border: 0px;
+
+        &:hover {
+            filter: brightness(95%);
+        }
     }
 
     .game-result-header {
@@ -58,7 +62,7 @@
             }
 
             .game-result-winner {
-                animation: win-circle 1.25s ease 0s 1 forwards;
+                animation: win-circle 1.5s ease 0.15s 1 forwards;
 
                 @keyframes win-circle {
                     0% {
@@ -91,9 +95,8 @@
             cursor: pointer;
             padding: 10px 15px;
             color: white;
-            border: 1px solid;
+            border: 1px solid #3d3d3d;
             background-color: #333333;
-            border-color: #3d3d3d;
             border-radius: 5px;
             box-shadow: 3px 3px 6px 0px rgb(0, 0, 0, 0.2);
 

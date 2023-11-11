@@ -1,25 +1,31 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUsers } from '../../../contexts/UsersContext';
 import { useGame } from '../../../contexts/GameContext';
-import { useUser } from '../../../contexts/UserContext';
-import ChessBoard from './ChessBoard';
+import { SurrenderMenuProvider } from '../../../contexts/SurrenderMenuContext';
+import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
+import { useGameSocket } from '../../../contexts/GameSocketContext';
+import GameSidebar from '../sidebar/GameSidebar';
+import pointsReducer from '../../../reducers/PointsReducer';
+import playSound from '../../../helpers/GameSounds';
 import PromotionMenu from './PromotionMenu';
 import GameInfo from '../extra/GameInfo';
-import playSound from '../../../helpers/GameSounds';
-import pointsReducer from '../../../reducers/PointsReducer';
+import ChessBoard from './ChessBoard';
 
-export default function Game({ socket, setSocket, setMessages, gameSetup, disableBoard, setDisableBoard, promotionMenu, setPromotionMenu }) {
-    const [isGameLoaded, setIsGameLoaded] = useState(false);
+export default function Game({ gameType, gameSetup }) {
     const [points, dispatchPoints] = useReducer(pointsReducer, { w: 0, b: 0 });
+    const [disableBoard, setDisableBoard] = useState(false);
+    const [isGameLoaded, setIsGameLoaded] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const { promotionMenu } = usePromotionMenu();
+    const { gameSocket, setGameSocket } = useGameSocket();
     const { users, setUsers } = useUsers();
     const { game, dispatchGame } = useGame();
-    const { user } = useUser();
     const navigate = useNavigate();
 
     useEffect(() => {
         const getGameData = async () => {
-            const setup = await gameSetup(setSocket, user);
+            const setup = await gameSetup(setGameSocket);
 
             if (setup !== 'error') {
                 const isPlayerWhite = setup.player === 'w';
@@ -62,7 +68,9 @@ export default function Game({ socket, setSocket, setMessages, gameSetup, disabl
                     prevMoves: setup.prevMoves
                 });
 
-                setMessages(setup.messages);
+                if (gameType === 'ranking') {
+                    setMessages(setup.messages);
+                }
 
                 setIsGameLoaded(true);
             } else {
@@ -71,11 +79,11 @@ export default function Game({ socket, setSocket, setMessages, gameSetup, disabl
         }
 
         getGameData();
-    }, [navigate, setMessages, setSocket, setUsers, dispatchGame, gameSetup, user]);
+    }, [navigate, setMessages, setGameSocket, setUsers, dispatchGame, gameSetup, gameType]);
 
     useEffect(() => {
-        if (socket) {
-            socket.onmessage = (message) => {
+        if (gameSocket) {
+            gameSocket.onmessage = (message) => {
                 const data = JSON.parse(message.data);
 
                 if (data.type === 'move' || data.type === 'promotion' || data.type === 'castle') {
@@ -131,43 +139,51 @@ export default function Game({ socket, setSocket, setMessages, gameSetup, disabl
                             body: body
                         }
                     ]);
+                } else if (data.type === 'surrender') {
+                    const { result } = data;
+
+                    dispatchGame({
+                        type: 'GAME_END',
+                        result
+                    });
                 }
             }
 
             return () => {
-                if (socket) {
-                    socket.close();
+                if (gameSocket) {
+                    gameSocket.close();
                 }
             };
         }
         // eslint-disable-next-line
-    }, [socket]);
+    }, [gameSocket]);
 
     return isGameLoaded && (
-        <div className="game-container">
-            <div className="game-content">
-                {promotionMenu.show && (
-                    <PromotionMenu
-                        socket={socket}
-                        promotionMenu={promotionMenu}
-                        setPromotionMenu={setPromotionMenu}
+        <SurrenderMenuProvider>
+            <div className="game-container">
+                <div className="game-content">
+                    {promotionMenu.show && (
+                        <PromotionMenu />
+                    )}
+                    <GameInfo
+                        player='enemy'
+                        points={points}
                     />
-                )}
-                <GameInfo
-                    player='enemy'
-                    points={points}
-                />
-                <ChessBoard
-                    socket={socket}
-                    disableBoard={disableBoard}
-                    setDisableBoard={setDisableBoard}
-                    setPromotionMenu={setPromotionMenu}
-                />
-                <GameInfo
-                    player='player'
-                    points={points}
-                />
+                    <ChessBoard
+                        disableBoard={disableBoard}
+                        setDisableBoard={setDisableBoard}
+                    />
+                    <GameInfo
+                        player='player'
+                        points={points}
+                    />
+                </div>
             </div>
-        </div>
+            <GameSidebar
+                messages={messages}
+                gameType={gameType}
+                setDisableBoard={setDisableBoard}
+            />
+        </SurrenderMenuProvider>
     );
 }

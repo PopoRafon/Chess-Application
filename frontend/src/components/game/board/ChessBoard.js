@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useUsers } from '../../../contexts/UsersContext';
+import { useSurrenderMenu } from '../../../contexts/SurrenderMenuContext';
+import SurrenderMenu from '../extra/SurrenderMenu';
 import GameResultAlert from '../extra/GameResultAlert';
 import Arbiter from './Arbiter';
 
@@ -52,8 +54,9 @@ function DisableChessBoard() {
     return <div className="disable-board"></div>;
 }
 
-export default function ChessBoard({ socket, disableBoard, setDisableBoard, setPromotionMenu }) {
+export default function ChessBoard({ disableBoard, setDisableBoard }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
+    const { surrenderMenu } = useSurrenderMenu();
     const { users } = useUsers();
     const { game } = useGame();
     const rows = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -76,6 +79,9 @@ export default function ChessBoard({ socket, disableBoard, setDisableBoard, setP
                     setShowResultAlert={setShowResultAlert}
                 />
             )}
+            {surrenderMenu && (
+                <SurrenderMenu />
+            )}
             <div className="board-squares">
                 {rows.map((_, rowIdx) => (
                     cols.map((_, colIdx) => (
@@ -87,10 +93,7 @@ export default function ChessBoard({ socket, disableBoard, setDisableBoard, setP
                     ))
                 ))}
             </div>
-            <Arbiter
-                socket={socket}
-                setPromotionMenu={setPromotionMenu}
-            />
+            <Arbiter />
             <RowLetters
                 rows={users.player.color === 'w' ? rows : rows.reverse()}
             />

@@ -1,3 +1,11 @@
+@keyframes scale-animation {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .nav {
   display: flex;
   position: relative;
@@ -133,7 +141,7 @@
   top: -30px;
   pointer-events: none;
   box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.1);
-  animation: tooltip-appear 0.35s ease 0s 1;
+  animation: scale-animation 0.35s ease 0s 1;
 }
 .tooltip::after {
   content: " ";
@@ -146,14 +154,6 @@
   border-color: #363636 transparent transparent transparent;
 }
 
-@keyframes tooltip-appear {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 .scrollbar::-webkit-scrollbar {
   width: 8px;
 }
@@ -200,10 +200,8 @@
 
 .play-page-sidebar {
   display: flex;
-  flex-direction: reverse;
   align-items: center;
-  border-left: 1px solid;
-  border-color: #363636;
+  border-left: 1px solid #363636;
   background-color: #2c2c2c;
   height: 100%;
   width: 350px;
@@ -223,8 +221,7 @@
   background-color: rgb(65, 161, 65);
   border-radius: 15px;
   border: 0px;
-  border-bottom: 4px solid;
-  border-color: rgb(6, 141, 6);
+  border-bottom: 4px solid rgb(6, 141, 6);
   color: white;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.15);
 }
@@ -932,14 +929,14 @@
   align-items: center;
   position: absolute;
   background-color: #3d3d3d;
-  border: 1px solid;
-  border-color: #535353;
+  border: 1px solid #535353;
   border-radius: 10px;
   padding: 25px 0px;
   width: 250px;
   height: 210px;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
   z-index: 25;
+  animation: scale-animation 0.75s ease 0s 1;
 }
 .game-result-alert .game-result-exit-button {
   cursor: pointer;
@@ -956,6 +953,9 @@
   width: 20px;
   background-size: 20px 20px;
   border: 0px;
+}
+.game-result-alert .game-result-exit-button:hover {
+  filter: brightness(95%);
 }
 .game-result-alert .game-result-header {
   font-size: large;
@@ -983,7 +983,7 @@
   border-radius: 100%;
 }
 .game-result-alert .game-result-body .game-result-user .game-result-winner {
-  animation: win-circle 1.25s ease 0s 1 forwards;
+  animation: win-circle 1.5s ease 0.15s 1 forwards;
 }
 @keyframes win-circle {
   0% {
@@ -1011,14 +1011,60 @@
   cursor: pointer;
   padding: 10px 15px;
   color: white;
-  border: 1px solid;
+  border: 1px solid #3d3d3d;
   background-color: #333333;
-  border-color: #3d3d3d;
   border-radius: 5px;
   box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
 }
 .game-result-alert .game-result-footer .game-result-new-game-button:hover {
   background-color: #353535;
+}
+
+.surrender-menu {
+  position: absolute;
+  background-color: #3d3d3d;
+  border: 1px solid #535353;
+  border-radius: 10px;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 25;
+  padding: 10px;
+  animation: scale-animation 0.5s ease 0s 1;
+}
+.surrender-menu .surrender-buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  width: 100%;
+}
+.surrender-menu .surrender-buttons-container .surrender-yes-button {
+  cursor: pointer;
+  height: 25px;
+  width: 55px;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
+  background-color: rgb(65, 173, 65);
+  border: 1px solid rgb(6, 158, 6);
+  margin-right: 5px;
+}
+.surrender-menu .surrender-buttons-container .surrender-yes-button:hover {
+  background-color: rgb(60, 158, 60);
+  border-color: rgb(6, 143, 6);
+}
+.surrender-menu .surrender-buttons-container .surrender-no-button {
+  cursor: pointer;
+  height: 25px;
+  width: 55px;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
+  background-color: rgb(207, 56, 56);
+  border: 1px solid rgb(194, 36, 36);
+}
+.surrender-menu .surrender-buttons-container .surrender-no-button:hover {
+  background-color: rgb(196, 53, 53);
+  border: 1px solid rgb(183, 33, 33);
 }
 
 .chess-board {
@@ -1143,23 +1189,24 @@
 
 .play-page {
   display: flex;
-  position: relative;
   flex-grow: 1;
-  justify-content: flex-end;
+}
+.play-page .play-page-container {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
   align-items: center;
 }
-.play-page .matchmaking {
+.play-page .play-page-container .matchmaking {
   position: relative;
-  margin: 0px calc(50vw - 20vh - 351px + 100px);
   font-weight: 500;
-  background-color: #323232;
-  border: 1px solid;
-  border-color: #383838;
+  background-color: rgb(65, 161, 65);
+  border: 1px solid rgb(6, 141, 6);
   padding: 15px 22px 15px 15px;
-  border-radius: 25px;
+  border-radius: 15px;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
 }
-.play-page .matchmaking::before {
+.play-page .play-page-container .matchmaking::before {
   position: absolute;
   right: 17px;
   width: 5px;

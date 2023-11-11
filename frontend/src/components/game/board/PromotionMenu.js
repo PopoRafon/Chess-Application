@@ -1,22 +1,26 @@
 import { useGame } from '../../../contexts/GameContext';
 import { useValidMoves } from '../../../contexts/ValidMovesContext';
+import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
+import { useGameSocket } from '../../../contexts/GameSocketContext';
 import { useUsers } from '../../../contexts/UsersContext';
 
-export default function PromotionMenu({ socket, promotionMenu, setPromotionMenu }) {
+export default function PromotionMenu() {
     const { game } = useGame();
     const { setValidMoves } = useValidMoves();
+    const { gameSocket } = useGameSocket();
+    const { promotionMenu, setPromotionMenu } = usePromotionMenu();
     const { data: [oldRow, oldCol], position: [newRow, newCol] } = promotionMenu;
     const { users } = useUsers();
 
     function handleExit() {
-        setPromotionMenu({show: false});
+        setPromotionMenu({ show: false });
     }
 
     function handlePromote(piecePromotionType) {
         const isPlayerWhite = users.player.color === 'w';
         const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
 
-        socket.send(JSON.stringify({
+        gameSocket.send(JSON.stringify({
             type: 'promotion',
             promotionType: piecePromotionType,
             oldPos: [lines[oldRow], lines[oldCol]],
@@ -25,7 +29,7 @@ export default function PromotionMenu({ socket, promotionMenu, setPromotionMenu 
 
         setValidMoves([]);
 
-        setPromotionMenu({show: false});
+        setPromotionMenu({ show: false });
     }
 
     return (

@@ -92,15 +92,22 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         action_type = text_data_json.get('type')
+        self.game = await self.get_game_object()
 
-        if action_type == 'move':
-            await self.receive_move(text_data_json)
-        elif action_type == 'promotion':
-            await self.receive_promotion(text_data_json)
-        elif action_type == 'castle':
-            await self.receive_castle(text_data_json)
-        elif action_type == 'message':
-            await self.receive_message(text_data_json)
+        if not self.game.result:
+            match action_type:
+                case 'move':
+                    await self.receive_move(text_data_json)
+                case 'promotion':
+                    await self.receive_promotion(text_data_json)
+                case 'castle':
+                    await self.receive_castle(text_data_json)
+                case 'message':
+                    await self.receive_message(text_data_json)
+                case 'surrender':
+                    await self.receive_surrender()
+                case _:
+                    await self.send_error()
         else:
             await self.send_error()
 
@@ -109,11 +116,22 @@ class GameConsumer(AsyncWebsocketConsumer):
             'error': 'Message you sent was invalid.'
         }))
 
+    async def receive_surrender(self):
+        player_color = await self.get_player_color()
+        result = 'Black won!' if player_color == 'w' else 'White won!'
+
+        self.game.result = result
+
+        await self.game.asave()
+
+        await self.channel_layer.group_send(self.room_group_name, {
+            'type': 'send_surrender',
+            'result': result
+        })
+
     async def receive_message(self, data):
         _, body = data.values()
         body = body.strip()
-
-        self.game = await self.get_game_object()
 
         if await self.perform_message_validation(body):
 
@@ -131,7 +149,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         _, old_pos, new_pos = data.values()
         self.old_row, self.old_col = old_pos
         self.new_row, self.new_col = new_pos
-        self.game = await self.get_game_object()
 
         if await self.perform_move_validation(castle=True):
             await self.perform_move_creation(castle=True)
@@ -152,7 +169,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         _, promotion_type, old_pos, new_pos = data.values()
         self.old_row, self.old_col = old_pos
         self.new_row, self.new_col = new_pos
-        self.game = await self.get_game_object()
 
         if len(promotion_type) == 1 and await self.perform_move_validation(promotion=promotion_type):
             await self.perform_move_creation(promotion=promotion_type)
@@ -173,7 +189,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         _, old_pos, new_pos = data.values()
         self.old_row, self.old_col = old_pos
         self.new_row, self.new_col = new_pos
-        self.game = await self.get_game_object()
 
         if await self.perform_move_validation():
             await self.perform_move_creation()
@@ -189,6 +204,14 @@ class GameConsumer(AsyncWebsocketConsumer):
             })
         else:
             await self.send_error()
+
+    async def send_surrender(self, event):
+        _, result = event.values()
+
+        await self.send(json.dumps({
+            'type': 'surrender',
+            'result': result
+        }))
 
     async def send_promotion(self, event):
         _, turn, promotion_type, en_passant, old_pos, new_pos, move = event.values()

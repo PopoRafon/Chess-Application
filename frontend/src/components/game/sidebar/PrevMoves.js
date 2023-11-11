@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useValidMoves } from '../../../contexts/ValidMovesContext';
+import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
 import PrevMovesButtons from './PrevMovesButtons';
 import PrevMovesContainer from './PrevMovesContainer';
 
-export default function PrevMoves({ setDisableBoard, setPromotionMenu }) {
+export default function PrevMoves({ setDisableBoard }) {
     const { game, dispatchGame } = useGame();
     const { setValidMoves } = useValidMoves();
-    const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
+    const [currentMoveIdx, setCurrentMoveIdx] = useState(0);
+    const { setPromotionMenu } = usePromotionMenu();
     const refPositions = useRef();
 
     useEffect(() => {
-        setCurrentMoveIndex(game.prevMoves.length - 1);
+        setCurrentMoveIdx(game.prevMoves.length - 1);
     }, [game.prevMoves]);
 
     function changePositions(index) {
         if (index < 0 || index >= game.prevMoves.length) return;
-        setCurrentMoveIndex(index);
+        setCurrentMoveIdx(index);
 
         if (!refPositions.current) {
             refPositions.current = game.positions;
@@ -49,12 +51,11 @@ export default function PrevMoves({ setDisableBoard, setPromotionMenu }) {
         <div className="prev-moves">
             <PrevMovesContainer
                 changePositions={changePositions}
-                game={game}
-                currentMoveIndex={currentMoveIndex}
+                currentMoveIdx={currentMoveIdx}
             />
             <PrevMovesButtons
                 changePositions={changePositions}
-                currentMoveIndex={currentMoveIndex}
+                currentMoveIdx={currentMoveIdx}
             />
         </div>
     );

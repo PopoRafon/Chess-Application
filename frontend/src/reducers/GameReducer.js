@@ -30,7 +30,7 @@ export default function gameReducer(state, action) {
                 markedSquares: action.markedSquares
             };
         case 'GAME_END':
-            new Audio('/static/sounds/game_end.mp3').play();
+            // new Audio('/static/sounds/game_end.mp3').play();
 
             return {
                 ...state,

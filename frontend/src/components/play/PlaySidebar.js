@@ -18,6 +18,21 @@ export default function Sidebar({ setMatchmaking }) {
     }, []);
 
     function handleMatchmaking() {
+        if (user.isLoggedIn) {
+            const gameUrl = Cookies.get('ranking_game_url');
+
+            if (gameUrl) {
+                navigate(`/play/online/${gameUrl}`);
+            }
+        } else {
+            const gameToken = Cookies.get('guest_game_token');
+            const gameUrl = Cookies.get('guest_game_url');
+
+            if (gameUrl && gameToken) {
+                navigate(`/play/online/${gameUrl}`);
+            }
+        }
+
         if (!socket.current) {
             socket.current = new WebSocket(`ws://${window.location.hostname}:8000/ws/matchmaking/`);
 
@@ -28,36 +43,46 @@ export default function Sidebar({ setMatchmaking }) {
                 const { url, guest_game_token } = data;
 
                 if (url) {
-                    if (!user.isLoggedIn) {
+                    if (user.isLoggedIn) {
+                        Cookies.set('ranking_game_url', url);
+                    } else {
                         Cookies.set('guest_game_token', guest_game_token);
+                        Cookies.set('guest_game_url', url);
                     }
 
-                    navigate(`online/${data.url}`);
+                    navigate(`/play/online/${url}`);
                 }
             }
         }
     }
 
     function handleGameCreation() {
-        fetch('/api/v1/computer/game/room', {
-            method: 'POST'
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.id) {
-                Cookies.set('computer_game_token', data.player);
-                Cookies.set('computer_game_url', data.id);
-                navigate('/play/computer');
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        const gameToken = Cookies.get('computer_game_token');
+        const gameUrl = Cookies.get('computer_game_url');
+
+        if (gameToken && gameUrl) {
+            navigate('/play/computer/');
+        } else {
+            fetch('/api/v1/computer/game/room', {
+                method: 'POST'
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.id) {
+                    Cookies.set('computer_game_token', data.player);
+                    Cookies.set('computer_game_url', data.id);
+                    navigate('/play/computer');
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
     }
 
     return (
         <div className="play-page-sidebar">
-            <ul style={{width: '100%'}}>
+            <ul style={{ width: '100%' }}>
                 <li>
                     <button
                         onClick={handleMatchmaking}

@@ -1,3 +1,4 @@
+@import 'core/global_animations';
 @import 'core/navigation';
 @import 'core/authentication_alert';
 @import 'core/tooltip';
@@ -48,7 +49,6 @@ textarea {
 }
 
 .un-draggable {
-  // user-drag: none;
   -webkit-user-drag: none;
   user-select: none;
   -moz-user-select: none;

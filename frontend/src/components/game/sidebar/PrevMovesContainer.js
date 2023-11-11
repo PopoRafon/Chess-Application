@@ -1,4 +1,8 @@
-export default function PrevMovesContainer({ changePositions, game, currentMoveIndex }) {
+import { useGame } from '../../../contexts/GameContext';
+
+export default function PrevMovesContainer({ changePositions, currentMoveIdx }) {
+    const { game } = useGame();
+
     function handleMoveChange(index) {
         return () => changePositions(index);
     }
@@ -15,14 +19,14 @@ export default function PrevMovesContainer({ changePositions, game, currentMoveI
                                 key={index}
                             >
                                 <button
-                                    className={`prev-move ${(currentMoveIndex === index) && 'current-move'}`}
+                                    className={`prev-move ${(currentMoveIdx === index) && 'current-move'}`}
                                     onClick={handleMoveChange(index)}
                                 >
                                     {move[0]}
                                 </button>
                                 {game.prevMoves[index + 1] && (
                                     <button
-                                        className={`prev-move ${(currentMoveIndex === index + 1) && 'current-move'}`}
+                                        className={`prev-move ${(currentMoveIdx === index + 1) && 'current-move'}`}
                                         onClick={handleMoveChange(index + 1)}
                                     >
                                         {game.prevMoves[index + 1][0]}

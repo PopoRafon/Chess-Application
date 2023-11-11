@@ -2,12 +2,16 @@ import { useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useValidMoves } from '../../../contexts/ValidMovesContext';
 import { useUsers } from '../../../contexts/UsersContext';
+import { useGameSocket } from '../../../contexts/GameSocketContext';
+import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
 import calcPosition from '../../../helpers/CalculatePosition';
 import Piece from './Piece';
 
-export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
+export default function Pieces({ availableMoves }) {
     const { game } = useGame();
     const { validMoves, setValidMoves } = useValidMoves();
+    const { setPromotionMenu } = usePromotionMenu();
+    const { gameSocket } = useGameSocket();
     const { users } = useUsers();
     const piecesRef = useRef();
 
@@ -33,7 +37,7 @@ export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
                 });
             }
 
-            socket.send(JSON.stringify({
+            gameSocket.send(JSON.stringify({
                 type: action,
                 oldPos: [lines[oldRow], lines[oldCol]],
                 newPos: [lines[newRow], lines[newCol]]

@@ -1,10 +1,12 @@
+import { useGameSocket } from '../../../contexts/GameSocketContext';
 import { useState } from 'react';
 import { useUser } from '../../../contexts/UserContext';
 
-export default function Chat({ socket, messages }) {
+export default function Chat({ messages }) {
     const [submitTooltip, setSubmitTooltip] = useState(false);
     const [errorTooltip, setErrorTooltip] = useState(false);
     const [messageData, setMessageData] = useState('');
+    const { gameSocket } = useGameSocket();
     const { user } = useUser();
 
     function handleChange(event) {
@@ -35,7 +37,7 @@ export default function Chat({ socket, messages }) {
     }
 
     function sendMessage() {
-        socket.send(JSON.stringify({
+        gameSocket.send(JSON.stringify({
             type: 'message',
             body: messageData
         }));
