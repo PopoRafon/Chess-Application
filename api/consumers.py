@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Game, Move
+from .models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Game, Move, Message
 from .utils import get_cookie
 
 ranking_queue = []
@@ -99,6 +99,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.receive_promotion(text_data_json)
         elif action_type == 'castle':
             await self.receive_castle(text_data_json)
+        elif action_type == 'message':
+            await self.receive_message(text_data_json)
         else:
             await self.send_error()
 
@@ -106,6 +108,24 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.send(json.dumps({
             'error': 'Message you sent was invalid.'
         }))
+
+    async def receive_message(self, data):
+        _, body = data.values()
+        body = body.strip()
+
+        self.game = await self.get_game_object()
+
+        if await self.perform_message_validation(body):
+
+            await database_sync_to_async(Message.objects.create)(game=self.game, sender=self.user, body=body)
+
+            await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'send_message',
+                'username': self.user.username,
+                'body': body
+            })
+        else:
+            await self.send_error()
 
     async def receive_castle(self, data):
         _, old_pos, new_pos = data.values()
@@ -209,6 +229,27 @@ class GameConsumer(AsyncWebsocketConsumer):
             'move': move
         }))
 
+    async def send_message(self, event):
+        _, username, body = event.values()
+
+        await self.send(json.dumps({
+            'type': 'message',
+            'username': username,
+            'body': body
+        }))
+
+    async def perform_message_validation(self, message):
+        """
+        Perform all necessary validations for message.
+        Returns True if all validations pass.
+        """
+        if not message:
+            return False
+        elif len(message) > 255:
+            return False
+
+        return True
+
     async def perform_move_creation(self, promotion='', castle=False):
         """
         Add move to the Database and update current game state.
@@ -241,15 +282,28 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game.positions[self.new_row][self.new_col] = piece[0] + promotion if promotion else piece
             self.game.positions[self.old_row][self.old_col] = ''
 
-        await database_sync_to_async(Move.objects.create)(game=self.game, turn=self.game.turn, positions=self.game.positions, move=self.move)
+        await database_sync_to_async(Move.objects.create)(
+            game=self.game,
+            positions=self.game.positions,
+            move=self.move,
+            old_pos=f'{self.old_row}{self.old_col}',
+            new_pos=f'{self.new_row}{self.new_col}'
+        )
 
         self.game.turn = 'w' if self.game.turn == 'b' else 'b'
 
         await self.game.asave()
 
+    async def add_king_check_to_game_object(self):
+        """
+        Method used for checking if king is in check and adding it
+        to the game object.
+        """
+        pass
+
     async def add_en_passant_to_game_object(self, piece):
         """
-        Method used adding new en passant position to the game object
+        Method used for adding new en passant position to the game object
         and checking if en passant capture occured.
         """
         self.game.en_passant = ''
@@ -291,23 +345,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         Returns True if all validations pass.
         """
         piece = self.game.positions[self.old_row][self.old_col]
-        new_pos_piece = self.game.positions[self.new_row][self.new_col]
 
-        if await self.get_player_color() != piece[0]:
+        if not self.perform_basic_validation(piece, promotion):
             return False
-        elif piece[0] != self.game.turn:
-            return False
-        elif new_pos_piece and piece[0] == new_pos_piece[0]:
-            return False
-        elif self.new_row < 0 or self.new_row > 7 or self.new_col < 0 or self.new_col > 7:
-            return False
-        elif promotion and promotion != 'q' and promotion != 'r' and promotion != 'b' and promotion != 'n':
-            return False
-        elif piece[1] == 'p':
-            if not promotion and ((piece[0] == 'w' and self.new_row == 0) or (piece[0] == 'b' and self.new_row == 7)):
-                return False
-            elif promotion and ((piece[0] == 'w' and self.new_row != 0) or (piece[0] == 'b' and self.new_row != 7)):
-                return False
 
         match piece[1]:
             case 'p':
@@ -324,6 +364,32 @@ class GameConsumer(AsyncWebsocketConsumer):
                 return await self.validate_king(piece, castle)
             case _:
                 return await self.send_error()
+
+    async def perform_basic_validation(self, piece, promotion):
+        """
+        Perform all basic validations for player and his move.
+        """
+        new_pos_piece = self.game.positions[self.new_row][self.new_col]
+
+        if await self.get_player_color() != piece[0]:
+            return False
+        elif piece[0] != self.game.turn:
+            return False
+        elif self.game.king_check == piece[0] and piece[1] != 'k':
+            return False
+        elif new_pos_piece and piece[0] == new_pos_piece[0]:
+            return False
+        elif self.new_row < 0 or self.new_row > 7 or self.new_col < 0 or self.new_col > 7:
+            return False
+        elif promotion and promotion != 'q' and promotion != 'r' and promotion != 'b' and promotion != 'n':
+            return False
+        elif piece[1] == 'p':
+            if not promotion and ((piece[0] == 'w' and self.new_row == 0) or (piece[0] == 'b' and self.new_row == 7)):
+                return False
+            elif promotion and ((piece[0] == 'w' and self.new_row != 0) or (piece[0] == 'b' and self.new_row != 7)):
+                return False
+
+        return True
 
     async def validate_pawn(self, piece):
         direction = 1 if piece[0] == 'w' else -1

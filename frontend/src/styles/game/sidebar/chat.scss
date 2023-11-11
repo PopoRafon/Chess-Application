@@ -8,7 +8,8 @@ $chat-border-color: #363636;
     height: 350px;
 
     .chat-container {
-        position: relative;
+        display: flex;
+        flex-direction: column;
         background-color: rgb(0, 0, 0, 0.1);
         height: 90%;
         width: 85%;
@@ -20,17 +21,17 @@ $chat-border-color: #363636;
 
         .chat-header {
             font-size: large;
-            display: flex;
-            height: 50px;
-            justify-content: center;
-            align-items: center;
+            padding: 10px 0px;
+            text-align: center;
             background-color: #262626;
             border-bottom: 1px solid;
             border-color: $chat-border-color;
         }
 
         .chat-messages {
-            height: calc(315px - 52px - 60px);
+            display: flex;
+            flex-grow: 1;
+            flex-direction: column-reverse;
             padding: 5px;
             overflow-y: auto;
             overflow-x: hidden;
@@ -38,32 +39,59 @@ $chat-border-color: #363636;
         }
 
         .chat-footer {
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: absolute;
-            bottom: 0px;
-            width: 100%;
             padding: 8px 0px;
             border-top: 1px solid;
             border-color: $chat-border-color;
             background-color: #262626;
 
             .chat-footer-input {
+                width: 65%;
                 color: white;
                 font-size: medium;
                 background-color: #2c2c2c;
                 margin-right: 5px;
                 border: 1px solid;
                 border-color: $chat-border-color;
-                border-radius: 25px;
-                padding: 5px;
+                border-radius: 18px;
+                padding: 5px 8px;
+                overflow: hidden;
+                resize: none;
 
                 &:focus {
                     outline: 1px solid;
                     outline-color: #454545;
                     border: 1px solid;
                     border-color: #454545;
+                }
+            }
+
+            .chat-error-tooltip {
+                color: white;
+                font-size: small;
+                background-color: #d35d5d;
+                border-radius: 5px;
+                border: 1px solid #db5555;
+                position: absolute;
+                padding: 4px 8px;
+                z-index: 10;
+                top: -25px;
+                pointer-events: none;
+                box-shadow: 4px 4px 6px 0px rgb(0, 0, 0, 0.1);
+                animation: tooltip-appear 0.35s ease 0s 1;
+            
+                &::after {
+                    content: " ";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #db5555 transparent transparent transparent;
                 }
             }
 

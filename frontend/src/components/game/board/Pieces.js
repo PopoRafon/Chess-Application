@@ -20,7 +20,7 @@ export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
         const playerMoves = availableMoves.current[piece[0]][position];
         const isPlayerWhite = users.player.color === 'w';
         const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
-        let action;
+        const action = (piece[1] === 'k' && Math.abs(oldCol - newCol) === 2) ? 'castle' : 'move';
 
         setPromotionMenu({ show: false });
 
@@ -31,12 +31,6 @@ export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
                     data: [oldRow, oldCol],
                     position: [newRow, newCol],
                 });
-            }
-
-            if (piece[1] === 'k' && Math.abs(oldCol - newCol) === 2) {
-                action = 'castle';
-            } else {
-                action = 'move';
             }
 
             socket.send(JSON.stringify({
@@ -58,14 +52,14 @@ export default function Pieces({ socket, setPromotionMenu, availableMoves }) {
         >
             {game.markedSquares.map((square, index) => (
                 <div
-                    className={`highlight p-${square}`}
+                    className={`highlight p-${square} un-draggable`}
                     key={index}
                 >
                 </div>
             ))}
             {validMoves.map((square, index) => (
                 <div
-                    className={`p-${square}`}
+                    className={`p-${square} un-draggable`}
                     key={index}
                 >
                 </div>

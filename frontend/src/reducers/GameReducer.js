@@ -7,7 +7,8 @@ export default function gameReducer(state, action) {
                 turn: action.turn,
                 result: action.result,
                 castling: action.castling,
-                enPassant: action.enPassant
+                enPassant: action.enPassant,
+                prevMoves: action.prevMoves
             }
         case 'NEXT_ROUND':
             return {

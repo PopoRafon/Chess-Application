@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUsers } from '../../../contexts/UsersContext';
 import { useGame } from '../../../contexts/GameContext';
@@ -9,8 +9,8 @@ import GameInfo from '../extra/GameInfo';
 import playSound from '../../../helpers/GameSounds';
 import pointsReducer from '../../../reducers/PointsReducer';
 
-export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoard, promotionMenu, setPromotionMenu }) {
-    const [socket, setSocket] = useState();
+export default function Game({ socket, setSocket, setMessages, gameSetup, disableBoard, setDisableBoard, promotionMenu, setPromotionMenu }) {
+    const [isGameLoaded, setIsGameLoaded] = useState(false);
     const [points, dispatchPoints] = useReducer(pointsReducer, { w: 0, b: 0 });
     const { users, setUsers } = useUsers();
     const { game, dispatchGame } = useGame();
@@ -18,58 +18,67 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isLoaded) {
-            const getGameData = async () => {
-                const setup = await gameSetup(setSocket, navigate, user);
+        const getGameData = async () => {
+            const setup = await gameSetup(setSocket, user);
 
-                if (setup) {
-                    const isPlayerWhite = setup.player === 'w';
-                    let castling;
+            if (setup !== 'error') {
+                const isPlayerWhite = setup.player === 'w';
+                const newCastling = isPlayerWhite ? setup.castling[0] + setup.castling[1] : setup.castling[2] + setup.castling[3];
 
-                    if (setup.player === 'b') {
-                        castling = setup.castling[2] + setup.castling[3];
-                        setup.positions.map((row) => row.reverse());
-                        setup.positions.reverse();
-                    } else {
-                        castling = setup.castling[0] + setup.castling[1];
-                    }
-
-                    setUsers({
-                        [isPlayerWhite ? 'player' : 'enemy']: {
-                            color: 'w',
-                            username: setup.white_username,
-                            rating: setup.white_rating,
-                            timer: setup.white_timer
-                        },
-                        [!isPlayerWhite ? 'player' : 'enemy']: {
-                            color: 'b',
-                            username: setup.black_username,
-                            rating: setup.black_rating,
-                            timer: setup.black_timer
-                        }
+                if (!isPlayerWhite) {
+                    setup.prevMoves.map(move => {
+                        move[1].map(row => row.reverse());
+                        move[1].reverse();
+                        move[2][0] = `${Math.abs(parseInt(move[2][0][0] - 7))}${Math.abs(parseInt(move[2][0][1] - 7))}`;
+                        move[2][1] = `${Math.abs(parseInt(move[2][1][0] - 7))}${Math.abs(parseInt(move[2][1][1] - 7))}`;
+                        return move;
                     });
-
-                    dispatchGame({
-                        type: 'GAME_START',
-                        positions: setup.positions,
-                        turn: setup.turn,
-                        result: setup.result,
-                        castling: castling,
-                        enPassant: setup.en_passant
-                    });
+                    setup.positions.map(row => row.reverse());
+                    setup.positions.reverse();
                 }
-            }
 
-            getGameData();
+                setUsers({
+                    [isPlayerWhite ? 'player' : 'enemy']: {
+                        color: 'w',
+                        username: setup.white_username,
+                        rating: setup.white_rating,
+                        timer: setup.white_timer
+                    },
+                    [!isPlayerWhite ? 'player' : 'enemy']: {
+                        color: 'b',
+                        username: setup.black_username,
+                        rating: setup.black_rating,
+                        timer: setup.black_timer
+                    }
+                });
+
+                dispatchGame({
+                    type: 'GAME_START',
+                    positions: setup.positions,
+                    turn: setup.turn,
+                    result: setup.result,
+                    castling: newCastling,
+                    enPassant: setup.en_passant,
+                    prevMoves: setup.prevMoves
+                });
+
+                setMessages(setup.messages);
+
+                setIsGameLoaded(true);
+            } else {
+                navigate('/');
+            }
         }
-    }, [navigate, isLoaded, setUsers, dispatchGame, gameSetup, user]);
+
+        getGameData();
+    }, [navigate, setMessages, setSocket, setUsers, dispatchGame, gameSetup, user]);
 
     useEffect(() => {
         if (socket) {
             socket.onmessage = (message) => {
                 const data = JSON.parse(message.data);
 
-                if (!data.error) {
+                if (data.type === 'move' || data.type === 'promotion' || data.type === 'castle') {
                     const { type, newPos, oldPos, promotionType, turn, move, castling, enPassant } = data;
                     const newPositions = game.positions.slice();
                     const isPlayerWhite = users.player.color === 'w';
@@ -112,6 +121,16 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
 
                     playSound(pieceCaptured, type);
                     dispatchPoints({ type: pieceCaptured });
+                } else if (data.type === 'message') {
+                    const { username, body } = data;
+
+                    setMessages((messages) => [
+                        ...messages,
+                        {
+                            username: username,
+                            body: body
+                        }
+                    ]);
                 }
             }
 
@@ -124,7 +143,7 @@ export default function Game({ gameSetup, isLoaded, disableBoard, setDisableBoar
         // eslint-disable-next-line
     }, [socket]);
 
-    return socket && (
+    return isGameLoaded && (
         <div className="game-container">
             <div className="game-content">
                 {promotionMenu.show && (

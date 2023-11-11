@@ -48,6 +48,7 @@ class GameRoomSerializer(serializers.ModelSerializer):
     Parent serializer for all Game Room Serializers.
     Provides all basic fields for game to work.
     """
+    king_check = serializers.CharField(source='game.king_check')
     en_passant = serializers.CharField(source='game.en_passant')
     positions = serializers.JSONField(source='game.positions')
     castling = serializers.CharField(source='game.castling')

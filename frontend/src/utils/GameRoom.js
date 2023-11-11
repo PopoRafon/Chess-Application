@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-async function setupUserGame(setSocket, navigate) {
+async function setupRankingGame(setSocket) {
     const accessToken = Cookies.get('access');
     const gameId = window.location.pathname.split('/')[3];
 
@@ -17,7 +17,7 @@ async function setupUserGame(setSocket, navigate) {
 
             return data;
         } else {
-            navigate('/');
+            return 'error';
         }
     })
     .catch((error) => {
@@ -25,7 +25,7 @@ async function setupUserGame(setSocket, navigate) {
     });
 }
 
-async function setupGuestGame(setSocket, navigate) {
+async function setupGuestGame(setSocket) {
     const gameId = window.location.pathname.split('/')[3];
 
     return await fetch(`/api/v1/guest/game/room/${gameId}`, {
@@ -41,7 +41,7 @@ async function setupGuestGame(setSocket, navigate) {
 
             return data;
         } else {
-            navigate('/');
+            return 'error';
         }
     })
     .catch((error) => {
@@ -49,7 +49,7 @@ async function setupGuestGame(setSocket, navigate) {
     });
 }
 
-async function setupComputerGame(setSocket, navigate, user) {
+async function setupComputerGame(setSocket, user) {
     const gameId = Cookies.get('computer_game_url');
 
     return await fetch(`/api/v1/computer/game/room/${gameId}`, {
@@ -66,7 +66,7 @@ async function setupComputerGame(setSocket, navigate, user) {
 
             return data;
         } else {
-            navigate('/');
+            return 'error';
         }
     })
     .catch((error) => {
@@ -74,4 +74,4 @@ async function setupComputerGame(setSocket, navigate, user) {
     });
 }
 
-export { setupUserGame, setupGuestGame, setupComputerGame };
+export { setupRankingGame, setupGuestGame, setupComputerGame };

@@ -1,0 +1,43 @@
+import { useState } from 'react';
+
+export default function PrevMovesButtons({ changePositions, currentMoveIndex }) {
+    const [newGame, setNewGame] = useState(false);
+    const [prevMove, setPrevMove] = useState(false);
+    const [nextMove, setNextMove] = useState(false);
+
+    function handleMoveShift(shift) {
+        return () => changePositions(currentMoveIndex + shift);
+    }
+
+    return (
+        <div className="prev-moves-buttons-container">
+            <button
+                className="prev-moves-button"
+                onMouseEnter={() => setNewGame(true)}
+                onMouseLeave={() => setNewGame(false)}
+            >
+                <img src="/static/images/icons/new_game_icon.png" alt="New Game" />
+                {newGame && <div className="tooltip">New game</div>}
+            </button>
+            <button
+                className="prev-moves-button"
+                style={{ margin: "6px" }}
+                onClick={handleMoveShift(-1)}
+                onMouseEnter={() => setPrevMove(true)}
+                onMouseLeave={() => setPrevMove(false)}
+            >
+                <img src="/static/images/icons/move_back_icon.png" alt="Move Back" />
+                {prevMove && <div className="tooltip">Prev move</div>}
+            </button>
+            <button
+                className="prev-moves-button"
+                onClick={handleMoveShift(1)}
+                onMouseEnter={() => setNextMove(true)}
+                onMouseLeave={() => setNextMove(false)}
+            >
+                <img src="/static/images/icons/move_forward_icon.png" alt="Move Forward" />
+                {nextMove && <div className="tooltip">Next move</div>}
+            </button>
+        </div>
+    );
+}

@@ -30,9 +30,12 @@ class RankingGameRoomView(RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
-        game_object = self.get_object()
+        game_room_object = self.get_object()
         user = request.user
-        response.data['player'] = 'w' if game_object.white_player == user else 'b'
+
+        response.data['player'] = 'w' if game_room_object.white_player == user else 'b'
+        response.data['messages'] = [{'username': message.sender.username, 'body': message.body} for message in game_room_object.game.messages.all()]
+        response.data['prevMoves'] = [[move.move, move.positions, [move.old_pos, move.new_pos]] for move in game_room_object.game.moves.all()]
 
         return response
 
@@ -47,9 +50,11 @@ class GuestGameRoomView(RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
-        game_object = self.get_object()
+        game_room_object = self.get_object()
         token = request.COOKIES.get('guest_game_token')
-        response.data['player'] = 'w' if game_object.white_player == token else 'b'
+
+        response.data['player'] = 'w' if game_room_object.white_player == token else 'b'
+        response.data['prevMoves'] = [[move.move, move.positions, [move.old_pos, move.new_pos]] for move in game_room_object.game.moves.all()]
 
         return response
 
@@ -61,6 +66,14 @@ class ComputerGameRoomRetrieveView(RetrieveAPIView):
 
     def get_queryset(self):
         return ComputerGameRoom.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        game_room_object = self.get_object()
+
+        response.data['prevMoves'] = [[move.move, move.positions, [move.old_pos, move.new_pos]] for move in game_room_object.game.moves.all()]
+
+        return response
 
 
 class ComputerGameRoomCreateView(CreateAPIView):

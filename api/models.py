@@ -22,12 +22,20 @@ class Game(models.Model):
     castling = models.CharField(max_length=4, blank=True, default='KQkq')
     turn = models.CharField(max_length=1, blank=True, default='w')
     result = models.CharField(max_length=10, blank=True)
+    king_check = models.CharField(max_length=1, blank=True)
+
+
+class Message(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
+    body = models.CharField(max_length=255)
 
 
 class Move(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='moves')
     positions = models.JSONField()
-    turn = models.CharField(max_length=1)
+    new_pos = models.CharField(max_length=4)
+    old_pos = models.CharField(max_length=4)
     move = models.CharField(max_length=10)
 
 
