@@ -17,11 +17,13 @@ class Profile(models.Model):
 
 
 class Game(models.Model):
+    white_points = models.IntegerField(blank=True, default=0)
+    black_points = models.IntegerField(blank=True, default=0)
     positions = models.JSONField(blank=True, default=default_game_positions)
     en_passant = models.CharField(max_length=2, blank=True)
     castling = models.CharField(max_length=4, blank=True, default='KQkq')
     turn = models.CharField(max_length=1, blank=True, default='w')
-    result = models.CharField(max_length=10, blank=True)
+    result = models.CharField(max_length=40, blank=True)
     king_check = models.CharField(max_length=1, blank=True)
 
 

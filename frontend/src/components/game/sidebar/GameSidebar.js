@@ -6,6 +6,7 @@ export default function GameSidebar({ messages, gameType, setDisableBoard }) {
         <div className="game-sidebar">
             <PrevMoves
                 setDisableBoard={setDisableBoard}
+                gameType={gameType}
             />
             {gameType === 'ranking' && (
                 <Chat

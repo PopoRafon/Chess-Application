@@ -21,7 +21,7 @@ class TestRankingGameRoomView(APITestCase):
         response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response_json), 17)
+        self.assertEqual(len(response_json), 19)
 
     def test_ranking_game_room_GET_authenticated_user(self):
         third_user = User.objects.create(username='third user')
@@ -51,7 +51,7 @@ class TestGuestGameRoomView(APITestCase):
         response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response_json), 10)
+        self.assertEqual(len(response_json), 12)
 
     def test_guest_game_room_GET_invalid_data(self):
         self.client.cookies = SimpleCookie({'guest_game_token': 'invalid_token'})
@@ -71,7 +71,7 @@ class TestComputerGameRoomRetrieveView(APITestCase):
         response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response_json), 7)
+        self.assertEqual(len(response_json), 9)
 
     def test_computer_game_room_GET_invalid_data(self):
         self.client.cookies = SimpleCookie({'computer_game_token': 'invalid_token'})

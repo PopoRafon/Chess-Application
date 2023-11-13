@@ -54,7 +54,7 @@ function DisableChessBoard() {
     return <div className="disable-board"></div>;
 }
 
-export default function ChessBoard({ disableBoard, setDisableBoard }) {
+export default function ChessBoard({ disableBoard, setDisableBoard, gameType }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
     const { surrenderMenu } = useSurrenderMenu();
     const { users } = useUsers();
@@ -77,6 +77,7 @@ export default function ChessBoard({ disableBoard, setDisableBoard }) {
             {showResultAlert && (
                 <GameResultAlert
                     setShowResultAlert={setShowResultAlert}
+                    gameType={gameType}
                 />
             )}
             {surrenderMenu && (

@@ -1004,20 +1004,29 @@
 }
 .game-result-alert .game-result-footer {
   display: flex;
-  justify-content: center;
   align-items: center;
+  height: 35px;
 }
-.game-result-alert .game-result-footer .game-result-new-game-button {
+.game-result-alert .game-result-footer .game-result-exit-game-button {
   cursor: pointer;
   padding: 10px 15px;
+  position: relative;
+  overflow: hidden;
+  background-position: center;
   color: white;
-  border: 1px solid #3d3d3d;
-  background-color: #333333;
-  border-radius: 5px;
-  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgb(6, 141, 6);
+  background-color: rgb(65, 161, 65);
+  border-radius: 25px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.7s;
 }
-.game-result-alert .game-result-footer .game-result-new-game-button:hover {
-  background-color: #353535;
+.game-result-alert .game-result-footer .game-result-exit-game-button:hover {
+  background: rgb(59, 146, 59) radial-gradient(circle, transparent 1%, rgb(62, 151, 62) 1%) center/15000%;
+}
+.game-result-alert .game-result-footer .game-result-exit-game-button:active {
+  background-color: rgb(91, 207, 91);
+  background-size: 100%;
+  transition: all 0s;
 }
 
 .surrender-menu {

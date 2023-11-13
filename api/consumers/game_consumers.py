@@ -1,71 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Game, Move, Message
-from .utils import get_cookie
-
-ranking_queue = []
-guest_queue = []
-
-class MatchmakingConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        try:
-            self.room_group_name = 'queue'
-            self.user = self.scope['user']
-
-            await self.channel_layer.group_add(
-                self.room_group_name,
-                self.channel_name
-            )
-
-            await self.accept()
-
-            if self.user.is_authenticated:
-                ranking_queue.append(self)
-
-                await self.check_ranking_queue()
-            else:
-                guest_queue.append(self)
-
-                await self.check_guest_queue()
-        except Exception:
-            await self.close()
-
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
-        if self in ranking_queue:
-            ranking_queue.remove(self)
-        elif self in guest_queue:
-            guest_queue.remove(self)
-
-    async def check_ranking_queue(self):
-        if len(ranking_queue) >= 2:
-            user_one = ranking_queue.pop()
-            user_two = ranking_queue.pop()
-
-            if user_one.user != user_two.user:
-                room = await database_sync_to_async(RankingGameRoom.objects.create)(
-                    white_player=user_one.scope['user'],
-                    black_player=user_two.scope['user']
-                )
-
-                await user_one.send(json.dumps({'url': str(room.id)}))
-                await user_two.send(json.dumps({'url': str(room.id)}))
-            else:
-                ranking_queue.append(user_one)
-
-    async def check_guest_queue(self):
-        if len(guest_queue) >= 2:
-            user_one = guest_queue.pop()
-            user_two = guest_queue.pop()
-
-            room = await database_sync_to_async(GuestGameRoom.objects.create)()
-
-            await user_one.send(json.dumps({'url': str(room.id), 'guest_game_token': room.white_player}))
-            await user_two.send(json.dumps({'url': str(room.id), 'guest_game_token': room.black_player}))
+from api.models import Game, Move, Message
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -106,6 +42,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.receive_message(text_data_json)
                 case 'surrender':
                     await self.receive_surrender()
+                case 'checkmate':
+                    await self.receive_checkmate()
+                case 'stalemate':
+                    await self.receive_stalemate()
                 case _:
                     await self.send_error()
         else:
@@ -116,16 +56,41 @@ class GameConsumer(AsyncWebsocketConsumer):
             'error': 'Message you sent was invalid.'
         }))
 
-    async def receive_surrender(self):
-        player_color = await self.get_player_color()
-        result = 'Black won!' if player_color == 'w' else 'White won!'
+    async def receive_stalemate(self):
+        result = 'Stalemate! Draw!'
 
         self.game.result = result
 
         await self.game.asave()
 
         await self.channel_layer.group_send(self.room_group_name, {
-            'type': 'send_surrender',
+            'type': 'send_game_end',
+            'result': result
+        })
+
+    async def receive_checkmate(self):
+        player_color = await self.get_player_color()
+        result = 'Checkmate! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
+
+        self.game.result = result
+
+        await self.game.asave()
+
+        await self.channel_layer.group_send(self.room_group_name, {
+            'type': 'send_game_end',
+            'result': result
+        })
+
+    async def receive_surrender(self):
+        player_color = await self.get_player_color()
+        result = 'Surrender! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
+
+        self.game.result = result
+
+        await self.game.asave()
+
+        await self.channel_layer.group_send(self.room_group_name, {
+            'type': 'send_game_end',
             'result': result
         })
 
@@ -134,7 +99,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         body = body.strip()
 
         if await self.perform_message_validation(body):
-
             await database_sync_to_async(Message.objects.create)(game=self.game, sender=self.user, body=body)
 
             await self.channel_layer.group_send(self.room_group_name, {
@@ -175,6 +139,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'send_promotion',
+                'white_points': self.game.white_points,
+                'black_points': self.game.black_points,
                 'turn': self.game.turn,
                 'promotionType': promotion_type,
                 'enPassant': self.game.en_passant,
@@ -195,6 +161,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'send_move',
+                'white_points': self.game.white_points,
+                'black_points': self.game.black_points,
                 'turn': self.game.turn,
                 'castling': self.game.castling,
                 'enPassant': self.game.en_passant,
@@ -205,19 +173,21 @@ class GameConsumer(AsyncWebsocketConsumer):
         else:
             await self.send_error()
 
-    async def send_surrender(self, event):
+    async def send_game_end(self, event):
         _, result = event.values()
 
         await self.send(json.dumps({
-            'type': 'surrender',
+            'type': 'game_end',
             'result': result
         }))
 
     async def send_promotion(self, event):
-        _, turn, promotion_type, en_passant, old_pos, new_pos, move = event.values()
+        _, white_points, black_points, turn, promotion_type, en_passant, old_pos, new_pos, move = event.values()
 
         await self.send(json.dumps({
             'type': 'promotion',
+            'whitePoints': white_points,
+            'blackPoints': black_points,
             'turn': turn,
             'promotionType': promotion_type,
             'enPassant': en_passant,
@@ -227,10 +197,12 @@ class GameConsumer(AsyncWebsocketConsumer):
         }))
 
     async def send_move(self, event):
-        _, turn, castling, en_passant, old_pos, new_pos, move = event.values()
+        _, white_points, black_points, turn, castling, en_passant, old_pos, new_pos, move = event.values()
 
         await self.send(json.dumps({
             'type': 'move',
+            'whitePoints': white_points,
+            'blackPoints': black_points,
             'turn': turn,
             'castling': castling,
             'enPassant': en_passant,
@@ -281,6 +253,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         await self.add_move_notation_to_game_object(piece, promotion, castle)
         await self.add_en_passant_to_game_object(piece)
+        await self.add_points_to_game_object()
 
         if castle:
             self.game.castling = '--' + self.game.castling[2:4] if piece[0] == 'w' else self.game.castling[0:2] + '--'
@@ -317,12 +290,20 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         await self.game.asave()
 
-    async def add_king_check_to_game_object(self):
+    async def add_points_to_game_object(self):
         """
-        Method used for checking if king is in check and adding it
-        to the game object.
+        Method used for adding points to the game object based on piece type.
         """
-        pass
+        captured_piece = self.game.positions[self.new_row][self.new_col]
+
+        if captured_piece:
+            pieces_value = {'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9}
+            points_to_add = pieces_value.get(captured_piece[1])
+
+            if captured_piece[0] == 'w':
+                self.game.black_points += points_to_add
+            else:
+                self.game.white_points += points_to_add
 
     async def add_en_passant_to_game_object(self, piece):
         """
@@ -397,8 +378,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         if await self.get_player_color() != piece[0]:
             return False
         elif piece[0] != self.game.turn:
-            return False
-        elif self.game.king_check == piece[0] and piece[1] != 'k':
             return False
         elif new_pos_piece and piece[0] == new_pos_piece[0]:
             return False
@@ -521,74 +500,3 @@ class GameConsumer(AsyncWebsocketConsumer):
         Method used for getting game object.
         """
         return await database_sync_to_async(Game.objects.get)(id=self.game_id)
-
-
-class RankingGameConsumer(GameConsumer):
-    async def connect(self):
-        try:
-            self.room_name = self.scope['url_route']['kwargs']['game']
-            self.room_group_name = f'ranking_game_{self.room_name}'
-            self.user = self.scope['user']
-
-            if self.user.is_authenticated:
-                self.room = await database_sync_to_async(RankingGameRoom.objects.prefetch_related('white_player', 'black_player', 'game').get)(id=self.room_name)
-                self.game_id = self.room.game.id
-
-                if self.room.white_player == self.user or self.room.black_player == self.user:
-                    await self.channel_layer.group_add(
-                        self.room_group_name,
-                        self.channel_name
-                    )
-
-                    return await self.accept()
-
-            await self.close()
-        except Exception:
-            await self.close()
-
-
-class GuestGameConsumer(GameConsumer):
-    async def connect(self):
-        try:
-            self.room_name = self.scope['url_route']['kwargs']['game']
-            self.room_group_name = f'guest_game_{self.room_name}'
-            self.user = get_cookie(self.scope, 'guest_game_token')
-            self.room = await database_sync_to_async(GuestGameRoom.objects.prefetch_related('game').get)(id=self.room_name)
-            self.game_id = self.room.game.id
-
-            if self.user and (self.room.white_player == self.user or self.room.black_player == self.user):
-                await self.channel_layer.group_add(
-                    self.room_group_name,
-                    self.channel_name
-                )
-
-                return await self.accept()
-
-            await self.close()
-        except Exception:
-            await self.close()
-
-
-class ComputerGameConsumer(GameConsumer):
-    async def connect(self):
-        try:
-            self.room_name = self.scope['url_route']['kwargs']['game']
-            self.room_group_name = f'computer_game_{self.room_name}'
-            self.user = get_cookie(self.scope, 'computer_game_token')
-            self.room = await database_sync_to_async(ComputerGameRoom.objects.prefetch_related('game').get)(id=self.room_name)
-            self.game_id = self.room.game.id
-
-            if self.user and self.room.player == self.user:
-                await self.channel_layer.group_add(
-                    self.room_group_name,
-                    self.channel_name
-                )
-
-                return await self.accept()
-
-            await self.close()
-        except Exception:
-            await self.close()
-
-    async def get_player_color(self):
-        return 'w'

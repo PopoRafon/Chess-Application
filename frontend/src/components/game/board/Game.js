@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUsers } from '../../../contexts/UsersContext';
 import { useGame } from '../../../contexts/GameContext';
@@ -6,14 +6,12 @@ import { SurrenderMenuProvider } from '../../../contexts/SurrenderMenuContext';
 import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
 import { useGameSocket } from '../../../contexts/GameSocketContext';
 import GameSidebar from '../sidebar/GameSidebar';
-import pointsReducer from '../../../reducers/PointsReducer';
 import playSound from '../../../helpers/GameSounds';
 import PromotionMenu from './PromotionMenu';
 import GameInfo from '../extra/GameInfo';
 import ChessBoard from './ChessBoard';
 
 export default function Game({ gameType, gameSetup }) {
-    const [points, dispatchPoints] = useReducer(pointsReducer, { w: 0, b: 0 });
     const [disableBoard, setDisableBoard] = useState(false);
     const [isGameLoaded, setIsGameLoaded] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -48,13 +46,15 @@ export default function Game({ gameType, gameSetup }) {
                         color: 'w',
                         username: setup.white_username,
                         rating: setup.white_rating,
-                        timer: setup.white_timer
+                        timer: setup.white_timer,
+                        points: setup.white_points
                     },
                     [!isPlayerWhite ? 'player' : 'enemy']: {
                         color: 'b',
                         username: setup.black_username,
                         rating: setup.black_rating,
-                        timer: setup.black_timer
+                        timer: setup.black_timer,
+                        points: setup.black_points
                     }
                 });
 
@@ -87,7 +87,7 @@ export default function Game({ gameType, gameSetup }) {
                 const data = JSON.parse(message.data);
 
                 if (data.type === 'move' || data.type === 'promotion' || data.type === 'castle') {
-                    const { type, newPos, oldPos, promotionType, turn, move, castling, enPassant } = data;
+                    const { type, newPos, oldPos, promotionType, turn, move, castling, enPassant, whitePoints, blackPoints } = data;
                     const newPositions = game.positions.slice();
                     const isPlayerWhite = users.player.color === 'w';
                     const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
@@ -103,6 +103,19 @@ export default function Game({ gameType, gameSetup }) {
                     if (piece[1] === 'p' && oldCol !== newCol && !pieceCaptured) {
                         pieceCaptured = newPositions[lines[newPos[0] + direction]][newCol];
                         newPositions[lines[newPos[0] + direction]][newCol] = '';
+                    }
+
+                    if (whitePoints && blackPoints) {
+                        setUsers({
+                            player: {
+                                ...users.player,
+                                points: isPlayerWhite ? whitePoints : blackPoints
+                            },
+                            enemy: {
+                                ...users.enemy,
+                                points: isPlayerWhite ? blackPoints : whitePoints
+                            }
+                        });
                     }
 
                     newPositions[newRow][newCol] = type === 'promotion' ? piece[0] + promotionType : piece;
@@ -128,7 +141,6 @@ export default function Game({ gameType, gameSetup }) {
                     });
 
                     playSound(pieceCaptured, type);
-                    dispatchPoints({ type: pieceCaptured });
                 } else if (data.type === 'message') {
                     const { username, body } = data;
 
@@ -139,7 +151,7 @@ export default function Game({ gameType, gameSetup }) {
                             body: body
                         }
                     ]);
-                } else if (data.type === 'surrender') {
+                } else if (data.type === 'game_end') {
                     const { result } = data;
 
                     dispatchGame({
@@ -167,15 +179,14 @@ export default function Game({ gameType, gameSetup }) {
                     )}
                     <GameInfo
                         player='enemy'
-                        points={points}
                     />
                     <ChessBoard
                         disableBoard={disableBoard}
                         setDisableBoard={setDisableBoard}
+                        gameType={gameType}
                     />
                     <GameInfo
                         player='player'
-                        points={points}
                     />
                 </div>
             </div>

@@ -5,7 +5,7 @@ import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
 import PrevMovesButtons from './PrevMovesButtons';
 import PrevMovesContainer from './PrevMovesContainer';
 
-export default function PrevMoves({ setDisableBoard }) {
+export default function PrevMoves({ setDisableBoard, gameType }) {
     const { game, dispatchGame } = useGame();
     const { setValidMoves } = useValidMoves();
     const [currentMoveIdx, setCurrentMoveIdx] = useState(0);
@@ -56,6 +56,7 @@ export default function PrevMoves({ setDisableBoard }) {
             <PrevMovesButtons
                 changePositions={changePositions}
                 currentMoveIdx={currentMoveIdx}
+                gameType={gameType}
             />
         </div>
     );

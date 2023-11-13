@@ -48,7 +48,7 @@ export default function Navigation() {
     return (
         <nav className="nav">
             <div className="nav-logo">
-                <Link to='/'>Logo Placeholder</Link>
+                <Link to='/'>Logo placeholder</Link>
             </div>
             <ul>
                 {navLinks.map((link, index) => (

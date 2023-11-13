@@ -8,7 +8,7 @@ function convertToSeconds(timer) {
     return hours * 3600 + minutes * 60 + seconds;
 }
 
-export default function GameInfo({ player, points }) {
+export default function GameInfo({ player }) {
     const { game, dispatchGame } = useGame();
     const { users } = useUsers();
     const [timer, setTimer] = useState(users[player].timer !== undefined && convertToSeconds(users[player].timer));
@@ -52,7 +52,7 @@ export default function GameInfo({ player, points }) {
                 {users[player].rating && (
                     <span className="game-user-rating">({users[player].rating})</span>
                 )}
-                <div className="game-points">Points: +{points[users[player].color]}</div>
+                <div className="game-points">Points: {users[player].points}</div>
             </div>
             {users[player].timer !== undefined && (
                 <div

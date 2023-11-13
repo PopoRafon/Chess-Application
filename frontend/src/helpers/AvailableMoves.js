@@ -1,6 +1,6 @@
 import { getAvailableMoves } from './Moves';
 
-export default function updateAvailableMoves(game, squares, availableMoves, dispatchGame, player) {
+export default function updateAvailableMoves(game, gameSocket, squares, availableMoves, dispatchGame, player) {
     const { turn, positions } = game;
     const { kingCheckSquares } = squares;
     let availableMovesLength = 0;
@@ -30,15 +30,13 @@ export default function updateAvailableMoves(game, squares, availableMoves, disp
 
     if (player.color === turn && availableMovesLength === 0) {
         if (kingCheckSquares.current[turn].length > 0) {
-            dispatchGame({
-                type: 'GAME_END',
-                result: `Checkmate! ${turn === 'w' ? 'Black' : 'White'} wins!`
-            });
+            gameSocket.send(JSON.stringify({
+                type: 'checkmate'
+            }));
         } else {
-            dispatchGame({
-                type: 'GAME_END',
-                result: 'Stalemate! Draw!'
-            });
+            gameSocket.send(JSON.stringify({
+                type: 'stalemate'
+            }))
         }
     }
 }
