@@ -3,7 +3,7 @@ import { useUser } from '../contexts/UserContext';
 import LoginForm from '../components/forms/LoginForm';
 import Navigation from '../components/core/Navigation';
 
-export default function Login({ isLoaded }) {
+export default function Login() {
     const { user } = useUser();
     const navigate = useNavigate();
 
@@ -11,7 +11,7 @@ export default function Login({ isLoaded }) {
         navigate('/');
     }
 
-    return isLoaded && (
+    return !user.isLoggedIn && (
         <>
             <Navigation />
             <div className="form-page">

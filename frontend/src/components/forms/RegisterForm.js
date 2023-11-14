@@ -71,9 +71,7 @@ export default function RegisterForm() {
                 },
                 body: JSON.stringify(formData)
             })
-            .then((response) => {
-                return response.json();
-            })
+            .then(response => response.json())
             .then((data) => {
                 if (data.success) {
                     getUserData(setUser);

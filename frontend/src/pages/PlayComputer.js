@@ -8,10 +8,10 @@ import { useUser } from '../contexts/UserContext';
 import Game from '../components/game/board/Game';
 import Navigation from '../components/core/Navigation';
 
-export default function PlayComputer({ isLoaded }) {
+export default function PlayComputer() {
     const { user } = useUser();
 
-    return isLoaded && (
+    return (
         <>
             <Navigation />
             <div className="play-page">

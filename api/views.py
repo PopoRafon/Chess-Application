@@ -1,6 +1,12 @@
 from datetime import timedelta
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.core.mail import EmailMessage
+from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.permissions import IsAuthenticated
@@ -93,6 +99,7 @@ class UserDataView(APIView):
         if request.user.is_authenticated:
             return Response({
                 'success': {
+                    'email': request.user.email,
                     'username': request.user.username,
                     'rating': request.user.profile.rating
                 }
@@ -181,6 +188,85 @@ class LogoutView(APIView):
         response.delete_cookie('access')
 
         return response
+
+
+class PasswordChangeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        user = self.request.user
+        data = request.data
+        old_password = data.get('oldPassword')
+        new_password1 = data.get('newPassword1')
+        new_password2 = data.get('newPassword2')
+
+        if user.check_password(old_password):
+            if new_password1 == new_password2:
+                user.set_password(new_password1)
+                user.save()
+
+                return Response({'success': 'Your password has been successfully changed!'})
+            else:
+                return Response({'newPassword2': 'Passwords must be the same.'})
+        else:
+            return Response({'oldPassword': 'Old password is incorrect.'})
+
+
+class PasswordRecoveryView(APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            email = data.get('email')
+            user = User.objects.get(email=email)
+
+            base64_encoded_id = urlsafe_base64_encode(force_bytes(user.id))
+            token = PasswordResetTokenGenerator().make_token(user)
+
+            subject = 'Chess password reset'
+            body = render_to_string('password_reset_email.html', {
+                'domain': settings.BASE_DOMAIN,
+                'uidb64': base64_encoded_id,
+                'token': token,
+                'username': user.username,
+                'site_name': 'Chess'
+            })
+
+            EmailMessage(
+                subject=subject,
+                body=body,
+                to=[email]
+            ).send()
+
+            return Response({'success': 'Link to reset password has been sent to your email address!'})
+        except Exception:
+            return Response({'email': 'Email address you provided was invalid.'})
+
+
+class PasswordResetView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            uidb64 = kwargs.get('uidb64')
+            token = kwargs.get('token')
+            id = urlsafe_base64_decode(uidb64).decode('utf-8')
+            user = User.objects.get(id=id)
+            is_token_valid = PasswordResetTokenGenerator().check_token(user, token)
+
+            if is_token_valid:
+                data = request.data
+                new_password1 = data['newPassword1']
+                new_password2 = data['newPassword2']
+
+                if new_password1 == new_password2:
+                    user.set_password(new_password1)
+                    user.save()
+
+                    return Response({'success': 'Your password has been successfully changed!'})
+                else:
+                    return Response({'newPassword2': 'Passwords must be the same.'})
+            else:
+                return Response({'token': 'Token you provided is invalid.'})
+        except Exception:
+            return Response({'user': "User you provided doesn't exist."})
 
 
 class RankingView(ListAPIView):

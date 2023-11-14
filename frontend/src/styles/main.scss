@@ -3,10 +3,12 @@
 @import 'core/authentication_alert';
 @import 'core/tooltip';
 @import 'core/scrollbar';
+@import 'pages/home';
 @import 'pages/page404';
 @import 'pages/play';
-@import 'forms/form';
 @import 'pages/ranking';
+@import 'pages/settings';
+@import 'forms/form';
 
 $font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',

@@ -10,7 +10,7 @@ async function setupRankingGame(setSocket) {
             'Authorization': `Bearer ${accessToken}`
         }
     })
-    .then((response) => response.json())
+    .then(response => response.json())
     .then((data) => {
         if (data.positions) {
             setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/ranking/game/${gameId}/`));
@@ -31,7 +31,7 @@ async function setupGuestGame(setSocket) {
     return await fetch(`/api/v1/guest/game/room/${gameId}`, {
         method: 'GET'
     })
-    .then((response) => response.json())
+    .then(response => response.json())
     .then((data) => {
         if (data.positions) {
             setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`));
@@ -55,7 +55,7 @@ async function setupComputerGame(setSocket, user) {
     return await fetch(`/api/v1/computer/game/room/${gameId}`, {
         method: 'GET'
     })
-    .then((response) => response.json())
+    .then(response => response.json())
     .then((data) => {
         if (data.positions) {
             setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`));

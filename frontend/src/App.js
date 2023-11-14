@@ -14,6 +14,10 @@ import Play from './pages/Play';
 import PlayOnline from './pages/PlayOnline';
 import PlayComputer from './pages/PlayComputer';
 import Ranking from './pages/Ranking';
+import Settings from './pages/Settings';
+import PasswordChange from './pages/PasswordChange';
+import PasswordReset from './pages/PasswordReset';
+import PasswordRecovery from './pages/PasswordRecovery';
 
 function App() {
   const { setUser } = useUser();
@@ -30,21 +34,27 @@ function App() {
     fetchData();
   }, [setUser]);
 
-  return (
+  return isLoaded && (
     <BrowserRouter>
       <div className="app">
         <AlertProvider>
           <Alert />
           <Routes>
             <Route path='/'>
-              <Route index element={<Home isLoaded={isLoaded} />} />
-              <Route path='register' element={<Register isLoaded={isLoaded} />} />
-              <Route path='login' element={<Login isLoaded={isLoaded} />} />
-              <Route path='ranking' element={<Ranking isLoaded={isLoaded} />} />
+              <Route index element={<Home />} />
+              <Route path='register' element={<Register />} />
+              <Route path='login' element={<Login />} />
+              <Route path='ranking' element={<Ranking />} />
+              <Route path='settings' element={<Settings />} />
+              <Route path='password'>
+                <Route path='recovery' element={<PasswordRecovery />} />
+                <Route path='change' element={<PasswordChange />} />
+                <Route path='reset/:uidb64/:token' element={<PasswordReset />} />
+              </Route>
               <Route path='play'>
-                <Route index element={<Play isLoaded={isLoaded} />} />
-                <Route path='online/:id' element={<PlayOnline isLoaded={isLoaded} />} />
-                <Route path='computer' element={<PlayComputer isLoaded={isLoaded} />} />
+                <Route index element={<Play />} />
+                <Route path='online/:id' element={<PlayOnline />} />
+                <Route path='computer' element={<PlayComputer />} />
               </Route>
             </Route>
             <Route path='*' element={<Page404 />} />

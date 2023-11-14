@@ -2,10 +2,10 @@ import { useState } from 'react';
 import Sidebar from '../components/play/PlaySidebar';
 import Navigation from '../components/core/Navigation';
 
-export default function Play({ isLoaded }) {
+export default function Play() {
     const [matchmaking, setMatchmaking] = useState(false);
 
-    return isLoaded && (
+    return (
         <>
             <Navigation />
             <div className="play-page">

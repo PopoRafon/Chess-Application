@@ -1,22 +1,25 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import RegisterForm from '../components/forms/RegisterForm';
+import PasswordRecoveryForm from '../components/forms/PasswordRecoveryForm';
 import Navigation from '../components/core/Navigation';
 
-export default function Register() {
+export default function PasswordRecovery() {
     const { user } = useUser();
     const navigate = useNavigate();
 
-    if (user.isLoggedIn) {
-        navigate('/');
-    }
+    useEffect(() => {
+        if (user.isLoggedIn) {
+            navigate('/');
+        }
+    });
 
     return !user.isLoggedIn && (
         <>
             <Navigation />
             <div className="form-page">
                 <div className="form-container">
-                    <RegisterForm />
+                    <PasswordRecoveryForm />
                 </div>
             </div>
         </>

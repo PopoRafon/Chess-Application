@@ -98,33 +98,33 @@ $invalid-field-color: rgb(221, 16, 16);
                 justify-content: space-between;
                 align-items: center;
                 margin-top: 20px;
+            }
 
-                .form-link-button {
-                    color: rgb(69, 146, 233);
-                    padding: 3px 5px;
-                    border-radius: 5px;
+            .form-link-button {
+                color: rgb(69, 146, 233);
+                padding: 3px 5px;
+                border-radius: 5px;
 
-                    &:hover {
-                        background-color: rgb(255, 255, 255, 0.02);
-                        box-shadow: 1px 1px 4px rgb(0, 0, 0, 0.1);
-                    }
+                &:hover {
+                    background-color: rgb(255, 255, 255, 0.02);
+                    box-shadow: 1px 1px 4px rgb(0, 0, 0, 0.1);
                 }
+            }
 
-                .form-submit-button {
-                    cursor: pointer;
-                    color: white;
-                    background-color: #313131;
-                    border: 1px solid;
-                    border-color: #454545;
-                    border-radius: 25px;
-                    padding: 8px 16px;
-                    font-size: 16px;
-                    box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
-                    text-shadow: 3px 3px 6px rgb(0, 0, 0, 0.30);
+            .form-submit-button {
+                cursor: pointer;
+                color: white;
+                background-color: #313131;
+                border: 1px solid;
+                border-color: #454545;
+                border-radius: 25px;
+                padding: 8px 16px;
+                font-size: 16px;
+                box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
+                text-shadow: 3px 3px 6px rgb(0, 0, 0, 0.30);
 
-                    &:hover {
-                        background-color: #353535;
-                    }
+                &:hover {
+                    background-color: #353535;
                 }
             }
 

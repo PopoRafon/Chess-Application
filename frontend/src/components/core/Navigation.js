@@ -1,30 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import { useAlert } from '../../contexts/AlertContext';
+import NavigationLink from './NavigationLink';
 
 export default function Navigation() {
     const { user, setUser } = useUser();
     const { setAlert } = useAlert();
     const navigate = useNavigate();
-
-    const navLinks = [
-        {
-            title: 'Play',
-            href: '/play'
-        },
-        {
-            title: 'Ranking',
-            href: '/ranking'
-        },
-        {
-            title: 'Login',
-            href: '/login'
-        },
-        {
-            title: 'Sign Up',
-            href: '/register'
-        }
-    ];
 
     async function handleLogout() {
         await fetch('/api/v1/logout', {
@@ -51,18 +33,36 @@ export default function Navigation() {
                 <Link to='/'>Logo placeholder</Link>
             </div>
             <ul>
-                {navLinks.map((link, index) => (
-                    (user.isLoggedIn && (link.title === 'Login' || link.title === 'Sign Up')) || (
-                        <li key={index}>
-                            <Link
-                                to={link.href}
-                                className="nav-link"
-                            >
-                                {link.title}
-                            </Link>
-                        </li>
-                    )
-                ))}
+                <NavigationLink
+                    title="Play"
+                    href="/play"
+                    imagePrefix="play"
+                />
+                <NavigationLink
+                    title="Ranking"
+                    href="/ranking"
+                    imagePrefix="ranking"
+                />
+                {user.isLoggedIn ? (
+                    <NavigationLink
+                        title="Settings"
+                        href="/settings"
+                        imagePrefix="settings"
+                    />
+                ) : (
+                    <>
+                        <NavigationLink
+                            title="Login"
+                            href="/login"
+                            imagePrefix="login"
+                        />
+                        <NavigationLink
+                            title="Sign Up"
+                            href="/register"
+                            imagePrefix="register"
+                        />
+                    </>
+                )}
             </ul>
             {user.isLoggedIn && (
                 <div className="nav-footer">
