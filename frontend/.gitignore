@@ -10,6 +10,7 @@
 
 # production
 build
+avatars
 
 # misc
 .DS_Store

@@ -66,6 +66,7 @@ export default function PasswordRecoveryForm() {
             onSubmit={handleSubmit}
             noValidate={true}
         >
+            <div className="form-header">Recover Your Password</div>
             <FormInput
                 id="email"
                 label="Email address"

@@ -7,8 +7,8 @@ export default function PasswordResetForm() {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
-        newPassword1: '',
-        newPassword2: '',
+        new_password1: '',
+        new_password2: '',
     });
 
     function handleChange(event) {
@@ -21,14 +21,14 @@ export default function PasswordResetForm() {
     }
 
     function validation() {
-        const { newPassword1, newPassword2 } = formData;
+        const { new_password1, new_password2 } = formData;
         const newErrors = {};
 
-        if (newPassword1.length < 8) newErrors['newPassword1'] = 'Ensure this field has at least 8 characters.';
+        if (new_password1.length < 8) newErrors['new_password1'] = 'Ensure this field has at least 8 characters.';
 
-        if (newPassword1 !== newPassword2) newErrors['newPassword2'] = 'Passwords must be the same.';
+        if (new_password1 !== new_password2) newErrors['new_password2'] = 'Passwords must be the same.';
 
-        if (newPassword2.length < 8) newErrors['newPassword2'] = 'Ensure this field has at least 8 characters.';
+        if (new_password2.length < 8) newErrors['new_password2'] = 'Ensure this field has at least 8 characters.';
 
         if (Object.keys(newErrors).length >= 1) {
             setErrors(newErrors);
@@ -55,7 +55,7 @@ export default function PasswordResetForm() {
                 if (data.success) {
                     navigate('/login');
                 } else {
-                    if (data.token || data.user) {
+                    if (data.token || data.error) {
                         navigate('/');
                     } else {
                         setErrors(data);
@@ -74,22 +74,23 @@ export default function PasswordResetForm() {
             onSubmit={handleSubmit}
             noValidate={true}
         >
+            <div className="form-header">Create New Password</div>
             <FormInput
-                id="newPassword1"
+                id="new_password1"
                 label="New Password"
                 type="password"
-                value={formData.newPassword1}
+                value={formData.new_password1}
                 handleChange={handleChange}
-                error={errors.newPassword1}
+                error={errors.new_password1}
                 requirements={passwordReq}
             />
             <FormInput
-                id="newPassword2"
+                id="new_password2"
                 label="Confirm New Password"
                 type="password"
-                value={formData.newPassword2}
+                value={formData.new_password2}
                 handleChange={handleChange}
-                error={errors.newPassword2}
+                error={errors.new_password2}
                 requirements={confirmPasswordReq}
             />
             <div className="form-buttons" style={{ justifyContent: 'center' }}>

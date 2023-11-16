@@ -43,7 +43,7 @@ export default function GameInfo({ player }) {
     return (
         <div className="game-info">
             <img
-                src='/static/images/avatar.png'
+                src={users[player].avatar}
                 className="game-user-avatar"
                 alt="Avatar"
             />

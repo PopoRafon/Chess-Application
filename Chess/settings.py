@@ -145,8 +145,11 @@ USE_TZ = True
 STATIC_ROOT = BASE_DIR / 'static/'
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'frontend/build/static/'
+    BASE_DIR / 'frontend/public/static/'
 ]
+
+MEDIA_ROOT = BASE_DIR / 'frontend/public/media/'
+MEDIA_URL = 'media/'
 
 
 # Default primary key field type

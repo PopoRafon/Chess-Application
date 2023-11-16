@@ -38,6 +38,8 @@ async function setupGuestGame(setSocket) {
 
             data.white_username = 'Guest';
             data.black_username = 'Guest';
+            data.white_avatar = '/media/avatar.png';
+            data.black_avatar = '/media/avatar.png';
 
             return data;
         } else {
@@ -60,8 +62,17 @@ async function setupComputerGame(setSocket, user) {
         if (data.positions) {
             setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`));
 
-            data.white_username = user.isLoggedIn ? user.username : 'Guest';
+            if (user.isLoggedIn) {
+                data.white_username = user.username;
+                data.white_avatar = user.avatar;
+                data.white_rating = user.rating;
+            } else {
+                data.white_username = 'Guest';
+                data.white_avatar = '/media/avatar.png';
+            }
+
             data.black_username = 'Bot';
+            data.black_avatar = '/media/avatar.png';
             data.player = 'w';
 
             return data;

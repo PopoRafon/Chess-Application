@@ -2,12 +2,12 @@ import uuid
 from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
-from .utils import default_game_positions
+from .utils import default_game_positions, create_avatar_name
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(default='avatar.png', upload_to='avatars/', null=True)
+    avatar = models.ImageField(default='avatar.png', upload_to=create_avatar_name, null=True)
     rating = models.IntegerField(default=800)
     wins = models.IntegerField(blank=True, default=0)
     loses = models.IntegerField(blank=True, default=0)

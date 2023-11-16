@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import Navigation from '../components/core/Navigation';
-import SettingsForm from '../components/forms/SettingsForm';
+import SettingsMenu from '../components/settings/SettingsMenu';
 
 export default function Settings() {
     const { user } = useUser();
@@ -17,10 +17,8 @@ export default function Settings() {
     return user.isLoggedIn && (
         <>
             <Navigation />
-            <div className="form-page">
-                <div className="form-container">
-                    <SettingsForm />
-                </div>
+            <div className="settings-page">
+                <SettingsMenu />
             </div>
         </>
     );

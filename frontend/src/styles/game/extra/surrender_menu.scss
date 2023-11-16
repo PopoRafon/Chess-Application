@@ -1,4 +1,4 @@
-@mixin surrender-button {
+@mixin surrender-button-mixin {
     cursor: pointer;
     height: 25px;
     width: 55px;
@@ -25,7 +25,7 @@
         width: 100%;
 
         .surrender-yes-button {
-            @include surrender-button;
+            @include surrender-button-mixin;
             background-color: rgb(65, 173, 65);
             border: 1px solid rgb(6, 158, 6);
             margin-right: 5px;
@@ -37,7 +37,7 @@
         }
     
         .surrender-no-button {
-            @include surrender-button;
+            @include surrender-button-mixin;
             background-color: rgb(207, 56, 56);
             border: 1px solid rgb(194, 36, 36);
 

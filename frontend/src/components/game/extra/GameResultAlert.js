@@ -44,7 +44,7 @@ export default function GameResultAlert({ setShowResultAlert, gameType }) {
             <div className="game-result-body">
                 <div className="game-result-user">
                     <img
-                        src='/static/images/avatar.png'
+                        src={users.player.avatar}
                         className={`game-result-avatar ${playerWinner && 'game-result-winner'}`}
                         alt="Avatar"
                     />
@@ -53,7 +53,7 @@ export default function GameResultAlert({ setShowResultAlert, gameType }) {
                 VS
                 <div className="game-result-user">
                     <img
-                        src='/static/images/avatar.png'
+                        src={users.enemy.avatar}
                         className={`game-result-avatar ${enemyWinner && 'game-result-winner'}`}
                         alt="Avatar"
                     />

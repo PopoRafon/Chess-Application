@@ -17,7 +17,7 @@ export default function Navigation() {
             if (data.success) {
                 setUser({ isLoggedIn: false });
 
-                setAlert('You have been successfully logged out of your account!');
+                setAlert(data.success);
             }
         })
         .catch((err) => {
@@ -68,7 +68,7 @@ export default function Navigation() {
                 <div className="nav-footer">
                     <div className="nav-footer-user">
                         <img
-                            src="/static/images/avatar.png"
+                            src={user.avatar}
                             className="nav-footer-avatar"
                             alt="Avatar"
                         />

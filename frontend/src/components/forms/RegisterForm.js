@@ -97,6 +97,7 @@ export default function RegisterForm() {
             onSubmit={handleSubmit}
             noValidate={true}
         >
+            <div className="form-header">Create Your Account</div>
             <FormInput
                 id="email"
                 label="Email Address"

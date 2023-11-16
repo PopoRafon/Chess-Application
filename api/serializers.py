@@ -38,10 +38,69 @@ class RegisterSerializer(serializers.Serializer):
         if password1 != password2:
             raise serializers.ValidationError({'password2': 'Passwords must be the same.'})
 
+        if validate_password(password1):
+            raise serializers.ValidationError({'password1': 'Password is invalid.'})
+
         if not checkbox:
             raise serializers.ValidationError({'checkbox': 'Terms of Service must be accepted.'})
 
         return attrs
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    new_password1 = serializers.CharField(required=True)
+    new_password2 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        new_password1 = attrs['new_password1']
+        new_password2 = attrs['new_password2']
+
+        if new_password1 != new_password2:
+            raise serializers.ValidationError({'new_password2': 'New passwords must be the same.'})
+
+        if validate_password(new_password1):
+            raise serializers.ValidationError({'new_password1': 'New password is invalid.'})
+
+        return attrs
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password1 = serializers.CharField(required=True)
+    new_password2 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        user = self.context['user']
+        old_password = attrs['old_password']
+        new_password1 = attrs['new_password1']
+        new_password2 = attrs['new_password2']
+
+        if not user.check_password(old_password):
+            raise serializers.ValidationError({'old_password': 'The old password is incorrect.'})
+
+        if new_password1 != new_password2:
+            raise serializers.ValidationError({'new_password2': 'New passwords must be the same.'})
+
+        if validate_password(new_password1):
+            raise serializers.ValidationError({'new_password1': 'New password is invalid.'})
+
+        return attrs
+
+
+class UserUpdateSerializer(serializers.Serializer):
+    avatar = serializers.ImageField(required=False)
+    email = serializers.EmailField(
+        required=False,
+        min_length=8,
+        max_length=64,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    username = serializers.CharField(
+        required=False,
+        min_length=8,
+        max_length=16,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
 
 
 class GameRoomSerializer(serializers.ModelSerializer):
@@ -64,8 +123,8 @@ class RankingGameRoomSerializer(GameRoomSerializer):
     black_username = serializers.CharField(source='black_player.username')
     white_rating = serializers.IntegerField(source='white_player.profile.rating')
     black_rating = serializers.IntegerField(source='black_player.profile.rating')
-    white_avatar = serializers.ImageField(source='white_player.profile.avatar')
-    black_avatar = serializers.ImageField(source='black_player.profile.avatar')
+    white_avatar = serializers.CharField(source='white_player.profile.avatar.url')
+    black_avatar = serializers.CharField(source='black_player.profile.avatar.url')
 
     class Meta:
         model = RankingGameRoom

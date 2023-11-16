@@ -1,4 +1,5 @@
 from http.cookies import SimpleCookie
+import uuid
 
 def get_cookie(scope, cookie):
     """
@@ -24,3 +25,11 @@ def default_game_positions():
         ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
         ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"]
     ]
+
+def create_avatar_name(instance, filename):
+    """
+    Function for creating hash name for user uploaded avatar files.
+    """
+    extension = filename.split('.')[-1]
+    hashed_file_name = f'{uuid.uuid4()}.{extension}'
+    return f'avatars/{hashed_file_name}'

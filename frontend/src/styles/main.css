@@ -67,6 +67,7 @@
   width: 25px;
   height: 25px;
   margin-right: 5px;
+  border-radius: 50%;
 }
 .nav .nav-footer .nav-footer-user .nav-footer-username {
   overflow: hidden;
@@ -999,7 +1000,7 @@
 .game-result-alert .game-result-body .game-result-user .game-result-avatar {
   width: 60px;
   height: 60px;
-  border-radius: 100%;
+  border-radius: 50%;
 }
 .game-result-alert .game-result-body .game-result-user .game-result-winner {
   animation: win-circle 1.5s ease 0.15s 1 forwards;
@@ -1202,6 +1203,7 @@
   width: 35px;
   height: 35px;
   margin-right: 5px;
+  border-radius: 50%;
 }
 .game-container .game-content .game-info .game-user-rating {
   color: grey;
@@ -1305,40 +1307,105 @@
 }
 .settings-page .settings-container {
   display: flex;
-  position: relative;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  width: 650px;
-  height: 750px;
+  width: 400px;
+  height: 500px;
   background-color: #303030;
-  border: 1px solid #363636;
+  border: 1px solid;
   border-radius: 25px;
+  border-color: #363636;
   box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.2);
 }
 .settings-page .settings-container .settings-header {
-  text-align: center;
-  padding: 15px 0px;
-  font-size: x-large;
-  font-weight: 500;
-}
-.settings-page .settings-container .settings-body {
   display: flex;
   position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80%;
-  height: 50%;
+  font-size: x-large;
 }
-.settings-page .settings-container .settings-body .settings-avatar {
+.settings-page .settings-container .settings-header .settings-avatar {
   width: 120px;
   height: 120px;
+  margin-top: 20px;
+  border-radius: 50%;
 }
-.settings-page .settings-container .settings-footer {
+.settings-page .settings-container .settings-header .settings-avatar-input {
+  cursor: pointer;
+  visibility: hidden;
+  background-color: transparent;
+  position: relative;
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+  right: -40px;
+  bottom: 40px;
+}
+.settings-page .settings-container .settings-header .settings-avatar-input::before {
+  content: url("../../public/static/images/icons/edit_icon.png");
+  visibility: visible;
   position: absolute;
-  bottom: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2c2c2c;
+  width: 35px;
+  height: 35px;
 }
-.settings-page .settings-container .settings-footer .settings-password-change-button {
+.settings-page .settings-container .settings-body {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 80px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.settings-page .settings-container .settings-body .settings-input-label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  width: 50%;
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-lock-button {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  border: 0;
+  background-color: transparent;
+  position: absolute;
+  bottom: 3px;
+  right: 10px;
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-lock-button .settings-lock-image {
+  width: 20px;
+  height: 20px;
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-input-field {
+  color: white;
+  background-color: #313131;
+  border: 1px solid #363636;
+  border-radius: 25px;
+  margin-top: 5px;
+  padding: 8px 30px 8px 8px;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  width: 80%;
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-input-field:focus {
+  outline: 1px solid;
+  border: 1px solid;
+  outline-color: #454545;
+  border-color: #454545;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-input-field:disabled {
+  color: rgb(109, 108, 108);
+}
+.settings-page .settings-container .settings-password-change-button {
   cursor: pointer;
   font-size: small;
   color: white;
@@ -1346,9 +1413,13 @@
   border-radius: 5px;
   border: 0px;
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
-  background-color: rgb(44, 133, 235);
+  margin-right: 5px;
+  background-color: rgb(32, 126, 235);
 }
-.settings-page .settings-container .settings-footer .settings-delete-account-button {
+.settings-page .settings-container .settings-password-change-button:hover {
+  background-color: rgb(30, 118, 219);
+}
+.settings-page .settings-container .settings-delete-account-button {
   cursor: pointer;
   font-size: small;
   color: white;
@@ -1356,9 +1427,13 @@
   border-radius: 5px;
   border: 0px;
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
-  background-color: red;
+  margin-right: 5px;
+  background-color: rgb(230, 0, 0);
 }
-.settings-page .settings-container .settings-footer .settings-submit-changes-button {
+.settings-page .settings-container .settings-delete-account-button:hover {
+  background-color: rgb(212, 0, 0);
+}
+.settings-page .settings-container .settings-submit-changes-button {
   cursor: pointer;
   font-size: small;
   color: white;
@@ -1366,7 +1441,61 @@
   border-radius: 5px;
   border: 0px;
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  margin-right: 5px;
   background-color: green;
+}
+.settings-page .settings-container .settings-submit-changes-button:hover {
+  background-color: rgb(0, 119, 0);
+}
+.settings-page .settings-container .account-delete-alert {
+  position: absolute;
+  background-color: #303030;
+  border: 1px solid #404040;
+  border-radius: 10px;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 25;
+  padding: 10px;
+  animation: scale-animation 0.5s ease 0s 1;
+}
+.settings-page .settings-container .account-delete-alert .account-delete-alert-remainder {
+  font-size: small;
+  color: red;
+  text-align: center;
+}
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-yes-button {
+  cursor: pointer;
+  height: 25px;
+  width: 55px;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
+  background-color: rgb(65, 173, 65);
+  border: 1px solid rgb(6, 158, 6);
+  margin-right: 5px;
+}
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-yes-button:hover {
+  background-color: rgb(60, 158, 60);
+  border-color: rgb(6, 143, 6);
+}
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-no-button {
+  cursor: pointer;
+  height: 25px;
+  width: 55px;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
+  background-color: rgb(207, 56, 56);
+  border: 1px solid rgb(194, 36, 36);
+}
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-no-button:hover {
+  background-color: rgb(196, 53, 53);
+  border: 1px solid rgb(183, 33, 33);
 }
 
 .form-page {
@@ -1380,7 +1509,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 0px;
+  padding: 20px 0px;
   width: 400px;
   background-color: #303030;
   border: 1px solid;
@@ -1394,6 +1523,10 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+.form-page .form-container .form .form-header {
+  font-size: x-large;
+  margin-bottom: 20px;
 }
 .form-page .form-container .form .form-input-container {
   position: relative;
@@ -1439,7 +1572,7 @@
   bottom: 55px;
   pointer-events: none;
   box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.1);
-  animation: tooltip-appear 0.35s ease 0s 1;
+  animation: scale-animation 0.35s ease 0s 1;
 }
 .form-page .form-container .form .form-input-container .form-input-tooltip::after {
   content: " ";

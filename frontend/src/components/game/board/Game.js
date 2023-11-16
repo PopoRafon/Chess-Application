@@ -44,6 +44,7 @@ export default function Game({ gameType, gameSetup }) {
                 setUsers({
                     [isPlayerWhite ? 'player' : 'enemy']: {
                         color: 'w',
+                        avatar: setup.white_avatar,
                         username: setup.white_username,
                         rating: setup.white_rating,
                         timer: setup.white_timer,
@@ -51,6 +52,7 @@ export default function Game({ gameType, gameSetup }) {
                     },
                     [!isPlayerWhite ? 'player' : 'enemy']: {
                         color: 'b',
+                        avatar: setup.black_avatar,
                         username: setup.black_username,
                         rating: setup.black_rating,
                         timer: setup.black_timer,
