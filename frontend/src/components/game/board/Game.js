@@ -181,6 +181,7 @@ export default function Game({ gameType, gameSetup }) {
                     )}
                     <GameInfo
                         player='enemy'
+                        gameType={gameType}
                     />
                     <ChessBoard
                         disableBoard={disableBoard}
@@ -189,6 +190,7 @@ export default function Game({ gameType, gameSetup }) {
                     />
                     <GameInfo
                         player='player'
+                        gameType={gameType}
                     />
                 </div>
             </div>

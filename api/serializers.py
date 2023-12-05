@@ -128,13 +128,13 @@ class RankingGameRoomSerializer(GameRoomSerializer):
 
     class Meta:
         model = RankingGameRoom
-        exclude = ['id', 'game_started', 'black_player', 'white_player', 'game']
+        exclude = ['id', 'black_player', 'white_player', 'game']
 
 
 class GuestGameRoomSerializer(GameRoomSerializer):
     class Meta:
         model = GuestGameRoom
-        exclude = ['id', 'game_started', 'black_player', 'white_player', 'game']
+        exclude = ['id', 'black_player', 'white_player', 'game']
 
 
 class ComputerGameRoomRetrieveSerializer(GameRoomSerializer):

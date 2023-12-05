@@ -19,12 +19,15 @@ class Profile(models.Model):
 class Game(models.Model):
     white_points = models.IntegerField(blank=True, default=0)
     black_points = models.IntegerField(blank=True, default=0)
+    white_timer = models.DurationField(default=timedelta(minutes=10), blank=True)
+    black_timer = models.DurationField(default=timedelta(minutes=10), blank=True)
     positions = models.JSONField(blank=True, default=default_game_positions)
     en_passant = models.CharField(max_length=2, blank=True)
     castling = models.CharField(max_length=4, blank=True, default='KQkq')
     turn = models.CharField(max_length=1, blank=True, default='w')
     result = models.CharField(max_length=40, blank=True)
     king_check = models.CharField(max_length=1, blank=True)
+    started = models.BooleanField(default=False)
 
 
 class Message(models.Model):
@@ -35,7 +38,9 @@ class Message(models.Model):
 
 class Move(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='moves')
+    player = models.CharField(max_length=1)
     positions = models.JSONField()
+    timestamp = models.DateTimeField(auto_now_add=True)
     new_pos = models.CharField(max_length=4)
     old_pos = models.CharField(max_length=4)
     move = models.CharField(max_length=10)
@@ -45,9 +50,6 @@ class RankingGameRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     white_player = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_room_white')
     black_player = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_room_black')
-    white_timer = models.DurationField(default=timedelta(minutes=10))
-    black_timer = models.DurationField(default=timedelta(minutes=10))
-    game_started = models.BooleanField(default=False)
     game = models.OneToOneField(Game, on_delete=models.CASCADE, blank=True, null=True)
 
 
@@ -55,9 +57,6 @@ class GuestGameRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     white_player = models.CharField(max_length=64, blank=True)
     black_player = models.CharField(max_length=64, blank=True)
-    white_timer = models.DurationField(default=timedelta(minutes=10))
-    black_timer = models.DurationField(default=timedelta(minutes=10))
-    game_started = models.BooleanField(default=False)
     game = models.OneToOneField(Game, on_delete=models.CASCADE, blank=True, null=True)
 
 

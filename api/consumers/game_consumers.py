@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone, timedelta
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from api.models import Game, Move, Message
@@ -46,6 +47,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.receive_checkmate()
                 case 'stalemate':
                     await self.receive_stalemate()
+                case 'timeout':
+                    await self.receive_timeout()
                 case _:
                     await self.send_error()
         else:
@@ -56,12 +59,45 @@ class GameConsumer(AsyncWebsocketConsumer):
             'error': 'Message you sent was invalid.'
         }))
 
+    async def receive_timeout(self):
+        if self.game.started:
+            last_move = await database_sync_to_async(self.game.moves.last)()
+
+            if last_move.player == 'w':
+                timer = (self.game.black_timer - (datetime.now(timezone.utc) - last_move.timestamp)).total_seconds()
+            else:
+                timer = (self.game.white_timer - (datetime.now(timezone.utc) - last_move.timestamp)).total_seconds()
+
+            if timer <= 0:
+                result = None
+                pieces_value = 0
+
+                for row in self.game.positions:
+                    for piece in row:
+                        if piece and piece[0] == last_move.player:
+                            if piece[1] == 'b' and piece[1] == 'n':
+                                pieces_value += 1
+
+                            if piece[1] == 'r' or piece[1] == 'q' or piece[1] == 'p' or pieces_value == 2:
+                                result = 'Timeout! ' + ('White' if last_move.player == 'w' else 'Black') + ' has won!'
+                                break
+
+                    if result:
+                        break
+                else:
+                    result = 'Timeout! Draw!'
+
+                await self.end_game(result)
+
+                await self.channel_layer.group_send(self.room_group_name, {
+                    'type': 'send_game_end',
+                    'result': result
+                })
+
     async def receive_stalemate(self):
         result = 'Stalemate! Draw!'
 
-        self.game.result = result
-
-        await self.game.asave()
+        await self.end_game(result)
 
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'send_game_end',
@@ -72,9 +108,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         player_color = await self.get_player_color()
         result = 'Checkmate! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
 
-        self.game.result = result
-
-        await self.game.asave()
+        await self.end_game(result)
 
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'send_game_end',
@@ -85,9 +119,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         player_color = await self.get_player_color()
         result = 'Surrender! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
 
-        self.game.result = result
-
-        await self.game.asave()
+        await self.end_game(result)
 
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'send_game_end',
@@ -251,6 +283,16 @@ class GameConsumer(AsyncWebsocketConsumer):
         """
         piece = self.game.positions[self.old_row][self.old_col]
 
+        if self.game.started:
+            last_move = await database_sync_to_async(self.game.moves.last)()
+
+            if piece[0] == 'w':
+                self.game.white_timer = self.game.white_timer - (datetime.now(timezone.utc) - last_move.timestamp)
+            else:
+                self.game.black_timer = self.game.black_timer - (datetime.now(timezone.utc) - last_move.timestamp)
+        else:
+            self.game.started = True
+
         await self.add_move_notation_to_game_object(piece, promotion, castle)
         await self.add_en_passant_to_game_object(piece)
         await self.add_points_to_game_object()
@@ -280,6 +322,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         await database_sync_to_async(Move.objects.create)(
             game=self.game,
+            player=piece[0],
             positions=self.game.positions,
             move=self.move,
             old_pos=f'{self.old_row}{self.old_col}',
@@ -287,6 +330,26 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
         self.game.turn = 'w' if self.game.turn == 'b' else 'b'
+
+        await self.game.asave()
+
+    async def end_game(self, result):
+        """
+        Method used for properly ending the game with correct settings.
+        """
+        last_move = await database_sync_to_async(self.game.moves.last)()
+
+        if last_move:
+            min_timer_time = timedelta(seconds=0)
+
+            if last_move.player == 'w':
+                timer = self.game.black_timer - (datetime.now(timezone.utc) - last_move.timestamp)
+                self.game.black_timer = timer if timer >= min_timer_time else min_timer_time
+            else:
+                timer = self.game.white_timer - (datetime.now(timezone.utc) - last_move.timestamp)
+                self.game.white_timer = timer if timer >= min_timer_time else min_timer_time
+
+        self.game.result = result
 
         await self.game.asave()
 

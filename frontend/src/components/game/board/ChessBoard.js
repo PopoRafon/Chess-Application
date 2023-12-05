@@ -6,33 +6,16 @@ import SurrenderMenu from '../extra/SurrenderMenu';
 import GameResultAlert from '../extra/GameResultAlert';
 import Arbiter from './Arbiter';
 
-function RowLetters({ rows }) {
+function SideLetters({ lettersType, letters }) {
     const { users } = useUsers();
     const indexShift = useRef(users.player.color === 'b' ? 1 : 0);
+    const letterColors = useRef(lettersType === 'cols' ? ['white-letter', 'black-letter'] : ['black-letter', 'white-letter']);
 
     return (
-        <div className="board-rows">
-            {rows.map((row, index) => (
+        <div className={`board-${lettersType}`}>
+            {letters.map((col, index) => (
                 <span
-                    className={(index + indexShift.current) % 2 === 0 ? 'black-letter' : 'white-letter'}
-                    key={index}
-                >
-                    {row}
-                </span>
-            ))}
-        </div>
-    );
-}
-
-function ColLetters({ columns }) {
-    const { users } = useUsers();
-    const indexShift = useRef(users.player.color === 'b' ? 1 : 0);
-
-    return (
-        <div className="board-cols">
-            {columns.map((col, index) => (
-                <span
-                    className={(index + indexShift.current) % 2 === 0 ? 'white-letter' : 'black-letter'}
+                    className={(index + indexShift.current) % 2 === 0 ? letterColors.current[0] : letterColors.current[1]}
                     key={index}
                 >
                     {col}
@@ -48,10 +31,6 @@ function Square({ colIdx, rowIdx }) {
     if (users.player.color === 'b') colIdx++;
 
     return <div className={(colIdx + rowIdx) % 2 === 0 ? 'white-square' : 'black-square'}></div>;
-}
-
-function DisableChessBoard() {
-    return <div className="disable-board"></div>;
 }
 
 export default function ChessBoard({ disableBoard, setDisableBoard, gameType }) {
@@ -71,9 +50,7 @@ export default function ChessBoard({ disableBoard, setDisableBoard, gameType }) 
 
     return (
         <div className="chess-board">
-            {disableBoard && (
-                <DisableChessBoard />
-            )}
+            {disableBoard && <div className="disable-board"></div>}
             {showResultAlert && (
                 <GameResultAlert
                     setShowResultAlert={setShowResultAlert}
@@ -95,11 +72,13 @@ export default function ChessBoard({ disableBoard, setDisableBoard, gameType }) 
                 ))}
             </div>
             <Arbiter />
-            <RowLetters
-                rows={users.player.color === 'w' ? rows : rows.reverse()}
+            <SideLetters
+                letters={users.player.color === 'w' ? rows : rows.reverse()}
+                lettersType="rows"
             />
-            <ColLetters
-                columns={users.player.color === 'w' ? cols : cols.reverse()}
+            <SideLetters
+                letters={users.player.color === 'w' ? cols : cols.reverse()}
+                lettersType="cols"
             />
         </div>
     );
