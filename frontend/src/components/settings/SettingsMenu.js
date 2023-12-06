@@ -4,48 +4,23 @@ import Cookies from 'js-cookie';
 import { useUser } from '../../contexts/UserContext';
 import { useAlert } from '../../contexts/AlertContext';
 import getUserData from '../../utils/UserData';
+import AccountDeleteAlert from './AccountDeleteAlert';
 
 export default function SettingsContainer() {
     const { user, setUser } = useUser();
     const { setAlert } = useAlert();
     const navigate = useNavigate();
-    const [accountDeleteAlert, setAccountDeleteAlert] = useState(false)
+    const [accountDeleteAlert, setAccountDeleteAlert] = useState(false);
     const [username, setUsername] = useState({ disabled: true, value: user.username });
     const [email, setEmail] = useState({ disabled: true, value: user.email });
     const [avatar, setAvatar] = useState();
 
-    function handleAccountDelete() {
-        const accessToken = Cookies.get('access');
-
-        fetch('/api/v1/user/delete', {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-        .then(response => response.json())
-        .then((data) => {
-            if (data.success) {
-                setUser({ isLoggedIn: false });
-
-                setAlert(data.success);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    }
-
     function handleChange(event) {
         const { name, value, files } = event.target;
 
-        if (name === 'username') {
-            setUsername({ ...username, value: value });
-        } else if (name === 'email') {
-            setEmail({ ...email, value: value });
-        } else if (name === 'avatar' && files && files[0]) {
-            setAvatar(files[0]);
-        }
+        if (name === 'username') setUsername({ ...username, value: value });
+        else if (name === 'email') setEmail({ ...email, value: value });
+        else if (name === 'avatar' && files && files[0]) setAvatar(files[0]);
     }
 
     function handleSubmit(event) {
@@ -53,15 +28,9 @@ export default function SettingsContainer() {
         const accessToken = Cookies.get('access');
         const formData = new FormData();
 
-        if (!email.disabled) {
-            formData.append('email', email.value);
-        }
-        if (!username.disabled) {
-            formData.append('username', username.value);
-        }
-        if (avatar) {
-            formData.append('avatar', avatar);
-        }
+        if (!email.disabled) formData.append('email', email.value);
+        if (!username.disabled) formData.append('username', username.value);
+        if (avatar) formData.append('avatar', avatar);
 
         fetch('/api/v1/user/update', {
             method: 'PATCH',
@@ -75,6 +44,10 @@ export default function SettingsContainer() {
             if (data.success) {
                 getUserData(setUser);
 
+                setEmail({ ...email, disabled: true });
+                setUsername({ ...username, disabled: true });
+                setAvatar(null);
+
                 setAlert(data.success);
             }
         })
@@ -83,10 +56,10 @@ export default function SettingsContainer() {
         });
     }
 
-    function handleFieldStatusChange(setField) {
+    function handleFieldStatusChange(setField, initialValue) {
         return () => {
             setField(prev => {
-                return { ...prev, disabled: !prev.disabled };
+                return { value: initialValue, disabled: !prev.disabled };
             });
         }
     }
@@ -96,21 +69,21 @@ export default function SettingsContainer() {
             className="settings-container"
             onSubmit={handleSubmit}
         >
-            <div className="settings-header">
-                <div>Account Settings</div>
-                <img
-                    className="settings-avatar"
-                    src={user.avatar}
-                    alt="Settings Avatar"
-                />
-                <input
-                    name="avatar"
-                    type="file"
-                    className="settings-avatar-input"
-                    onChange={handleChange}
-                />
-            </div>
+            <div className="settings-header">Account Settings</div>
             <div className="settings-body">
+                <div className="settings-input-label">
+                    <img
+                        className="settings-avatar"
+                        src={user.avatar}
+                        alt="Settings Avatar"
+                    />
+                    <input
+                        name="avatar"
+                        type="file"
+                        className="settings-avatar-input"
+                        onChange={handleChange}
+                    />
+                </div>
                 <label
                     htmlFor="email"
                     className="settings-input-label"
@@ -124,32 +97,19 @@ export default function SettingsContainer() {
                         onChange={handleChange}
                         className="settings-input-field"
                         disabled={email.disabled}
+                        autoComplete="off"
                     />
-                    {email.disabled ? (
-                        <button
-                            type="button"
-                            className="settings-lock-button"
-                            onClick={handleFieldStatusChange(setEmail)}
-                        >
-                            <img
-                                className="settings-lock-image"
-                                src="/static/images/icons/lock_icon.png"
-                                alt="Lock Email Input"
-                            />
-                        </button>
-                    ) : (
-                        <button
-                            type="button"
-                            className="settings-lock-button"
-                            onClick={handleFieldStatusChange(setEmail)}
-                        >
-                            <img
-                                className="settings-lock-image"
-                                src="/static/images/icons/unlock_icon.png"
-                                alt="Unlock Email Input"
-                            />
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        className="settings-lock-button"
+                        onClick={handleFieldStatusChange(setEmail, user.email)}
+                    >
+                        <img
+                            className="settings-lock-image"
+                            src={`/static/images/icons/${email.disabled ? 'lock_icon' : 'unlock_icon'}.png`}
+                            alt="Email Input Lock"
+                        />
+                    </button>
                 </label>
                 <label
                     htmlFor="username"
@@ -164,32 +124,19 @@ export default function SettingsContainer() {
                         onChange={handleChange}
                         className="settings-input-field"
                         disabled={username.disabled}
+                        autoComplete="off"
                     />
-                    {username.disabled ? (
-                        <button
-                            type="button"
-                            className="settings-lock-button"
-                            onClick={handleFieldStatusChange(setUsername)}
-                        >
-                            <img
-                                className="settings-lock-image"
-                                src="/static/images/icons/lock_icon.png"
-                                alt="Lock Username Input"
-                            />
-                        </button>
-                    ) : (
-                        <button
-                            type="button"
-                            className="settings-lock-button"
-                            onClick={handleFieldStatusChange(setUsername)}
-                        >
-                            <img
-                                className="settings-lock-image"
-                                src="/static/images/icons/unlock_icon.png"
-                                alt="Unlock Username Input"
-                            />
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        className="settings-lock-button"
+                        onClick={handleFieldStatusChange(setUsername, user.username)}
+                    >
+                        <img
+                            className="settings-lock-image"
+                            src={`/static/images/icons/${username.disabled ? 'lock_icon' : 'unlock_icon'}.png`}
+                            alt="Username Input Lock"
+                        />
+                    </button>
                 </label>
             </div>
             <div>
@@ -214,26 +161,9 @@ export default function SettingsContainer() {
                 </button>
             </div>
             {accountDeleteAlert && (
-                <div className="account-delete-alert">
-                    <div>Are you sure you want to delete your account?</div>
-                    <div className="account-delete-alert-remainder">(This action is irreversible!)</div>
-                    <div className="account-delete-alert-buttons-container">
-                        <button
-                            type="button"
-                            className="account-delete-yes-button"
-                            onClick={handleAccountDelete}
-                        >
-                            Yes
-                        </button>
-                        <button
-                            type="button"
-                            className="account-delete-no-button"
-                            onClick={() => setAccountDeleteAlert(false)}
-                        >
-                            No
-                        </button>
-                    </div>
-                </div>
+                <AccountDeleteAlert
+                    setAccountDeleteAlert={setAccountDeleteAlert}
+                />
             )}
         </form>
     );

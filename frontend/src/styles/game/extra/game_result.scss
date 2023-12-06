@@ -95,23 +95,17 @@
             cursor: pointer;
             padding: 10px 15px;
             position: relative;
-            overflow: hidden;
             background-position: center;
             color: white;
             border: 1px solid rgb(6, 141, 6);
             background-color: rgb(65, 161, 65);
             border-radius: 25px;
             box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.2);
-            transition: all 0.7s;
+            transition: 0.2s;
 
             &:hover {
-                background: rgb(59, 146, 59) radial-gradient(circle, transparent 1%, rgb(62, 151, 62) 1%) center/15000%;
-            }
-
-            &:active {
-                background-color: rgb(91, 207, 91);
-                background-size: 100%;
-                transition: all 0s;
+                background-color: rgb(81, 163, 81);
+                border-color: rgb(14, 139, 14);
             }
         }
     }

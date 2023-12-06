@@ -226,7 +226,7 @@ class TestRankingView(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response_json), 1)
-        self.assertEqual(len(response_json[0]), 5)
+        self.assertEqual(len(response_json[0]), 6)
 
 
 class TestPasswordChangeView(APITestCase):

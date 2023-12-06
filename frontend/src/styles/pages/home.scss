@@ -4,8 +4,81 @@
     justify-content: center;
     align-items: center;
 
+    .home-ranking {
+        position: absolute;
+        top: 25px;
+
+        .home-ranking-header {
+            font-size: x-large;
+            text-align: center;
+            margin: 0px;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px rgb(0, 0, 0, 0.3);
+        }
+
+        .home-ranking-body {
+            display: flex;
+
+            .home-ranking-player {
+                font-size: medium;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: #2f2f2f;
+                box-sizing: border-box;
+                padding: 5px 5px;
+                border-radius: 5px;
+                width: 150px;
+                height: 150px;
+                margin-right: 8px;
+                box-shadow: 4px 4px 6px 0px rgb(0, 0, 0, 0.2);
+                border: 1px solid #2a2a2a;
+                transition: 0.3s;
+
+                &:hover {
+                    background-color: #323232;
+                    border-color: #2d2d2d;
+                }
+
+                .home-ranking-username {
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    text-align: center;    
+                }
+
+                .home-ranking-avatar {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
+
     .home-container {
-        font-size: xx-large;
-        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .home-header {
+            font-size: xx-large;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 3px 3px rgb(0, 0, 0, 0.3);
+        }
+
+        .home-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: x-large;
+            text-shadow: 3px 3px rgb(0, 0, 0, 0.3);
+        }
     }
 }

@@ -24,14 +24,12 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       await createAccessToken();
       await getUserData(setUser);
 
       setIsLoaded(true);
-    }
-
-    fetchData();
+    })()
   }, [setUser]);
 
   return isLoaded && (

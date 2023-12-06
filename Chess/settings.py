@@ -143,13 +143,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_ROOT = BASE_DIR / 'static/'
+
 STATIC_URL = 'static/'
+
 STATICFILES_DIRS = [
     BASE_DIR / 'frontend/build/static/'
 ]
 
-MEDIA_ROOT = BASE_DIR / 'frontend/build/media/'
+
+# Media files settings
+
+MEDIA_ROOT = BASE_DIR / 'frontend/public/media/'
+
 MEDIA_URL = 'media/'
+
+CONTENT_TYPES = ['image', 'video']
+
+IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg']
+
+MAX_UPLOAD_SIZE = 5242880
 
 
 # Default primary key field type

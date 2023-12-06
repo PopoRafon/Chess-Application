@@ -40,12 +40,12 @@ class UserUpdateView(APIView):
     def patch(self, request):
         user = request.user
         data = request.data
-        serializer = UserUpdateSerializer(data=data)
+        serializer = UserUpdateSerializer(data=data, context={'user': user})
 
         if serializer.is_valid():
-            avatar = data.get('avatar', None)
-            username = data.get('username', None)
-            email = data.get('email', None)
+            avatar = data.get('avatar')
+            username = data.get('username')
+            email = data.get('email')
 
             if avatar:
                 user.profile.avatar = avatar

@@ -11,6 +11,7 @@ class Profile(models.Model):
     rating = models.IntegerField(default=800)
     wins = models.IntegerField(blank=True, default=0)
     loses = models.IntegerField(blank=True, default=0)
+    draws = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.user.username

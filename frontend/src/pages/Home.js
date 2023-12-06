@@ -1,12 +1,50 @@
+import { useState, useEffect } from 'react';
 import Navigation from '../components/core/Navigation';
+import getRankingPlayers from '../utils/RankingPlayers';
 
 export default function Home() {
+    const [topPlayers, setTopPlayers] = useState([]);
+
+    useEffect(() => {
+        getRankingPlayers(setTopPlayers, 3);
+    }, [setTopPlayers]);
+
     return (
         <>
             <Navigation />
             <div className="home-page">
+                <div className="home-ranking">
+                    <h2 className="home-ranking-header">Top Players</h2>
+                    <div className="home-ranking-body">
+                        {topPlayers.map((player, index) => (
+                            <div
+                                className="home-ranking-player"
+                                key={index}
+                            >
+                                {player && (
+                                    <>
+                                        <img
+                                            className="home-ranking-avatar"
+                                            src={player.avatar}
+                                            alt={`${player.username} Avatar`}
+                                        />
+                                        <span>#{index + 1}</span>
+                                        <span className="home-ranking-username">{player.username}</span>
+                                        <span style={{ fontSize: 'medium' }}>Rating: {player.rating}</span>
+                                    </>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
                 <div className="home-container">
-                    <span>Welcome to our world of strategic brilliance and timeless battles!</span>
+                    <h1 className="home-header">
+                        Welcome to our world of strategic brilliance and timeless battles!<br/>
+                    </h1>
+                    <div className="home-body">
+                        <span>Dive into a world where strategy meets passion, and every game brings forth a thrilling tale.</span>
+                        <span>Challenge opponents from across the globe or sharpen your skills against our AI.</span>
+                    </div>
                 </div>
             </div>
         </>

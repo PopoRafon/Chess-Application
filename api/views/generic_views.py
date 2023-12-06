@@ -16,4 +16,12 @@ class RankingView(ListAPIView):
     serializer_class = RankingSerializer
 
     def get_queryset(self):
-        return User.objects.prefetch_related('profile').all().order_by('-profile__rating')[0:25]
+        count = 10
+        count_param = self.request.GET.get('count')
+
+        if count_param and count_param.isdigit():
+            count_param_int = int(count_param)
+            if count_param_int >= 1 and count_param_int <= 100:
+                count = count_param_int
+
+        return User.objects.prefetch_related('profile').all().order_by('-profile__rating')[0:count]

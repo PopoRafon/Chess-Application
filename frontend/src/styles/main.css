@@ -184,9 +184,73 @@
   justify-content: center;
   align-items: center;
 }
+.home-page .home-ranking {
+  position: absolute;
+  top: 25px;
+}
+.home-page .home-ranking .home-ranking-header {
+  font-size: x-large;
+  text-align: center;
+  margin: 0px;
+  margin-bottom: 15px;
+  text-shadow: 3px 3px rgba(0, 0, 0, 0.3);
+}
+.home-page .home-ranking .home-ranking-body {
+  display: flex;
+}
+.home-page .home-ranking .home-ranking-body .home-ranking-player {
+  font-size: medium;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #2f2f2f;
+  box-sizing: border-box;
+  padding: 5px 5px;
+  border-radius: 5px;
+  width: 150px;
+  height: 150px;
+  margin-right: 8px;
+  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid #2a2a2a;
+  transition: 0.3s;
+}
+.home-page .home-ranking .home-ranking-body .home-ranking-player:hover {
+  background-color: #323232;
+  border-color: #2d2d2d;
+}
+.home-page .home-ranking .home-ranking-body .home-ranking-player .home-ranking-username {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+.home-page .home-ranking .home-ranking-body .home-ranking-player .home-ranking-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+}
 .home-page .home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.home-page .home-container .home-header {
   font-size: xx-large;
   font-weight: 700;
+  margin: 0;
+  text-shadow: 3px 3px rgba(0, 0, 0, 0.3);
+}
+.home-page .home-container .home-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: x-large;
+  text-shadow: 3px 3px rgba(0, 0, 0, 0.3);
 }
 
 .error-page {
@@ -1031,22 +1095,17 @@
   cursor: pointer;
   padding: 10px 15px;
   position: relative;
-  overflow: hidden;
   background-position: center;
   color: white;
   border: 1px solid rgb(6, 141, 6);
   background-color: rgb(65, 161, 65);
   border-radius: 25px;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-  transition: all 0.7s;
+  transition: 0.2s;
 }
 .game-result-alert .game-result-footer .game-result-exit-game-button:hover {
-  background: rgb(59, 146, 59) radial-gradient(circle, transparent 1%, rgb(62, 151, 62) 1%) center/15000%;
-}
-.game-result-alert .game-result-footer .game-result-exit-game-button:active {
-  background-color: rgb(91, 207, 91);
-  background-size: 100%;
-  transition: all 0s;
+  background-color: rgb(81, 163, 81);
+  border-color: rgb(14, 139, 14);
 }
 
 .surrender-menu {
@@ -1262,7 +1321,7 @@
   justify-content: center;
 }
 .ranking-page .ranking-container {
-  width: 35%;
+  width: 600px;
   border: 1px solid #363636;
   border-radius: 25px;
   overflow: hidden;
@@ -1319,40 +1378,9 @@
   box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.2);
 }
 .settings-page .settings-container .settings-header {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
   font-size: x-large;
-}
-.settings-page .settings-container .settings-header .settings-avatar {
-  width: 120px;
-  height: 120px;
-  margin-top: 20px;
-  border-radius: 50%;
-}
-.settings-page .settings-container .settings-header .settings-avatar-input {
-  cursor: pointer;
-  visibility: hidden;
-  background-color: transparent;
-  position: relative;
-  width: 35px;
-  height: 35px;
-  border-radius: 5px;
-  right: -40px;
-  bottom: 40px;
-}
-.settings-page .settings-container .settings-header .settings-avatar-input::before {
-  content: url("../../public/static/images/icons/edit_icon.png");
-  visibility: visible;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #2c2c2c;
-  width: 35px;
-  height: 35px;
+  text-shadow: 3px 3px rgba(0, 0, 0, 0.3);
 }
 .settings-page .settings-container .settings-body {
   display: flex;
@@ -1363,13 +1391,46 @@
   width: 100%;
 }
 .settings-page .settings-container .settings-body .settings-input-label {
-  position: relative;
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-size: large;
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
   margin-top: 10px;
   width: 50%;
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-avatar {
+  width: 120px;
+  height: 120px;
+  margin-top: 15px;
+  border-radius: 50%;
+  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.2);
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-avatar-input {
+  cursor: pointer;
+  visibility: hidden;
+  background-color: transparent;
+  position: relative;
+  width: 35px;
+  height: 35px;
+  right: -45px;
+  bottom: 30px;
+}
+.settings-page .settings-container .settings-body .settings-input-label .settings-avatar-input::before {
+  content: "";
+  background-image: url("../../public/static/images/icons/edit_icon.png");
+  background-repeat: no-repeat;
+  background-color: #303030;
+  background-position: center;
+  background-size: 20px;
+  visibility: visible;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.2);
 }
 .settings-page .settings-container .settings-body .settings-input-label .settings-lock-button {
   cursor: pointer;
@@ -1378,8 +1439,8 @@
   border: 0;
   background-color: transparent;
   position: absolute;
-  bottom: 3px;
-  right: 10px;
+  bottom: 5px;
+  right: -8px;
 }
 .settings-page .settings-container .settings-body .settings-input-label .settings-lock-button .settings-lock-image {
   width: 20px;
@@ -1387,13 +1448,13 @@
 }
 .settings-page .settings-container .settings-body .settings-input-label .settings-input-field {
   color: white;
+  font-size: medium;
   background-color: #313131;
   border: 1px solid #363636;
   border-radius: 25px;
   margin-top: 5px;
   padding: 8px 30px 8px 8px;
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
-  width: 80%;
 }
 .settings-page .settings-container .settings-body .settings-input-label .settings-input-field:focus {
   outline: 1px solid;
@@ -1412,8 +1473,9 @@
   padding: 8px;
   border-radius: 5px;
   border: 0px;
-  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
   margin-right: 5px;
+  transition: 0.2s;
   background-color: rgb(32, 126, 235);
 }
 .settings-page .settings-container .settings-password-change-button:hover {
@@ -1426,8 +1488,9 @@
   padding: 8px;
   border-radius: 5px;
   border: 0px;
-  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
   margin-right: 5px;
+  transition: 0.2s;
   background-color: rgb(230, 0, 0);
 }
 .settings-page .settings-container .settings-delete-account-button:hover {
@@ -1440,8 +1503,9 @@
   padding: 8px;
   border-radius: 5px;
   border: 0px;
-  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
   margin-right: 5px;
+  transition: 0.2s;
   background-color: green;
 }
 .settings-page .settings-container .settings-submit-changes-button:hover {
