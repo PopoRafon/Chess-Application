@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { passwordReq, confirmPasswordReq } from '../../helpers/FormsRequirements';
+import { passwordResetConfirmFormValidation } from '../../helpers/FormsValidations';
 import { useAlert } from '../../contexts/AlertContext';
-import { emailRecoveryReq } from '../../helpers/FormsRequirements';
 import FormInput from './FormInput';
 
-export default function PasswordRecoveryForm() {
+export default function PasswordResetConfirmForm() {
     const { setAlert } = useAlert();
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
-    const [formData, setFormData] = useState({ email: '' });
+    const [formData, setFormData] = useState({
+        new_password1: '',
+        new_password2: '',
+    });
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -19,25 +23,12 @@ export default function PasswordRecoveryForm() {
         });
     }
 
-    function validation() {
-        const { email } = formData;
-        const newErrors = {};
-
-        if (!email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/)) newErrors['email'] = 'Enter a valid email address.';
-
-        if (Object.keys(newErrors).length >= 1) {
-            setErrors(newErrors);
-            return false;
-        }
-
-        return true;
-    }
-
     function handleSubmit(event) {
         event.preventDefault();
+        const path = window.location.pathname.split('/');
 
-        if (validation()) {
-            fetch('/api/v1/password/recovery', {
+        if (passwordResetConfirmFormValidation(formData, setErrors)) {
+            fetch(`/api/v1/password/reset/confirm/${path[4]}/${path[5]}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -49,6 +40,8 @@ export default function PasswordRecoveryForm() {
                 if (data.success) {
                     setAlert(data.success);
 
+                    navigate('/login');
+                } else if (data.token || data.error) {
                     navigate('/');
                 } else {
                     setErrors(data);
@@ -66,15 +59,23 @@ export default function PasswordRecoveryForm() {
             onSubmit={handleSubmit}
             noValidate={true}
         >
-            <div className="form-header">Recover Your Password</div>
             <FormInput
-                id="email"
-                label="Email address"
-                type="text"
-                value={formData.email}
+                id="new_password1"
+                label="New Password"
+                type="password"
+                value={formData.new_password1}
                 handleChange={handleChange}
-                error={errors.email}
-                requirements={emailRecoveryReq}
+                error={errors.new_password1}
+                requirements={passwordReq}
+            />
+            <FormInput
+                id="new_password2"
+                label="Confirm New Password"
+                type="password"
+                value={formData.new_password2}
+                handleChange={handleChange}
+                error={errors.new_password2}
+                requirements={confirmPasswordReq}
             />
             <div className="form-buttons" style={{ justifyContent: 'center' }}>
                 <input

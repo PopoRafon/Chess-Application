@@ -1,6 +1,6 @@
+import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { useUser } from '../../contexts/UserContext';
 import { useAlert } from '../../contexts/AlertContext';
 import getUserData from '../../utils/UserData';

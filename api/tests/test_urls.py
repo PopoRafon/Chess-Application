@@ -2,7 +2,7 @@ from django.urls import resolve, reverse
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.test import APISimpleTestCase
 from api.views.game_room_views import RankingGameRoomView, GuestGameRoomView, ComputerGameRoomRetrieveView, ComputerGameRoomCreateView
-from api.views.password_views import PasswordChangeView, PasswordRecoveryView, PasswordResetView
+from api.views.password_views import PasswordChangeView, PasswordResetView, PasswordResetConfirmView
 from api.views.user_views import UserDataView, UserDeleteView, UserUpdateView
 from api.views.account_views import RegisterView, LoginView, LogoutView
 from api.views.generic_views import RankingView, TokenRefreshView
@@ -116,16 +116,16 @@ class TestPasswordUrls(APISimpleTestCase):
         self.assertEqual(url, '/api/v1/password/change')
         self.assertEqual(resolver.func.view_class, PasswordChangeView)
 
-    def test_password_recovery_url(self):
-        url = reverse('password-recovery')
-        resolver = resolve(url)
-
-        self.assertEqual(url, '/api/v1/password/recovery')
-        self.assertEqual(resolver.func.view_class, PasswordRecoveryView)
-
     def test_password_reset_url(self):
-        url = reverse('password-reset', kwargs={'uidb64': 'uidb64', 'token': 'token'})
+        url = reverse('password-reset')
         resolver = resolve(url)
 
-        self.assertEqual(url, '/api/v1/password/reset/uidb64/token')
+        self.assertEqual(url, '/api/v1/password/reset')
         self.assertEqual(resolver.func.view_class, PasswordResetView)
+
+    def test_password_reset_confirm_url(self):
+        url = reverse('password-reset-confirm', kwargs={'uidb64': 'uidb64', 'token': 'token'})
+        resolver = resolve(url)
+
+        self.assertEqual(url, '/api/v1/password/reset/confirm/uidb64/token')
+        self.assertEqual(resolver.func.view_class, PasswordResetConfirmView)

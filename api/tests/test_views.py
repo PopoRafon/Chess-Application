@@ -202,13 +202,13 @@ class TestLoginView(APITestCase):
 
 
 class TestLogoutView(APITestCase):
-    def test_logout_view_GET(self):
+    def test_logout_view_POST(self):
         url = reverse('logout')
         user = User.objects.create(username='user')
         token = RefreshToken.for_user(user)
 
         self.client.cookies = SimpleCookie({'refresh': token})
-        response = self.client.get(url)
+        response = self.client.post(url)
         response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -257,45 +257,45 @@ class TestPasswordChangeView(APITestCase):
         self.assertTrue(User.objects.first().check_password('testpassword'))
 
 
-class TestPasswordRecoveryView(APITestCase):
+class TestPasswordResetView(APITestCase):
     def setUp(self):
         self.user = User.objects.create(username='user', email='email@example.com')
-        self.url = reverse('password-recovery')
+        self.url = reverse('password-reset')
 
-    def test_password_recovery_view_POST_valid_data(self):
+    def test_password_reset_view_POST_valid_data(self):
         response = self.client.post(self.url, data={'email': self.user.email})
 
         self.assertEqual(response.status_code, 200)
 
-    def test_password_recovery_view_POST_invalid_data(self):
+    def test_password_reset_view_POST_invalid_data(self):
         response = self.client.post(self.url, data={'email': 'email'})
 
         self.assertEqual(response.status_code, 400)
 
 
-class TestPasswordResetView(APITestCase):
+class TestPasswordResetConfirmView(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='user', password='testpassword')
         self.token = PasswordResetTokenGenerator().make_token(self.user)
         self.uidb64 = urlsafe_base64_encode(force_bytes(self.user.id))
-        self.url = reverse('password-reset', kwargs={'uidb64': self.uidb64, 'token': self.token})
+        self.url = reverse('password-reset-confirm', kwargs={'uidb64': self.uidb64, 'token': self.token})
         self.valid_payload = {'new_password1': 'newtestpassword', 'new_password2': 'newtestpassword'}
 
-    def test_password_reset_view_POST_valid_token_valid_data(self):
+    def test_password_reset_confirm_view_POST_valid_token_valid_data(self):
         response = self.client.post(self.url, data=self.valid_payload)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.first().check_password('newtestpassword'))
 
-    def test_password_reset_view_POST_invalid_data(self):
+    def test_password_reset_confirm_view_POST_invalid_data(self):
         invalid_payload = {'new_password1': 'password', 'new_password2': 'password'}
         response = self.client.post(self.url, data=invalid_payload)
 
         self.assertEqual(response.status_code, 400)
         self.assertTrue(User.objects.first().check_password('testpassword'))
 
-    def test_password_reset_view_POST_invalid_token(self):
-        new_url = reverse('password-reset', kwargs={'uidb64': self.uidb64, 'token': 'token'})
+    def test_password_reset_confirm_view_POST_invalid_token(self):
+        new_url = reverse('password-reset-confirm', kwargs={'uidb64': self.uidb64, 'token': 'token'})
         response = self.client.post(new_url, data=self.valid_payload)
 
         self.assertEqual(response.status_code, 401)
@@ -304,13 +304,13 @@ class TestPasswordResetView(APITestCase):
 
 class TestUserDeleteView(APITestCase):
     def setUp(self):
-        self.user = User.objects.create(username='user')
+        self.user = User.objects.create_user(username='user', password='password')
         self.url = reverse('user-delete')
+        self.refresh = RefreshToken.for_user(self.user)
+        self.access = self.refresh.access_token
 
     def test_user_delete_view_DELETE_authenticated_user(self):
-        refresh = RefreshToken.for_user(self.user)
-        access = refresh.access_token
-        response = self.client.delete(self.url, HTTP_AUTHORIZATION=f'Bearer {access}')
+        response = self.client.delete(self.url, {'password': 'password'}, HTTP_AUTHORIZATION=f'Bearer {self.access}')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.count(), 0)
@@ -319,6 +319,12 @@ class TestUserDeleteView(APITestCase):
         response = self.client.delete(self.url)
 
         self.assertEqual(response.status_code, 401)
+        self.assertEqual(User.objects.count(), 1)
+
+    def test_user_delete_view_DELETE_invalid_data(self):
+        response = self.client.delete(self.url, {'password': 'invalidpassword'}, HTTP_AUTHORIZATION=f'Bearer {self.access}')
+
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(User.objects.count(), 1)
 
 

@@ -79,7 +79,7 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    def get(self, request):
+    def post(self, request):
         response = Response({
             'success': 'You have been successfully logged out of your account!'
         }, status=status.HTTP_200_OK)

@@ -7,12 +7,12 @@ $invalid-field-color: rgb(221, 16, 16);
     padding: 8px;
     width: 60%;
     margin-top: 5px;
-    box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
+    box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.2);
 
     &:focus {
         outline: 1px solid;
         border: 1px solid;
-        box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.20);
+        box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.2);
     }
 }
 
@@ -27,13 +27,13 @@ $invalid-field-color: rgb(221, 16, 16);
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 20px 0px;
+        padding: 30px 0px 20px;
         width: 400px;
         background-color: #303030;
         border: 1px solid;
         border-radius: 25px;
         border-color: #363636;
-        box-shadow: 5px 5px 6px rgb(0, 0, 0, 0.20);
+        box-shadow: 5px 5px 6px rgb(0, 0, 0, 0.2);
 
         .form {
             display: flex;
@@ -41,11 +41,6 @@ $invalid-field-color: rgb(221, 16, 16);
             justify-content: center;
             align-items: center;
             width: 100%;
-
-            .form-header {
-                font-size: x-large;
-                margin-bottom: 20px;
-            }
 
             .form-input-container {
                 position: relative;
@@ -55,7 +50,8 @@ $invalid-field-color: rgb(221, 16, 16);
                 margin-bottom: 10px;
                 height: 76px;
                 width: 100%;
-                text-shadow: 5px 5px 6px rgb(0, 0, 0, 0.30);
+                font-size: large;
+                text-shadow: 2px 2px 0px rgb(0, 0, 0, 0.3);
             
                 .form-input {
                     color: white;
@@ -102,13 +98,14 @@ $invalid-field-color: rgb(221, 16, 16);
                 width: 60%;
                 justify-content: space-between;
                 align-items: center;
-                margin-top: 20px;
+                margin-top: 10px;
             }
 
             .form-link-button {
                 color: rgb(69, 146, 233);
                 padding: 3px 5px;
                 border-radius: 5px;
+                transition: 0.3s;
 
                 &:hover {
                     background-color: rgb(255, 255, 255, 0.02);
@@ -122,11 +119,12 @@ $invalid-field-color: rgb(221, 16, 16);
                 background-color: #313131;
                 border: 1px solid;
                 border-color: #454545;
-                border-radius: 25px;
+                border-radius: 5px;
                 padding: 8px 16px;
                 font-size: 16px;
-                box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
-                text-shadow: 3px 3px 6px rgb(0, 0, 0, 0.30);
+                transition: 0.3s;
+                box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.2);
+                text-shadow: 3px 3px 3px rgb(0, 0, 0, 0.3);
 
                 &:hover {
                     background-color: #353535;
@@ -157,7 +155,7 @@ $invalid-field-color: rgb(221, 16, 16);
                 align-items: center;
                 height: 38px;
                 width: 100%;
-                text-shadow: 5px 5px 6px rgb(0, 0, 0, 0.30);
+                text-shadow: 5px 5px 6px rgb(0, 0, 0, 0.3);
             }            
         }
     }

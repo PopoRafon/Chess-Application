@@ -17,7 +17,8 @@ import Ranking from './pages/Ranking';
 import Settings from './pages/Settings';
 import PasswordChange from './pages/PasswordChange';
 import PasswordReset from './pages/PasswordReset';
-import PasswordRecovery from './pages/PasswordRecovery';
+import PasswordResetConfirm from './pages/PasswordResetConfirm';
+import AccountDelete from './pages/AccountDelete';
 
 function App() {
   const { setUser } = useUser();
@@ -44,10 +45,11 @@ function App() {
               <Route path='login' element={<Login />} />
               <Route path='ranking' element={<Ranking />} />
               <Route path='settings' element={<Settings />} />
+              <Route path='account/delete' element={<AccountDelete />} />
               <Route path='password'>
-                <Route path='recovery' element={<PasswordRecovery />} />
                 <Route path='change' element={<PasswordChange />} />
-                <Route path='reset/:uidb64/:token' element={<PasswordReset />} />
+                <Route path='reset' element={<PasswordReset />} />
+                <Route path='reset/confirm/:uidb64/:token' element={<PasswordResetConfirm />} />
               </Route>
               <Route path='play'>
                 <Route index element={<Play />} />

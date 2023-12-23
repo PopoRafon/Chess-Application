@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import PasswordRecoveryForm from '../components/forms/PasswordRecoveryForm';
+import PasswordResetConfirmForm from '../components/forms/PasswordResetConfirmForm';
 import Navigation from '../components/core/Navigation';
 
-export default function PasswordRecovery() {
+export default function PasswordResetConfirm() {
     const { user } = useUser();
     const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ export default function PasswordRecovery() {
             <Navigation />
             <div className="form-page">
                 <div className="form-container">
-                    <PasswordRecoveryForm />
+                    <PasswordResetConfirmForm />
                 </div>
             </div>
         </>

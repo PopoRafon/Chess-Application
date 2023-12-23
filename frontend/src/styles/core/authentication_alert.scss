@@ -7,6 +7,7 @@
     height: 150px;
     pointer-events: none;
     animation: alert-disappear-animation 0.6s ease-out 3s 1;
+    z-index: 50;
 
     @keyframes alert-disappear-animation {
         from {

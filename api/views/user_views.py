@@ -25,13 +25,19 @@ class UserDeleteView(APIView):
 
     def delete(self, request):
         user = request.user
-        user.delete()
+        data = request.data
+        password = data.get('password')
 
-        response = Response({'success': 'Your account has been successfully deleted!'})
-        response.delete_cookie('refresh')
-        response.delete_cookie('access')
+        if user.check_password(password):
+            user.delete()
 
-        return response
+            response = Response({'success': 'Your account has been successfully deleted!'})
+            response.delete_cookie('refresh')
+            response.delete_cookie('access')
+
+            return response
+        else:
+            return Response({'password': 'Provided password is incorrect.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserUpdateView(APIView):

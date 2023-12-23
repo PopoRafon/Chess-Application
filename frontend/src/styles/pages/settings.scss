@@ -17,6 +17,7 @@
     color: white;
     border-radius: 5px;
     box-shadow: 3px 3px 6px 0px rgb(0, 0, 0, 0.2);
+    border: 1px solid;
 }
 
 .settings-page {
@@ -41,7 +42,7 @@
         .settings-header {
             text-align: center;
             font-size: x-large;
-            text-shadow: 3px 3px rgb(0, 0, 0, 0.3);
+            text-shadow: 3px 3px 3px rgb(0, 0, 0, 0.3);
         }
 
         .settings-body {
@@ -70,7 +71,7 @@
                     border-radius: 50%;
                     box-shadow: 4px 4px 6px 0px rgb(0, 0, 0, 0.2);
                 }
-        
+
                 .settings-avatar-input {
                     cursor: pointer;
                     visibility: hidden;
@@ -122,7 +123,7 @@
                     margin-top: 5px;
                     padding: 8px 30px 8px 8px;
                     box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.20);
-                
+
                     &:focus {
                         outline: 1px solid;
                         border: 1px solid;
@@ -146,7 +147,7 @@
                 background-color: rgb(30, 118, 219);
             }
         }
-        
+
         .settings-delete-account-button {
             @include settings-button-mixin;
             background-color: rgb(230, 0, 0);
@@ -155,7 +156,7 @@
                 background-color: rgb(212, 0, 0);
             }
         }
-        
+
         .settings-submit-changes-button {
             @include settings-button-mixin;
             background-color: green;
@@ -164,7 +165,7 @@
                 background-color: rgb(0, 119, 0);
             }
         }
-        
+
         .account-delete-alert {
             position: absolute;
             background-color: #303030;
@@ -174,39 +175,39 @@
             z-index: 25;
             padding: 10px;
             animation: scale-animation 0.5s ease 0s 1;
-        
+
             .account-delete-alert-remainder {
                 font-size: small;
                 color: red;
                 text-align: center;
             }
-        
+
             .account-delete-alert-buttons-container {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 margin-top: 10px;
-        
-                .account-delete-yes-button {
+
+                .account-delete-green-button {
                     @include account-delete-button-mixin;
                     background-color: rgb(65, 173, 65);
-                    border: 1px solid rgb(6, 158, 6);
-                    margin-right: 5px;
-            
+                    border-color: rgb(6, 158, 6);
+
                     &:hover {
                         background-color: rgb(60, 158, 60);
                         border-color: rgb(6, 143, 6);
                     }
                 }
-                
-                .account-delete-no-button {
+
+                .account-delete-red-button {
                     @include account-delete-button-mixin;
                     background-color: rgb(207, 56, 56);
-                    border: 1px solid rgb(194, 36, 36);
-            
+                    border-color: rgb(194, 36, 36);
+                    margin-right: 5px;
+
                     &:hover {
                         background-color: rgb(196, 53, 53);
-                        border: 1px solid rgb(183, 33, 33);
+                        border-color: rgb(183, 33, 33);
                     }
                 }
             }

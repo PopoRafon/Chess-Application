@@ -4,6 +4,7 @@ import { useUser } from '../../contexts/UserContext';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { useAlert } from '../../contexts/AlertContext';
 import { emailReq, usernameReq, passwordReq, confirmPasswordReq } from '../../helpers/FormsRequirements';
+import { registerFormValidation } from '../../helpers/FormsValidations';
 import FormInput from './FormInput';
 import FormCheckbox from './FormCheckbox';
 import getUserData from '../../utils/UserData';
@@ -30,40 +31,10 @@ export default function RegisterForm() {
         });
     }
 
-    function validation() {
-        const { email, username, password1, password2, checkbox } = formData;
-        const newErrors = {};
-
-        if (!email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/)) newErrors['email'] = 'Enter a valid email address.';
-
-        if (email.length < 8) newErrors['email'] = 'Ensure this field has at least 8 characters.';
-
-        if (email.length > 64) newErrors['email'] = 'Ensure this field has no more than 64 characters.';
-
-        if (username.length < 8) newErrors['username'] = 'Ensure this field has at least 8 characters.';
-
-        if (username.length > 16) newErrors['username'] = 'Ensure this field has no more than 16 characters.';
-
-        if (password1.length < 8) newErrors['password1'] = 'Ensure this field has at least 8 characters.';
-
-        if (password1 !== password2) newErrors['password2'] = 'Passwords must be the same.';
-
-        if (password2.length < 8) newErrors['password2'] = 'Ensure this field has at least 8 characters.';
-
-        if (!checkbox) newErrors['checkbox'] = 'Terms of Service must be accepted.';
-
-        if (Object.keys(newErrors).length >= 1) {
-            setErrors(newErrors);
-            return false;
-        }
-
-        return true;
-    }
-
     function handleSubmit(event) {
         event.preventDefault();
 
-        if (validation()) {
+        if (registerFormValidation(formData, setErrors)) {
             fetch('/api/v1/register', {
                 method: 'POST',
                 headers: {
@@ -97,7 +68,6 @@ export default function RegisterForm() {
             onSubmit={handleSubmit}
             noValidate={true}
         >
-            <div className="form-header">Create Your Account</div>
             <FormInput
                 id="email"
                 label="Email Address"

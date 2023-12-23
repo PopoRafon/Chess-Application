@@ -17,7 +17,7 @@ export default function FormInput({ id, label, type, value, handleChange, error,
                 autoComplete="off"
                 className={error ? "invalid-form-input" : "form-input"}
             />
-            {requirementsTooltip && (
+            {requirements && requirementsTooltip && (
                 <ul className="form-input-tooltip">
                     {requirements.map((req, index) => (
                         <li

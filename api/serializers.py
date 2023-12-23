@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth.models import User
 from django.conf import settings
 from rest_framework import serializers
@@ -32,9 +33,13 @@ class RegisterSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
+        username = attrs.get('username')
         password1 = attrs.get('password1')
         password2 = attrs.get('password2')
         checkbox = attrs.get('checkbox')
+
+        if not re.search('^[a-zA-Z0-9]*$', username):
+            raise serializers.ValidationError({'username': 'Username can only contain letters and numbers.'})
 
         if password1 != password2:
             raise serializers.ValidationError({'password2': 'Passwords must be the same.'})
@@ -48,7 +53,7 @@ class RegisterSerializer(serializers.Serializer):
         return attrs
 
 
-class PasswordResetSerializer(serializers.Serializer):
+class PasswordResetConfirmSerializer(serializers.Serializer):
     new_password1 = serializers.CharField(required=True)
     new_password2 = serializers.CharField(required=True)
 
@@ -77,7 +82,7 @@ class PasswordChangeSerializer(serializers.Serializer):
         new_password2 = attrs.get('new_password2')
 
         if not user.check_password(old_password):
-            raise serializers.ValidationError({'old_password': 'The old password is incorrect.'})
+            raise serializers.ValidationError({'old_password': 'Old password is incorrect.'})
 
         if new_password1 != new_password2:
             raise serializers.ValidationError({'new_password2': 'New passwords must be the same.'})
@@ -121,6 +126,9 @@ class UserUpdateSerializer(serializers.Serializer):
                 raise serializers.ValidationError({'email': 'User with that email address already exist.'})
 
         if username:
+            if not re.search('^[a-zA-Z0-9]*$', username):
+                raise serializers.ValidationError({'username': 'Username can only contain letters and numbers.'})
+
             if username != user.username and User.objects.filter(username=username)[:1]:
                 raise serializers.ValidationError({'username': 'User with that username already exist.'})
 

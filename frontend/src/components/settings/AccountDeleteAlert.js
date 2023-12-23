@@ -1,32 +1,7 @@
-import Cookies from 'js-cookie';
-import { useUser } from '../../contexts/UserContext';
-import { useAlert } from '../../contexts/AlertContext';
+import { useNavigate } from 'react-router-dom';
 
-export default function SettingsAlert({ setAccountDeleteAlert }) {
-    const { setUser } = useUser();
-    const { setAlert } = useAlert();
-
-    function handleAccountDelete() {
-        const accessToken = Cookies.get('access');
-
-        fetch('/api/v1/user/delete', {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-        .then(response => response.json())
-        .then((data) => {
-            if (data.success) {
-                setUser({ isLoggedIn: false });
-
-                setAlert(data.success);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    }
+export default function AccountDeleteAlert({ setAccountDeleteAlert }) {
+    const navigate = useNavigate();
 
     return (
         <div className="account-delete-alert">
@@ -35,14 +10,14 @@ export default function SettingsAlert({ setAccountDeleteAlert }) {
             <div className="account-delete-alert-buttons-container">
                 <button
                     type="button"
-                    className="account-delete-yes-button"
-                    onClick={handleAccountDelete}
+                    className="account-delete-red-button"
+                    onClick={() => navigate('/account/delete')}
                 >
                     Yes
                 </button>
                 <button
                     type="button"
-                    className="account-delete-no-button"
+                    className="account-delete-green-button"
                     onClick={() => setAccountDeleteAlert(false)}
                 >
                     No

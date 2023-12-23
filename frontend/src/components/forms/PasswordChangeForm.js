@@ -5,6 +5,7 @@ import { useUser } from '../../contexts/UserContext';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { useAlert } from '../../contexts/AlertContext';
 import { oldPasswordReq, passwordReq, confirmPasswordReq } from '../../helpers/FormsRequirements';
+import { passwordChangeFormValidation } from '../../helpers/FormsValidations';
 import FormInput from './FormInput';
 import getUserData from '../../utils/UserData';
 
@@ -28,31 +29,11 @@ export default function PasswordChangeForm() {
         });
     }
 
-    function validation() {
-        const { old_password, new_password1, new_password2 } = formData;
-        const newErrors = {};
-
-        if (old_password.length < 8) newErrors['old_password'] = 'Ensure this field contains correct old password.';
-
-        if (new_password1.length < 8) newErrors['new_password1'] = 'Ensure this field has at least 8 characters.';
-
-        if (new_password1 !== new_password2) newErrors['new_password2'] = 'Passwords must be the same.';
-
-        if (new_password2.length < 8) newErrors['new_password2'] = 'Ensure this field has at least 8 characters.';
-
-        if (Object.keys(newErrors).length >= 1) {
-            setErrors(newErrors);
-            return false;
-        }
-
-        return true;
-    }
-
     function handleSubmit(event) {
         event.preventDefault();
         const accessToken = Cookies.get('access');
 
-        if (validation()) {
+        if (passwordChangeFormValidation(formData, setErrors)) {
             fetch('/api/v1/password/change', {
                 method: 'PATCH',
                 headers: {
@@ -87,7 +68,6 @@ export default function PasswordChangeForm() {
             onSubmit={handleSubmit}
             noValidate={true}
         >
-            <div className="form-header">Change Password</div>
             <FormInput
                 id="old_password"
                 label="Old Password"

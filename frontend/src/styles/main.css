@@ -19,11 +19,7 @@
   box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.15);
 }
 .nav .nav-logo {
-  display: flex;
-  width: 100%;
-  height: 5vh;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 5px;
 }
 .nav .nav-link {
   display: flex;
@@ -98,6 +94,7 @@
   height: 150px;
   pointer-events: none;
   animation: alert-disappear-animation 0.6s ease-out 3s 1;
+  z-index: 50;
 }
 @keyframes alert-disappear-animation {
   from {
@@ -1380,7 +1377,7 @@
 .settings-page .settings-container .settings-header {
   text-align: center;
   font-size: x-large;
-  text-shadow: 3px 3px rgba(0, 0, 0, 0.3);
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
 }
 .settings-page .settings-container .settings-body {
   display: flex;
@@ -1532,34 +1529,36 @@
   align-items: center;
   margin-top: 10px;
 }
-.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-yes-button {
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-green-button {
   cursor: pointer;
   height: 25px;
   width: 55px;
   color: white;
   border-radius: 5px;
   box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid;
   background-color: rgb(65, 173, 65);
-  border: 1px solid rgb(6, 158, 6);
-  margin-right: 5px;
+  border-color: rgb(6, 158, 6);
 }
-.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-yes-button:hover {
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-green-button:hover {
   background-color: rgb(60, 158, 60);
   border-color: rgb(6, 143, 6);
 }
-.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-no-button {
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-red-button {
   cursor: pointer;
   height: 25px;
   width: 55px;
   color: white;
   border-radius: 5px;
   box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid;
   background-color: rgb(207, 56, 56);
-  border: 1px solid rgb(194, 36, 36);
+  border-color: rgb(194, 36, 36);
+  margin-right: 5px;
 }
-.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-no-button:hover {
+.settings-page .settings-container .account-delete-alert .account-delete-alert-buttons-container .account-delete-red-button:hover {
   background-color: rgb(196, 53, 53);
-  border: 1px solid rgb(183, 33, 33);
+  border-color: rgb(183, 33, 33);
 }
 
 .form-page {
@@ -1573,7 +1572,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0px;
+  padding: 30px 0px 20px;
   width: 400px;
   background-color: #303030;
   border: 1px solid;
@@ -1588,10 +1587,6 @@
   align-items: center;
   width: 100%;
 }
-.form-page .form-container .form .form-header {
-  font-size: x-large;
-  margin-bottom: 20px;
-}
 .form-page .form-container .form .form-input-container {
   position: relative;
   display: flex;
@@ -1600,7 +1595,8 @@
   margin-bottom: 10px;
   height: 76px;
   width: 100%;
-  text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
+  font-size: large;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
 }
 .form-page .form-container .form .form-input-container .form-input {
   color: white;
@@ -1653,12 +1649,13 @@
   width: 60%;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .form-page .form-container .form .form-link-button {
   color: rgb(69, 146, 233);
   padding: 3px 5px;
   border-radius: 5px;
+  transition: 0.3s;
 }
 .form-page .form-container .form .form-link-button:hover {
   background-color: rgba(255, 255, 255, 0.02);
@@ -1670,11 +1667,12 @@
   background-color: #313131;
   border: 1px solid;
   border-color: #454545;
-  border-radius: 25px;
+  border-radius: 5px;
   padding: 8px 16px;
   font-size: 16px;
+  transition: 0.3s;
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
 }
 .form-page .form-container .form .form-submit-button:hover {
   background-color: #353535;

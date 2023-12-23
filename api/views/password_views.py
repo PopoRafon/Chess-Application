@@ -9,8 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from api.serializers import PasswordChangeSerializer
-from api.serializers import PasswordResetSerializer
+from api.serializers import PasswordChangeSerializer, PasswordResetConfirmSerializer
 
 
 class PasswordChangeView(APIView):
@@ -32,7 +31,7 @@ class PasswordChangeView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PasswordRecoveryView(APIView):
+class PasswordResetView(APIView):
     def post(self, request):
         try:
             data = request.data
@@ -57,12 +56,12 @@ class PasswordRecoveryView(APIView):
                 to=[email]
             ).send()
 
-            return Response({'success': 'Link to reset password has been sent to your email address!'})
+            return Response({'success': 'Link to password reset has been sent to your email address!'})
         except Exception:
             return Response({'email': 'Email address you provided was invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PasswordResetView(APIView):
+class PasswordResetConfirmView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             uidb64 = kwargs.get('uidb64')
@@ -73,7 +72,7 @@ class PasswordResetView(APIView):
 
             if is_token_valid:
                 data = request.data
-                serializer = PasswordResetSerializer(data=data)
+                serializer = PasswordResetConfirmSerializer(data=data)
 
                 if serializer.is_valid():
                     new_password1 = data['new_password1']

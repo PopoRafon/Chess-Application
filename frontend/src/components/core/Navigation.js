@@ -8,9 +8,9 @@ export default function Navigation() {
     const { setAlert } = useAlert();
     const navigate = useNavigate();
 
-    async function handleLogout() {
-        await fetch('/api/v1/logout', {
-            method: 'GET'
+    function handleLogout() {
+        fetch('/api/v1/logout', {
+            method: 'POST'
         })
         .then((response) => response.json())
         .then((data) => {
@@ -18,20 +18,27 @@ export default function Navigation() {
                 setUser({ isLoggedIn: false });
 
                 setAlert(data.success);
+
+                navigate('/');
             }
         })
         .catch((err) => {
             console.log(err);
         });
-
-        navigate('/');
     }
 
     return (
         <nav className="nav">
-            <div className="nav-logo">
-                <Link to='/'>Logo placeholder</Link>
-            </div>
+            <Link
+                to='/'
+                className="nav-logo"
+            >
+                <img
+                    src="/static/images/logo.png"
+                    style={{ width: '100%' }}
+                    alt="Logo"
+                />
+            </Link>
             <ul>
                 <NavigationLink
                     title="Play"

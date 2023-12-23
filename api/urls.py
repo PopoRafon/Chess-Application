@@ -17,8 +17,8 @@ urlpatterns = [
     path('logout', account_views.LogoutView.as_view(), name='logout'),
 
     path('password/change', password_views.PasswordChangeView.as_view(), name='password-change'),
-    path('password/recovery', password_views.PasswordRecoveryView.as_view(), name='password-recovery'),
-    path('password/reset/<uidb64>/<token>', password_views.PasswordResetView.as_view(), name='password-reset'),
+    path('password/reset', password_views.PasswordResetView.as_view(), name='password-reset'),
+    path('password/reset/confirm/<uidb64>/<token>', password_views.PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
 
     path('ranking/game/room/<id>', game_room_views.RankingGameRoomView.as_view(), name='ranking-game-room'),
     path('guest/game/room/<id>', game_room_views.GuestGameRoomView.as_view(), name='guest-game-room'),

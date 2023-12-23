@@ -161,7 +161,7 @@ CONTENT_TYPES = ['image', 'video']
 
 IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg']
 
-MAX_UPLOAD_SIZE = 5242880
+MAX_UPLOAD_SIZE = 5242880 # 5MB
 
 
 # Default primary key field type

@@ -4,6 +4,7 @@ import { useUser } from '../../contexts/UserContext';
 import { refreshAccessToken } from '../../utils/AccessToken';
 import { useAlert } from '../../contexts/AlertContext';
 import { usernameReq, passwordReq } from '../../helpers/FormsRequirements';
+import { loginFormValidation } from '../../helpers/FormsValidations';
 import FormInput from './FormInput';
 import getUserData from '../../utils/UserData';
 
@@ -26,28 +27,10 @@ export default function LoginForm() {
         });
     }
 
-    function validation() {
-        const { username, password } = formData;
-        const newErrors = {};
-
-        if (username.length < 8) newErrors['username'] = 'Ensure this field has at least 8 characters.';
-
-        if (username.length > 16) newErrors['username'] = 'Ensure this field has no more than 16 characters.';
-
-        if (password.length < 8) newErrors['password'] = 'Ensure this field has at least 8 characters.';
-
-        if (Object.keys(newErrors).length >= 1) {
-            setErrors(newErrors);
-            return false;
-        }
-
-        return true;
-    }
-
     function handleSubmit(event) {
         event.preventDefault();
 
-        if (validation()) {
+        if (loginFormValidation(formData, setErrors)) {
             fetch('/api/v1/login', {
                 method: 'POST',
                 headers: {
@@ -81,7 +64,6 @@ export default function LoginForm() {
             onSubmit={handleSubmit}
             noValidate={true}
         >
-            <div className="form-header">Login To Your Account</div>
             <FormInput
                 id="username"
                 label="Username"
@@ -101,11 +83,11 @@ export default function LoginForm() {
                 requirements={passwordReq}
             />
             <Link
-                to='/password/recovery'
+                to='/password/reset'
                 className="form-link-button"
                 style={{ fontSize: 'small' }}
             >
-                Password Recovery
+                Account Recovery
             </Link>
             <div className="form-buttons">
                 <Link
