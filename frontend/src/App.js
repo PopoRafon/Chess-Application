@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useUser } from './contexts/UserContext';
 import { AlertProvider } from './contexts/AlertContext';
 import { createAccessToken } from './utils/AccessToken';
+import Navigation from './components/core/Navigation';
 import getUserData from './utils/UserData';
 import Alert from './components/core/AuthenticationAlert';
 import Page404 from './pages/Page404';
@@ -37,6 +38,7 @@ function App() {
     <BrowserRouter>
       <div className="app">
         <AlertProvider>
+          <Navigation />
           <Alert />
           <Routes>
             <Route path='/'>

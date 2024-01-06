@@ -1,7 +1,7 @@
 import PrevMoves from './PrevMoves';
 import Chat from './Chat';
 
-export default function GameSidebar({ messages, gameType, setDisableBoard }) {
+export default function GameSidebar({ messages, gameType, setDisableBoard, setShowSurrenderMenu, setPromotionMenu }) {
     return (
         <div className="game-sidebar">
             {gameType === 'ranking' ? (
@@ -13,6 +13,8 @@ export default function GameSidebar({ messages, gameType, setDisableBoard }) {
             )}
             <PrevMoves
                 setDisableBoard={setDisableBoard}
+                setPromotionMenu={setPromotionMenu}
+                setShowSurrenderMenu={setShowSurrenderMenu}
                 gameType={gameType}
             />
         </div>

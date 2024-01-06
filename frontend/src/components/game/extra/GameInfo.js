@@ -1,3 +1,4 @@
+import { Chess } from 'chess.js';
 import { useEffect, useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useUsers } from '../../../contexts/UsersContext';
@@ -13,12 +14,12 @@ export default function GameInfo({ player, gameType }) {
     const formattedTimer = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
     useEffect(() => {
-        if (gameType !== 'computer' && !game.result && game.prevMoves.length !== 0) {
+        if (gameType !== 'computer' && !game.result && game.prevMoves.length >= 1) {
             let timerTimeout;
 
             if (timer <= 0) {
                 gameSocket.send(JSON.stringify({ type: 'timeout' }));
-            } else if (game.turn === users[player].color) {
+            } else if (new Chess(game.fen).turn() === users[player].color) {
                 timerTimeout = setTimeout(() => {
                     setTimer(prevTimer => prevTimer - 1);
                 }, 1000);
@@ -26,10 +27,10 @@ export default function GameInfo({ player, gameType }) {
 
             return () => {
                 clearTimeout(timerTimeout);
-            };
+            }
         }
         // eslint-disable-next-line
-    }, [game.result, game.turn, timer]);
+    }, [timer, game.prevMoves]);
 
     return (
         <div className="game-info">
@@ -47,7 +48,7 @@ export default function GameInfo({ player, gameType }) {
             </div>
             {gameType !== 'computer' && (
                 <div
-                    className={`game-timer ${(game.turn === player && !game.result) && 'game-timer-on'}`}
+                    className={`game-timer ${(new Chess(game.fen).turn() === users[player].color && !game.result) && 'game-timer-on'}`}
                 >
                     {formattedTimer}
                 </div>

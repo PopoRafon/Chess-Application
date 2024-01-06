@@ -1,16 +1,14 @@
 import { useGameSocket } from '../../../contexts/GameSocketContext';
-import { useSurrenderMenu } from '../../../contexts/SurrenderMenuContext';
 
-export default function SurrenderMenu() {
+export default function SurrenderMenu({ setShowSurrenderMenu }) {
     const { gameSocket } = useGameSocket();
-    const { setSurrenderMenu } = useSurrenderMenu();
 
     function handleSurrender() {
         gameSocket.send(JSON.stringify({
             type: 'surrender'
         }));
 
-        setSurrenderMenu(false);
+        setShowSurrenderMenu(false);
     }
 
     return (
@@ -27,7 +25,7 @@ export default function SurrenderMenu() {
                 </button>
                 <button
                     className="surrender-no-button"
-                    onClick={() => setSurrenderMenu(false)}
+                    onClick={() => setShowSurrenderMenu(false)}
                 >
                     NO
                 </button>

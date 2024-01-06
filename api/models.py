@@ -1,8 +1,9 @@
 import uuid
+import chess
 from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
-from .utils import default_game_positions, create_avatar_name
+from .utils import create_avatar_name
 
 
 class Profile(models.Model):
@@ -22,10 +23,7 @@ class Game(models.Model):
     black_points = models.IntegerField(blank=True, default=0)
     white_timer = models.DurationField(default=timedelta(minutes=10), blank=True)
     black_timer = models.DurationField(default=timedelta(minutes=10), blank=True)
-    positions = models.JSONField(blank=True, default=default_game_positions)
-    en_passant = models.CharField(max_length=2, blank=True)
-    castling = models.CharField(max_length=4, blank=True, default='KQkq')
-    turn = models.CharField(max_length=1, blank=True, default='w')
+    FEN = models.CharField(max_length=90, default=chess.STARTING_FEN)
     result = models.CharField(max_length=40, blank=True)
     king_check = models.CharField(max_length=1, blank=True)
     started = models.BooleanField(default=False)
@@ -39,11 +37,8 @@ class Message(models.Model):
 
 class Move(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='moves')
-    player = models.CharField(max_length=1)
-    positions = models.JSONField()
+    FEN = models.CharField(max_length=90)
     timestamp = models.DateTimeField(auto_now_add=True)
-    new_pos = models.CharField(max_length=4)
-    old_pos = models.CharField(max_length=4)
     move = models.CharField(max_length=10)
 
 

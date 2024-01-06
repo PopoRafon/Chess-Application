@@ -1,19 +1,13 @@
 import { useState } from 'react';
-import { useValidMoves } from '../../../contexts/ValidMovesContext';
 
-export default function Piece({ type, row, col, availableMoves }) {
+export default function Piece({ type, row, col }) {
     const [pos, setPos] = useState();
-    const { setValidMoves } = useValidMoves();
-    const position = `${row}${col}`;
 
     function handleShowAvailablePositions() {
-        const moves = availableMoves.current[type[0]][position];
 
-        setValidMoves(moves);
     }
 
     function handlePieceLift(event) {
-        const moves = availableMoves.current[type[0]][position];
         const { left, top } = event.target.getBoundingClientRect();
 
         event.dataTransfer.setDragImage(event.target, window.outerWidth, window.outerHeight);
@@ -21,7 +15,6 @@ export default function Piece({ type, row, col, availableMoves }) {
         event.dataTransfer.setData('text/plain', [type, row, col]);
         event.target.style = 'z-index: 10;';
 
-        setValidMoves(moves);
         setPos([left, top]);
     }
 

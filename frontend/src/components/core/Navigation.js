@@ -34,8 +34,8 @@ export default function Navigation() {
                 className="nav-logo"
             >
                 <img
-                    src="/static/images/logo.png"
-                    style={{ width: '100%' }}
+                    src="/static/images/logo.svg"
+                    className="nav-logo-icon"
                     alt="Logo"
                 />
             </Link>

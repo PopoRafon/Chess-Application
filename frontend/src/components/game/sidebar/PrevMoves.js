@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
-import { useValidMoves } from '../../../contexts/ValidMovesContext';
-import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
 import PrevMovesButtons from './PrevMovesButtons';
 import PrevMovesContainer from './PrevMovesContainer';
 
-export default function PrevMoves({ setDisableBoard, gameType }) {
+export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowSurrenderMenu, gameType }) {
     const { game, dispatchGame } = useGame();
-    const { setValidMoves } = useValidMoves();
     const [currentMoveIdx, setCurrentMoveIdx] = useState(0);
-    const { setPromotionMenu } = usePromotionMenu();
-    const refPositions = useRef();
+    const positionsRef = useRef();
 
     useEffect(() => {
         setCurrentMoveIdx(game.prevMoves.length - 1);
@@ -20,10 +16,9 @@ export default function PrevMoves({ setDisableBoard, gameType }) {
         if (index < 0 || index >= game.prevMoves.length) return;
         setCurrentMoveIdx(index);
 
-        if (!refPositions.current) {
-            refPositions.current = game.positions;
+        if (!positionsRef.current) {
+            positionsRef.current = game.fen;
 
-            setValidMoves([]);
             setPromotionMenu(false);
             setDisableBoard(true);
         }
@@ -31,18 +26,16 @@ export default function PrevMoves({ setDisableBoard, gameType }) {
         if (game.prevMoves.length === index + 1 && !game.result) {
             dispatchGame({
                 type: 'NEW_POSITIONS',
-                positions: refPositions.current,
-                markedSquares: game.prevMoves[game.prevMoves.length - 1][2]
+                fen: positionsRef.current
             });
 
-            refPositions.current = '';
+            positionsRef.current = '';
 
             setDisableBoard(false);
         } else {
             dispatchGame({
                 type: 'NEW_POSITIONS',
-                positions: game.prevMoves[index][1],
-                markedSquares: game.prevMoves[index][2]
+                fen: game.prevMoves[index][1]
             });
         }
     }
@@ -56,6 +49,7 @@ export default function PrevMoves({ setDisableBoard, gameType }) {
             <PrevMovesButtons
                 changePositions={changePositions}
                 currentMoveIdx={currentMoveIdx}
+                setShowSurrenderMenu={setShowSurrenderMenu}
                 gameType={gameType}
             />
         </div>

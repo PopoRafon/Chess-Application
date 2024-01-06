@@ -1,33 +1,20 @@
-import { useGame } from '../../../contexts/GameContext';
-import { useValidMoves } from '../../../contexts/ValidMovesContext';
-import { usePromotionMenu } from '../../../contexts/PromotionMenuContext';
-import { useGameSocket } from '../../../contexts/GameSocketContext';
 import { useUsers } from '../../../contexts/UsersContext';
+import { useGameSocket } from '../../../contexts/GameSocketContext';
 
-export default function PromotionMenu() {
-    const { game } = useGame();
-    const { setValidMoves } = useValidMoves();
-    const { gameSocket } = useGameSocket();
-    const { promotionMenu, setPromotionMenu } = usePromotionMenu();
-    const { data: [oldRow, oldCol], position: [newRow, newCol] } = promotionMenu;
+export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     const { users } = useUsers();
+    const { gameSocket } = useGameSocket();
+    const { oldPos: [oldRow, oldCol], newPos: [newRow, newCol] } = promotionMenu;
 
     function handleExit() {
         setPromotionMenu({ show: false });
     }
 
     function handlePromote(piecePromotionType) {
-        const isPlayerWhite = users.player.color === 'w';
-        const lines = isPlayerWhite ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
-
         gameSocket.send(JSON.stringify({
-            type: 'promotion',
-            promotionType: piecePromotionType,
-            oldPos: [lines[oldRow], lines[oldCol]],
-            newPos: [lines[newRow], lines[newCol]]
+            type: 'move',
+            move: 'abcdefgh'[oldCol] + '87654321'[oldRow] + 'abcdefgh'[newCol] + '87654321'[newRow] + piecePromotionType
         }));
-
-        setValidMoves([]);
 
         setPromotionMenu({ show: false });
     }
@@ -40,10 +27,10 @@ export default function PromotionMenu() {
             {['q', 'r', 'b', 'n'].map((type) => (
                 <button
                     key={type}
-                    className={`promotion-${type}-field promotion-field-${game.turn}`}
+                    className={`promotion-${type}-field promotion-field-${users.player.color}`}
                     onClick={() => handlePromote(type)}
-                    >
-                    <div className={`promotion-${type}-piece ${game.turn}${type}`}></div>
+                >
+                    <div className={`promotion-${type}-piece ${users.player.color}${type}`}></div>
                 </button>
             ))}
             <button

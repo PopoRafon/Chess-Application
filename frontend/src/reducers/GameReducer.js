@@ -3,31 +3,23 @@ export default function gameReducer(state, action) {
         case 'GAME_START':
             return {
                 ...state,
-                positions: action.positions,
-                turn: action.turn,
                 result: action.result,
-                castling: action.castling,
-                enPassant: action.enPassant,
+                fen: action.fen,
                 prevMoves: action.prevMoves
             }
         case 'NEXT_ROUND':
             return {
                 ...state,
-                positions: action.positions,
-                markedSquares: action.markedSquares,
-                turn: action.turn,
+                fen: action.fen,
                 prevMoves: [
                     ...state.prevMoves,
                     [...action.prevMoves]
-                ],
-                enPassant: action.enPassant,
-                castling: action.castling || state.castling
+                ]
             };
         case 'NEW_POSITIONS':
             return {
                 ...state,
-                positions: action.positions,
-                markedSquares: action.markedSquares
+                fen: action.fen
             };
         case 'GAME_END':
             // new Audio('/static/sounds/game_end.mp3').play();

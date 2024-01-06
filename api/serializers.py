@@ -143,11 +143,8 @@ class GameRoomSerializer(serializers.ModelSerializer):
     white_points = serializers.IntegerField(source='game.white_points')
     black_points = serializers.IntegerField(source='game.black_points')
     king_check = serializers.CharField(source='game.king_check')
-    en_passant = serializers.CharField(source='game.en_passant')
-    positions = serializers.JSONField(source='game.positions')
-    castling = serializers.CharField(source='game.castling')
     result = serializers.CharField(source='game.result')
-    turn = serializers.CharField(source='game.turn')
+    FEN = serializers.CharField(source='game.FEN')
 
 
 class RankingGameRoomSerializer(GameRoomSerializer):

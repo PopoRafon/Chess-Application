@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import Navigation from '../components/core/Navigation';
 import SettingsMenu from '../components/settings/SettingsMenu';
 
 export default function Settings() {
@@ -15,11 +14,8 @@ export default function Settings() {
     });
 
     return user.isLoggedIn && (
-        <>
-            <Navigation />
-            <div className="settings-page">
-                <SettingsMenu />
-            </div>
-        </>
+        <div className="settings-page">
+            <SettingsMenu />
+        </div>
     );
 }

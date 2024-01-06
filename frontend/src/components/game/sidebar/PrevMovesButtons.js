@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { useSurrenderMenu } from '../../../contexts/SurrenderMenuContext';
 import { useGame } from '../../../contexts/GameContext';
 
-export default function PrevMovesButtons({ changePositions, currentMoveIdx, gameType }) {
+export default function PrevMovesButtons({ changePositions, currentMoveIdx, setShowSurrenderMenu, gameType }) {
     const { game } = useGame();
-    const { setSurrenderMenu } = useSurrenderMenu();
-    const [exitGame, setExitGame] = useState(false);
-    const [surrender, setSurrender] = useState(false);
-    const [prevMove, setPrevMove] = useState(false);
-    const [nextMove, setNextMove] = useState(false);
+    const [showExitGameTooltip, setShowExitGameTooltip] = useState(false);
+    const [showSurrenderTooltip, setShowSurrenderTooltip] = useState(false);
+    const [showPrevMoveTooltip, setShowPrevMoveTooltip] = useState(false);
+    const [showNextMoveTooltip, setShowNextMoveTooltip] = useState(false);
     const navigate = useNavigate();
 
     function handleMoveShift(shift) {
@@ -18,15 +16,8 @@ export default function PrevMovesButtons({ changePositions, currentMoveIdx, game
     }
 
     function handleExitGame() {
-        if (gameType === 'ranking') {
-            Cookies.remove('ranking_game_url');
-        } else if (gameType === 'guest') {
-            Cookies.remove('guest_game_token');
-            Cookies.remove('guest_game_url');
-        } else {
-            Cookies.remove('computer_game_token');
-            Cookies.remove('computer_game_url');
-        }
+        Cookies.remove(`${gameType}_game_url`);
+        Cookies.remove(`${gameType}_game_token`);
 
         navigate('/play');
     }
@@ -37,41 +28,54 @@ export default function PrevMovesButtons({ changePositions, currentMoveIdx, game
                 <button
                     className="prev-moves-button"
                     onClick={handleExitGame}
-                    onMouseEnter={() => setExitGame(true)}
-                    onMouseLeave={() => setExitGame(false)}
+                    onMouseEnter={() => setShowExitGameTooltip(true)}
+                    onMouseLeave={() => setShowExitGameTooltip(false)}
                 >
-                    <img src="/static/images/icons/exit_game_icon.png" alt="Exit Game" />
-                    {exitGame && <div className="tooltip">Exit Game</div>}
+                    <img
+                        src="/static/images/icons/exit_game_icon.png"
+                        alt="Exit Game"
+                    />
+                    {showExitGameTooltip && <div className="tooltip">Exit Game</div>}
                 </button>
             ) : (
                 <button
                     className="prev-moves-button"
-                    onClick={() => setSurrenderMenu(true)}
-                    onMouseEnter={() => setSurrender(true)}
-                    onMouseLeave={() => setSurrender(false)}
+                    onClick={() => setShowSurrenderMenu(true)}
+                    onMouseEnter={() => setShowSurrenderTooltip(true)}
+                    onMouseLeave={() => setShowSurrenderTooltip(false)}
                 >
-                    <img style={{ width: '25px', height: '25px' }} src="/static/images/icons/surrender_icon.png" alt="Surrender" />
-                    {surrender && <div className="tooltip">Surrender</div>}
+                    <img
+                        className="prev-moves-surrender-icon"
+                        src="/static/images/icons/surrender_icon.png"
+                        alt="Surrender"
+                    />
+                    {showSurrenderTooltip && <div className="tooltip">Surrender</div>}
                 </button>
             )}
             <button
                 className="prev-moves-button"
                 style={{ margin: "6px" }}
                 onClick={handleMoveShift(-1)}
-                onMouseEnter={() => setPrevMove(true)}
-                onMouseLeave={() => setPrevMove(false)}
+                onMouseEnter={() => setShowPrevMoveTooltip(true)}
+                onMouseLeave={() => setShowPrevMoveTooltip(false)}
             >
-                <img src="/static/images/icons/move_back_icon.png" alt="Move Back" />
-                {prevMove && <div className="tooltip">Prev move</div>}
+                <img
+                    src="/static/images/icons/move_back_icon.png"
+                    alt="Move Back"
+                />
+                {showPrevMoveTooltip && <div className="tooltip">Prev move</div>}
             </button>
             <button
                 className="prev-moves-button"
                 onClick={handleMoveShift(1)}
-                onMouseEnter={() => setNextMove(true)}
-                onMouseLeave={() => setNextMove(false)}
+                onMouseEnter={() => setShowNextMoveTooltip(true)}
+                onMouseLeave={() => setShowNextMoveTooltip(false)}
             >
-                <img src="/static/images/icons/move_forward_icon.png" alt="Move Forward" />
-                {nextMove && <div className="tooltip">Next move</div>}
+                <img
+                    src="/static/images/icons/move_forward_icon.png"
+                    alt="Move Forward"
+                />
+                {showNextMoveTooltip && <div className="tooltip">Next move</div>}
             </button>
         </div>
     );

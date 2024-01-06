@@ -4,7 +4,7 @@ import gameReducer from '../reducers/GameReducer';
 const GameContext = createContext();
 
 function GameProvider({ children }) {
-    const [game, dispatchGame] = useReducer(gameReducer, { prevMoves: [], markedSquares: [] });
+    const [game, dispatchGame] = useReducer(gameReducer, { prevMoves: [] });
 
     return (
         <GameContext.Provider value={{ game, dispatchGame }}>

@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useUser } from '../../../contexts/UserContext';
 
 export default function Chat({ messages }) {
-    const [submitTooltip, setSubmitTooltip] = useState(false);
-    const [errorTooltip, setErrorTooltip] = useState(false);
+    const [showSubmitTooltip, setShowSubmitTooltip] = useState(false);
+    const [showErrorTooltip, setShowErrorTooltip] = useState(false);
     const [messageData, setMessageData] = useState('');
     const { gameSocket } = useGameSocket();
     const { user } = useUser();
@@ -14,9 +14,9 @@ export default function Chat({ messages }) {
         const inputHeight = scrollHeight - parseInt(height);
 
         if (value.length > 255) {
-            setErrorTooltip(true);
+            setShowErrorTooltip(true);
         } else {
-            setErrorTooltip(false);
+            setShowErrorTooltip(false);
             setMessageData(value);
         }
 
@@ -43,7 +43,7 @@ export default function Chat({ messages }) {
         }));
 
         setMessageData('');
-        setErrorTooltip(false);
+        setShowErrorTooltip(false);
     }
 
     return (
@@ -72,15 +72,15 @@ export default function Chat({ messages }) {
                         rows="1"
                         value={messageData}
                     />
-                    {errorTooltip && (<span className="chat-error-tooltip">Message cannot be longer than 255 characters!</span>)}
+                    {showErrorTooltip && (<span className="chat-error-tooltip">Message cannot be longer than 255 characters!</span>)}
                     <button
                         type="submit"
-                        onMouseEnter={() => setSubmitTooltip(true)}
-                        onMouseLeave={() => setSubmitTooltip(false)}
+                        onMouseEnter={() => setShowSubmitTooltip(true)}
+                        onMouseLeave={() => setShowSubmitTooltip(false)}
                         onClick={sendMessage}
                         className="chat-footer-submit"
                     >
-                        {submitTooltip && <span className="tooltip">Send</span>}
+                        {showSubmitTooltip && <span className="tooltip">Send</span>}
                     </button>
                 </div>
             </div>

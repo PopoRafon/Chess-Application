@@ -21,6 +21,10 @@
 .nav .nav-logo {
   margin-bottom: 5px;
 }
+.nav .nav-logo .nav-logo-icon {
+  width: 65%;
+  padding-top: 5px;
+}
 .nav .nav-link {
   display: flex;
   width: 90%;
@@ -254,7 +258,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  flex-grow: 1;
   height: 100vh;
 }
 .error-page .error-box {
@@ -507,6 +511,10 @@
 }
 .prev-moves .prev-moves-buttons-container .prev-moves-button:hover {
   background-color: #272727;
+}
+.prev-moves .prev-moves-buttons-container .prev-moves-button .prev-moves-surrender-icon {
+  width: 25px;
+  height: 25px;
 }
 
 .game-sidebar {

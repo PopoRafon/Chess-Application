@@ -1,4 +1,5 @@
 import math
+import chess
 from datetime import datetime, timezone
 from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -28,13 +29,13 @@ class RankingGameRoomView(RetrieveAPIView):
 
         response.data['player'] = 'w' if game_room_object.white_player == user else 'b'
         response.data['messages'] = [{'username': message.sender.username, 'body': message.body} for message in game_room_object.game.messages.all()]
-        response.data['prevMoves'] = [[move.move, move.positions, [move.old_pos, move.new_pos]] for move in game_moves]
+        response.data['prevMoves'] = [[move.move, move.FEN] for move in game_moves]
 
         if not game_room_object.game.started or game_room_object.game.result:
             response.data['white_timer'] = math.ceil(game_room_object.game.white_timer.total_seconds())
             response.data['black_timer'] = math.ceil(game_room_object.game.black_timer.total_seconds())
         else:
-            if game_room_object.game.turn == 'w':
+            if chess.Board(game_room_object.game.FEN).turn:
                 response.data['white_timer'] = math.ceil((game_room_object.game.white_timer - (datetime.now(timezone.utc) - game_moves[-1].timestamp)).total_seconds())
                 response.data['black_timer'] = math.ceil(game_room_object.game.black_timer.total_seconds())
             else:
@@ -59,13 +60,13 @@ class GuestGameRoomView(RetrieveAPIView):
         game_moves = list(game_room_object.game.moves.all())
 
         response.data['player'] = 'w' if game_room_object.white_player == token else 'b'
-        response.data['prevMoves'] = [[move.move, move.positions, [move.old_pos, move.new_pos]] for move in game_moves]
+        response.data['prevMoves'] = [[move.move, move.FEN] for move in game_moves]
 
         if not game_room_object.game.started or game_room_object.game.result:
             response.data['white_timer'] = math.ceil(game_room_object.game.white_timer.total_seconds())
             response.data['black_timer'] = math.ceil(game_room_object.game.black_timer.total_seconds())
         else:
-            if game_room_object.game.turn == 'w':
+            if chess.Board(game_room_object.game.FEN).turn:
                 response.data['white_timer'] = math.ceil((game_room_object.game.white_timer - (datetime.now(timezone.utc) - game_moves[-1].timestamp)).total_seconds())
                 response.data['black_timer'] = math.ceil(game_room_object.game.black_timer.total_seconds())
             else:
@@ -88,7 +89,7 @@ class ComputerGameRoomRetrieveView(RetrieveAPIView):
         game_room_object = self.get_object()
         game_moves = list(game_room_object.game.moves.all())
 
-        response.data['prevMoves'] = [[move.move, move.positions, [move.old_pos, move.new_pos]] for move in game_moves]
+        response.data['prevMoves'] = [[move.move, move.FEN] for move in game_moves]
 
         return response
 
