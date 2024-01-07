@@ -1,15 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
+import { useUsers } from '../../../contexts/UsersContext';
 import SurrenderMenu from '../extra/SurrenderMenu';
 import GameResultAlert from '../extra/GameResultAlert';
 import BoardSideLetters from './BoardSideLetters';
+import BoardSquares from './BoardSquares';
 import Pieces from './Pieces';
 
 export default function Board({ disableBoard, setDisableBoard, setPromotionMenu, gameType, showSurrenderMenu, setShowSurrenderMenu }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
     const { game } = useGame();
-    const rowsRef = useRef([8, 7, 6, 5, 4, 3, 2, 1]);
-    const colsRef = useRef(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
+    const { users } = useUsers();
+    const rowsRef = useRef(users.player.color === 'w' ? [8, 7, 6, 5, 4, 3, 2, 1] : [1, 2, 3, 4, 5, 6, 7, 8]);
+    const colsRef = useRef(users.player.color === 'w' ? ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] : ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']);
 
     useEffect(() => {
         if (game.result) {
@@ -32,13 +35,10 @@ export default function Board({ disableBoard, setDisableBoard, setPromotionMenu,
                     setShowSurrenderMenu={setShowSurrenderMenu}
                 />
             )}
-            <div className="board-squares">
-                {rowsRef.current.map((_, rowIdx) => (
-                    colsRef.current.map((_, colIdx) => (
-                        <div className={(colIdx + rowIdx) % 2 === 0 ? 'white-square' : 'black-square'}></div>
-                    ))
-                ))}
-            </div>
+            <BoardSquares
+                rowsRef={rowsRef}
+                colsRef={colsRef}
+            />
             <Pieces
                 setPromotionMenu={setPromotionMenu}
             />

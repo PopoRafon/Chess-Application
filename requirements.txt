@@ -6,6 +6,7 @@ Automat==22.10.0
 cffi==1.16.0
 channels==4.0.0
 channels-redis==4.1.0
+chess==1.10.0
 constantly==15.1.0
 cryptography==41.0.4
 daphne==4.0.0

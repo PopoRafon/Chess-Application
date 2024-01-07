@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
+import { useUsers } from '../../../contexts/UsersContext';
 import PrevMovesButtons from './PrevMovesButtons';
 import PrevMovesContainer from './PrevMovesContainer';
 
 export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowSurrenderMenu, gameType }) {
     const { game, dispatchGame } = useGame();
+    const { users } = useUsers();
     const [currentMoveIdx, setCurrentMoveIdx] = useState(0);
     const positionsRef = useRef();
 
@@ -33,9 +35,19 @@ export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowSu
 
             setDisableBoard(false);
         } else {
+            let fen;
+
+            if (users.player.color === 'w') {
+                fen = game.prevMoves[index][1];
+            } else {
+                fen = game.prevMoves[index][1].split(' ');
+                fen[0] = fen[0].split('').reverse().join('');
+                fen = fen.join(' ');
+            }
+
             dispatchGame({
                 type: 'NEW_POSITIONS',
-                fen: game.prevMoves[index][1]
+                fen: fen
             });
         }
     }

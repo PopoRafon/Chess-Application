@@ -1,13 +1,12 @@
 import { useState } from 'react';
+import { useUsers } from '../../../contexts/UsersContext';
 
 export default function Piece({ type, row, col }) {
     const [pos, setPos] = useState();
+    const { users } = useUsers();
 
-    function handleShowAvailablePositions() {
-
-    }
-
-    function handlePieceLift(event) {
+    function handlePieceDragStart(event) {
+        if (users.player.color !== type[0]) return event.preventDefault();
         const { left, top } = event.target.getBoundingClientRect();
 
         event.dataTransfer.setDragImage(event.target, window.outerWidth, window.outerHeight);
@@ -23,17 +22,16 @@ export default function Piece({ type, row, col }) {
         event.target.style.top = `${event.clientY-pos[1]-45}px`;
     }
 
-    function handlePiecePlace(event) {
+    function handlePieceDragEnd(event) {
         event.target.removeAttribute('style');
     }
 
     return (
         <div
             draggable={true}
-            onClick={handleShowAvailablePositions}
-            onDragStart={handlePieceLift}
+            onDragStart={handlePieceDragStart}
             onDrag={handlePieceDrag}
-            onDragEnd={handlePiecePlace}
+            onDragEnd={handlePieceDragEnd}
             className={`piece ${type} p-${row}${col}`}
         >
         </div>

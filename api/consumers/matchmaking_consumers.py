@@ -3,7 +3,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from api.models import GuestGameRoom, RankingGameRoom
 
-
 ranking_queue = []
 guest_queue = []
 

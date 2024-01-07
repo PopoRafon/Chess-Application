@@ -11,9 +11,17 @@ export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     }
 
     function handlePromote(piecePromotionType) {
+        let move;
+
+        if (users.player.color === 'w') {
+            move = 'abcdefgh'[oldCol] + '87654321'[oldRow] + 'abcdefgh'[newCol] + '87654321'[newRow] + piecePromotionType;
+        } else {
+            move = 'hgfedcba'[oldCol] + '12345678'[oldRow] + 'hgfedcba'[newCol] + '12345678'[newRow] + piecePromotionType;
+        }
+
         gameSocket.send(JSON.stringify({
             type: 'move',
-            move: 'abcdefgh'[oldCol] + '87654321'[oldRow] + 'abcdefgh'[newCol] + '87654321'[newRow] + piecePromotionType
+            move: move
         }));
 
         setPromotionMenu({ show: false });

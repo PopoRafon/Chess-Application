@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Sidebar from '../components/play/PlaySidebar';
+import PlaySidebar from '../components/play/PlaySidebar';
 
 export default function Play() {
     const [matchmaking, setMatchmaking] = useState(false);
@@ -9,7 +9,7 @@ export default function Play() {
             <div className="play-page-container">
                 {matchmaking && <div className="matchmaking">Searching for match</div>}
             </div>
-            <Sidebar
+            <PlaySidebar
                 setMatchmaking={setMatchmaking}
             />
         </div>

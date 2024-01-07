@@ -15,7 +15,7 @@ export default function Game({ gameType, gameSetup }) {
     const [showSurrenderMenu, setShowSurrenderMenu] = useState(false);
     const [messages, setMessages] = useState([]);
     const { gameSocket, setGameSocket } = useGameSocket();
-    const { setUsers } = useUsers();
+    const { users, setUsers } = useUsers();
     const { dispatchGame } = useGame();
     const navigate = useNavigate();
 
@@ -25,6 +25,7 @@ export default function Game({ gameType, gameSetup }) {
 
             if (setup !== 'error') {
                 const isPlayerWhite = setup.player === 'w';
+                let fen;
 
                 setUsers({
                     [isPlayerWhite ? 'player' : 'enemy']: {
@@ -45,9 +46,17 @@ export default function Game({ gameType, gameSetup }) {
                     }
                 });
 
+                if (isPlayerWhite) {
+                    fen = setup.FEN;
+                } else {
+                    fen = setup.FEN.split(' ');
+                    fen[0] = fen[0].split('').reverse().join('');
+                    fen = fen.join(' ');
+                }
+
                 dispatchGame({
                     type: 'GAME_START',
-                    fen: setup.FEN,
+                    fen: fen,
                     result: setup.result,
                     prevMoves: setup.prevMoves
                 });
@@ -70,10 +79,19 @@ export default function Game({ gameType, gameSetup }) {
 
                 if (data.type === 'move') {
                     const { fen, move } = data;
+                    let newFen;
+
+                    if (users.player.color === 'w') {
+                        newFen = fen;
+                    } else {
+                        newFen = fen.split(' ');
+                        newFen[0] = newFen[0].split('').reverse().join('');
+                        newFen = newFen.join(' ');
+                    }
 
                     dispatchGame({
                         type: 'NEXT_ROUND',
-                        fen: fen,
+                        fen: newFen,
                         prevMoves: [
                             move,
                             fen,
