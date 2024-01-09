@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUsers } from '../../../contexts/UsersContext';
 import { useGame } from '../../../contexts/GameContext';
 import { useGameSocket } from '../../../contexts/GameSocketContext';
+import playSound from '../../../helpers/GameSounds';
 import GameSidebar from '../sidebar/GameSidebar';
 import PromotionMenu from './PromotionMenu';
 import GameInfo from '../extra/GameInfo';
@@ -25,7 +26,7 @@ export default function Game({ gameType, gameSetup }) {
 
             if (setup !== 'error') {
                 const isPlayerWhite = setup.player === 'w';
-                let fen;
+                let newFen;
 
                 setUsers({
                     [isPlayerWhite ? 'player' : 'enemy']: {
@@ -47,16 +48,16 @@ export default function Game({ gameType, gameSetup }) {
                 });
 
                 if (isPlayerWhite) {
-                    fen = setup.FEN;
+                    newFen = setup.fen;
                 } else {
-                    fen = setup.FEN.split(' ');
-                    fen[0] = fen[0].split('').reverse().join('');
-                    fen = fen.join(' ');
+                    newFen = setup.fen.split(' ');
+                    newFen[0] = newFen[0].split('').reverse().join('');
+                    newFen = newFen.join(' ');
                 }
 
                 dispatchGame({
                     type: 'GAME_START',
-                    fen: fen,
+                    fen: newFen,
                     result: setup.result,
                     prevMoves: setup.prevMoves
                 });
@@ -78,10 +79,11 @@ export default function Game({ gameType, gameSetup }) {
                 const data = JSON.parse(message.data);
 
                 if (data.type === 'move') {
-                    const { fen, move } = data;
+                    const { fen, move, white_points, black_points } = data;
+                    const isPlayerWhite = users.player.color === 'w';
                     let newFen;
 
-                    if (users.player.color === 'w') {
+                    if (isPlayerWhite) {
                         newFen = fen;
                     } else {
                         newFen = fen.split(' ');
@@ -97,6 +99,19 @@ export default function Game({ gameType, gameSetup }) {
                             fen,
                         ]
                     });
+
+                    setUsers({
+                        [isPlayerWhite ? 'player' : 'enemy']: {
+                            ...users[isPlayerWhite ? 'player' : 'enemy'],
+                            points: white_points
+                        },
+                        [!isPlayerWhite ? 'player' : 'enemy']: {
+                            ...users[!isPlayerWhite ? 'player' : 'enemy'],
+                            points: black_points
+                        }
+                    });
+
+                    playSound(move);
                 } else if (data.type === 'message') {
                     const { username, body } = data;
 
@@ -114,6 +129,8 @@ export default function Game({ gameType, gameSetup }) {
                         type: 'GAME_END',
                         result
                     });
+
+                    new Audio('/static/sounds/game_end.mp3').play();
                 }
             }
 

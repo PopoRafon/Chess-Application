@@ -45,7 +45,8 @@ export default function PrevMovesButtons({ changePositions, currentMoveIdx, setS
                     onMouseLeave={() => setShowSurrenderTooltip(false)}
                 >
                     <img
-                        className="prev-moves-surrender-icon"
+                        width="25"
+                        height="25"
                         src="/static/images/icons/surrender_icon.png"
                         alt="Surrender"
                     />

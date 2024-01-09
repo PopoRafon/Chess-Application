@@ -24,32 +24,6 @@
     }
 }
 
-.highlight {
-    position: absolute;
-    background-color: rgb(255, 255, 51, 0.5);
-    z-index: 1;
-    width: 90px;
-    height: 90px;
-}
-
-.valid-move {
-    position: absolute;
-    background: radial-gradient(rgb(51, 51, 51, 0.5) 0%, rgb(51, 51, 51, 0.5) 22% , transparent 23%);
-    border-radius: 50%;
-    width: 90px;
-    height: 90px;
-}
-
-.mark {
-    position: absolute;
-    background-color: transparent;
-    border-radius: 50%;
-    width: 76px;
-    height: 76px;
-    border: 7px solid;
-    border-color: rgb(51, 51, 51, 0.5);
-}
-
 .bp {background-image: url('../../public/static/images/chess_pieces/black_pawn.png')}
 .br {background-image: url('../../public/static/images/chess_pieces/black_rook.png')}
 .bn {background-image: url('../../public/static/images/chess_pieces/black_knight.png')}

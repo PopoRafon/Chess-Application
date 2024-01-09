@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useUsers } from '../../../contexts/UsersContext';
 import PrevMovesButtons from './PrevMovesButtons';
@@ -8,7 +8,6 @@ export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowSu
     const { game, dispatchGame } = useGame();
     const { users } = useUsers();
     const [currentMoveIdx, setCurrentMoveIdx] = useState(0);
-    const positionsRef = useRef();
 
     useEffect(() => {
         setCurrentMoveIdx(game.prevMoves.length - 1);
@@ -18,38 +17,27 @@ export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowSu
         if (index < 0 || index >= game.prevMoves.length) return;
         setCurrentMoveIdx(index);
 
-        if (!positionsRef.current) {
-            positionsRef.current = game.fen;
-
+        if (game.prevMoves.length === index + 1 && !game.result) {
+            setDisableBoard(false);
+        } else {
             setPromotionMenu(false);
             setDisableBoard(true);
         }
 
-        if (game.prevMoves.length === index + 1 && !game.result) {
-            dispatchGame({
-                type: 'NEW_POSITIONS',
-                fen: positionsRef.current
-            });
+        let fen;
 
-            positionsRef.current = '';
-
-            setDisableBoard(false);
+        if (users.player.color === 'w') {
+            fen = game.prevMoves[index][1];
         } else {
-            let fen;
-
-            if (users.player.color === 'w') {
-                fen = game.prevMoves[index][1];
-            } else {
-                fen = game.prevMoves[index][1].split(' ');
-                fen[0] = fen[0].split('').reverse().join('');
-                fen = fen.join(' ');
-            }
-
-            dispatchGame({
-                type: 'NEW_POSITIONS',
-                fen: fen
-            });
+            fen = game.prevMoves[index][1].split(' ');
+            fen[0] = fen[0].split('').reverse().join('');
+            fen = fen.join(' ');
         }
+
+        dispatchGame({
+            type: 'NEW_POSITIONS',
+            fen: fen
+        });
     }
 
     return (

@@ -1,10 +1,28 @@
 from channels.db import database_sync_to_async
 from api.utils import get_cookie
-from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom
-from api.consumers.game_consumers import GameConsumer
+from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile
+from .game_consumers import GameConsumer
 
 
 class RankingGameConsumer(GameConsumer):
+    async def end_game(self, result):
+        await super().end_game(result)
+        white_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.white_player)
+        black_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.black_player)
+
+        if 'White' in result:
+            white_player_profile.wins += 1
+            black_player_profile.loses += 1
+        elif 'Black' in result:
+            white_player_profile.loses += 1
+            black_player_profile.wins += 1
+        else:
+            white_player_profile.draws += 1
+            black_player_profile.draws += 1
+
+        await white_player_profile.asave()
+        await black_player_profile.asave()
+
     async def connect(self):
         try:
             self.room_name = self.scope['url_route']['kwargs']['game']

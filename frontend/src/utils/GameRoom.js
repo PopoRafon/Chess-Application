@@ -12,7 +12,7 @@ async function setupRankingGame(setSocket) {
     })
     .then(response => response.json())
     .then((data) => {
-        if (data.FEN) {
+        if (data.fen) {
             setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/ranking/game/${gameId}/`));
 
             return data;
@@ -33,7 +33,7 @@ async function setupGuestGame(setSocket) {
     })
     .then(response => response.json())
     .then((data) => {
-        if (data.FEN) {
+        if (data.fen) {
             setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`));
 
             data.white_username = 'Guest';
@@ -59,7 +59,7 @@ async function setupComputerGame(setSocket, user) {
     })
     .then(response => response.json())
     .then((data) => {
-        if (data.FEN) {
+        if (data.fen) {
             setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`));
 
             if (user.isLoggedIn) {

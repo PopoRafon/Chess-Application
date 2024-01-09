@@ -1,4 +1,3 @@
-import { Chess } from 'chess.js';
 import { useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useGameSocket } from '../../../contexts/GameSocketContext';
@@ -17,7 +16,7 @@ export default function Pieces({ setPromotionMenu }) {
         const [newRow, newCol] = calcPosition(piecesRef.current, event);
         setPromotionMenu({ show: false });
 
-        if (type[0] === new Chess(game.fen).turn()) {
+        if (type[0] === game.turn) {
             if (type[1] === 'p' && (newRow === 7 || newRow === 0)) {
                 setPromotionMenu({
                     show: true,
@@ -48,7 +47,7 @@ export default function Pieces({ setPromotionMenu }) {
             onDragOver={(event) => event.preventDefault()}
             onDrop={handleDrop}
         >
-            {new Chess(game.fen).board().map((row, rowIdx) => (
+            {game.board.map((row, rowIdx) => (
                 row.map((piece, colIdx) => (
                     piece && (
                         <Piece

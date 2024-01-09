@@ -8,7 +8,7 @@ class TestProfileModel(TestCase):
         user = User.objects.create(username='user')
 
         self.assertEqual(Profile.objects.count(), 1)
-        self.assertEqual(Profile.objects.get(id=1).user, user)
+        self.assertEqual(Profile.objects.get(user__username='user').user, user)
 
 
 class TestRankingGameRoomModel(TestCase):
