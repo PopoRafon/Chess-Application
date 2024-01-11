@@ -23,15 +23,17 @@ export default function RankingTable() {
                     <tbody>
                         {ranking.map((user, index) => (
                             <tr key={index}>
-                                <td>{user && (index + 1)}</td>
-                                <td>{user.username}</td>
-                                <td>{user.rating}</td>
-                                <td>
-                                    <span style={{ color: 'green' }}>{user.wins}</span>
-                                    <span>{user ? ' - ' : <wbr />}</span>
-                                    <span style={{ color: 'grey' }}>{user.draws}</span>
-                                    <span>{user ? ' - ' : <wbr />}</span>
-                                    <span style={{ color: 'red' }}>{user.loses}</span>
+                                <td style={{ width: '15%' }}>{user && (index + 1)}</td>
+                                <td style={{ width: '35%' }}>{user.username}</td>
+                                <td style={{ width: '15%' }}>{user.rating}</td>
+                                <td style={{ width: '35%' }}>
+                                    {user && (
+                                        <>
+                                            <span style={{ color: 'green' }}>{user.wins}</span>
+                                            <span> - {user.draws} - </span>
+                                            <span style={{ color: 'red' }}>{user.loses}</span>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         ))}

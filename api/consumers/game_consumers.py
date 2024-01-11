@@ -41,8 +41,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.receive_message(text_data_json)
                 case 'surrender':
                     await self.receive_surrender()
-                case 'timeout':
-                    await self.receive_timeout()
                 case _:
                     await self.send_error()
         else:
@@ -88,19 +86,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             'username': username,
             'body': body
         }))
-
-    async def receive_timeout(self):
-        if self.game.started:
-            last_move = await database_sync_to_async(self.game.moves.last)()
-            timer = ((self.game.white_timer if self.board.turn else self.game.black_timer) - (datetime.now(timezone.utc) - last_move.timestamp)).total_seconds()
-
-            if timer <= 0:
-                if self.board.has_insufficient_material(not self.board.turn):
-                    result = 'Timeout! Draw!'
-                else:
-                    result = 'Timeout! ' + ('White' if not self.board.turn else 'Black') + ' has won!'
-
-                await self.end_game(result)
 
     async def receive_surrender(self):
         player_color = await self.get_player_color()

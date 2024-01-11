@@ -7,7 +7,7 @@ $table-border-color: #363636;
     justify-content: center;
 
     .ranking-container {
-        width: 600px;
+        width: 650px;
         border: 1px solid $table-border-color;
         border-radius: 10px;
         overflow: hidden;
@@ -18,11 +18,14 @@ $table-border-color: #363636;
             background-color: #2e2e2e;
             border-collapse: collapse;
 
+            tr {
+                height: 28px;
+            }
+
             th, td {
                 border: 1px solid;
                 border-color: transparent $table-border-color $table-border-color transparent;
                 text-align: center;
-                padding: 3px 0px;
             }
 
             th {

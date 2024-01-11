@@ -1,52 +1,27 @@
-import { useEffect, useState } from 'react';
-import { useGame } from '../../../contexts/GameContext';
+import { useRef } from 'react';
 import { useUsers } from '../../../contexts/UsersContext';
-import { useGameSocket } from '../../../contexts/GameSocketContext';
+import GameInfoTimer from './GameInfoTimer';
 
-export default function GameInfo({ player, gameType }) {
-    const { gameSocket } = useGameSocket();
-    const { game } = useGame();
+export default function GameInfo({ playerType, gameType }) {
     const { users } = useUsers();
-    const [timer, setTimer] = useState(users[player].timer);
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer % 60;
-    const formattedTimer = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-    useEffect(() => {
-        if (gameType !== 'computer' && !game.result && game.prevMoves.length >= 1) {
-            let timerTimeout;
-
-            if (timer <= 0) {
-                gameSocket.send(JSON.stringify({ type: 'timeout' }));
-            } else if (game.turn === users[player].color) {
-                timerTimeout = setTimeout(() => {
-                    setTimer(prevTimer => prevTimer - 1);
-                }, 1000);
-            }
-
-            return () => {
-                clearTimeout(timerTimeout);
-            }
-        }
-        // eslint-disable-next-line
-    }, [timer, game.turn]);
+    const player = useRef(users[playerType]);
 
     return (
         <div className="game-info">
             <img
-                src={users[player].avatar}
+                src={player.current.avatar}
                 className="game-user-avatar"
                 alt="Avatar"
             />
             <div className="player-info">
-                <span>{users[player].username}</span>
-                <span className="game-user-rating">{users[player].rating && `(${users[player].rating})`}</span>
-                <div className="game-points">Points: {users[player].points}</div>
+                <span>{player.current.username}</span>
+                <span className="game-user-rating">{player.current.rating && `(${player.current.rating})`}</span>
+                <div className="game-points">Points: {player.current.points}</div>
             </div>
             {gameType !== 'computer' && (
-                <div className={`game-timer ${(game.turn === users[player].color && !game.result) && 'game-timer-on'}`}>
-                    {formattedTimer}
-                </div>
+                <GameInfoTimer
+                    player={player.current}
+                />
             )}
         </div>
     );

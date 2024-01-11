@@ -1,5 +1,5 @@
 from channels.db import database_sync_to_async
-from api.utils import get_cookie
+from api.utils import get_cookie, add_rating_points
 from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile
 from .game_consumers import GameConsumer
 
@@ -13,9 +13,11 @@ class RankingGameConsumer(GameConsumer):
         if 'White' in result:
             white_player_profile.wins += 1
             black_player_profile.loses += 1
+            add_rating_points(white_player_profile, black_player_profile)
         elif 'Black' in result:
             white_player_profile.loses += 1
             black_player_profile.wins += 1
+            add_rating_points(black_player_profile, white_player_profile)
         else:
             white_player_profile.draws += 1
             black_player_profile.draws += 1

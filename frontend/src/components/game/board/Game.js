@@ -35,7 +35,8 @@ export default function Game({ gameType, gameSetup }) {
                         username: setup.white_username,
                         rating: setup.white_rating,
                         timer: setup.white_timer,
-                        points: setup.white_points
+                        points: setup.white_points,
+                        lastMove: setup.white_last_move
                     },
                     [!isPlayerWhite ? 'player' : 'enemy']: {
                         color: 'b',
@@ -43,7 +44,8 @@ export default function Game({ gameType, gameSetup }) {
                         username: setup.black_username,
                         rating: setup.black_rating,
                         timer: setup.black_timer,
-                        points: setup.black_points
+                        points: setup.black_points,
+                        lastMove: setup.black_last_move
                     }
                 });
 
@@ -154,7 +156,7 @@ export default function Game({ gameType, gameSetup }) {
                         />
                     )}
                     <GameInfo
-                        player='enemy'
+                        playerType='enemy'
                         gameType={gameType}
                     />
                     <Board
@@ -166,7 +168,7 @@ export default function Game({ gameType, gameSetup }) {
                         gameType={gameType}
                     />
                     <GameInfo
-                        player='player'
+                        playerType='player'
                         gameType={gameType}
                     />
                 </div>

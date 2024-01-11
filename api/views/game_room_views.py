@@ -1,5 +1,5 @@
 import chess
-from datetime import datetime, timezone
+from datetime import datetime
 from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from api.permissions import RankingGameRoomObjectPermissions, GuestGameRoomObjectPermissions, ComputerGameRoomObjectPermissions
@@ -30,16 +30,12 @@ class RankingGameRoomView(RetrieveAPIView):
         response.data['messages'] = [{'username': message.sender.username, 'body': message.body} for message in game_room_object.game.messages.all()]
         response.data['prevMoves'] = [[move.move, move.fen] for move in game_moves]
 
-        if not game_room_object.game.started or game_room_object.game.result:
-            response.data['white_timer'] = round(game_room_object.game.white_timer.total_seconds())
-            response.data['black_timer'] = round(game_room_object.game.black_timer.total_seconds())
-        else:
-            if chess.Board(game_room_object.game.fen).turn:
-                response.data['white_timer'] = round((game_room_object.game.white_timer - (datetime.now(timezone.utc) - game_moves[-1].timestamp)).total_seconds())
-                response.data['black_timer'] = round(game_room_object.game.black_timer.total_seconds())
-            else:
-                response.data['white_timer'] = round(game_room_object.game.white_timer.total_seconds())
-                response.data['black_timer'] = round((game_room_object.game.black_timer - (datetime.now(timezone.utc) - game_moves[-1].timestamp)).total_seconds())
+        response.data['white_timer'] = round(game_room_object.game.white_timer.total_seconds())
+        response.data['black_timer'] = round(game_room_object.game.black_timer.total_seconds())
+
+        if len(game_moves) >= 1 and not game_room_object.game.result:
+            last_move_player = 'white_last_move' if chess.Board(game_room_object.game.fen).turn else 'black_last_move'
+            response.data[last_move_player] = round(datetime.timestamp(game_moves[-1].timestamp))
 
         return response
 
@@ -61,16 +57,12 @@ class GuestGameRoomView(RetrieveAPIView):
         response.data['player'] = 'w' if game_room_object.white_player == token else 'b'
         response.data['prevMoves'] = [[move.move, move.fen] for move in game_moves]
 
-        if not game_room_object.game.started or game_room_object.game.result:
-            response.data['white_timer'] = round(game_room_object.game.white_timer.total_seconds())
-            response.data['black_timer'] = round(game_room_object.game.black_timer.total_seconds())
-        else:
-            if chess.Board(game_room_object.game.fen).turn:
-                response.data['white_timer'] = round((game_room_object.game.white_timer - (datetime.now(timezone.utc) - game_moves[-1].timestamp)).total_seconds())
-                response.data['black_timer'] = round(game_room_object.game.black_timer.total_seconds())
-            else:
-                response.data['white_timer'] = round(game_room_object.game.white_timer.total_seconds())
-                response.data['black_timer'] = round((game_room_object.game.black_timer - (datetime.now(timezone.utc) - game_moves[-1].timestamp)).total_seconds())
+        response.data['white_timer'] = round(game_room_object.game.white_timer.total_seconds())
+        response.data['black_timer'] = round(game_room_object.game.black_timer.total_seconds())
+
+        if len(game_moves) >= 1 and not game_room_object.game.result:
+            last_move_player = 'white_last_move' if chess.Board(game_room_object.game.fen).turn else 'black_last_move'
+            response.data[last_move_player] = round(datetime.timestamp(game_moves[-1].timestamp))
 
         return response
 
