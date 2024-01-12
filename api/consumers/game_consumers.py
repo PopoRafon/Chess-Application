@@ -39,8 +39,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.receive_move(text_data_json)
                 case 'message':
                     await self.receive_message(text_data_json)
-                case 'surrender':
-                    await self.receive_surrender()
+                case 'resign':
+                    await self.receive_resign()
                 case _:
                     await self.send_error()
         else:
@@ -87,9 +87,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             'body': body
         }))
 
-    async def receive_surrender(self):
+    async def receive_resign(self):
         player_color = await self.get_player_color()
-        result = 'Surrender! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
+        result = 'Resign! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
 
         await self.end_game(result)
 
@@ -120,14 +120,15 @@ class GameConsumer(AsyncWebsocketConsumer):
         _, move = data.values()
 
         if await self.perform_move_validation(move):
-            move = await self.perform_move_creation(move)
+            move_notation = self.board._algebraic(chess.Move.from_uci(move))
+            await self.perform_move_creation(move, move_notation)
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'send_move',
                 'white_points': self.game.white_points,
                 'black_points': self.game.black_points,
                 'fen': self.board.fen(),
-                'move': move
+                'move': move_notation
             })
         else:
             await self.send_error()
@@ -150,15 +151,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         except chess.InvalidMoveError:
             return False
 
-    async def perform_move_creation(self, move):
+    async def perform_move_creation(self, move, move_notation):
         """
         Add move to the Database and update current game state.
-        Returns move in algebraic notation.
         """
         await self.update_timers_in_game_object()
         await self.update_points_in_game_object(move)
 
-        move_notation = self.board._algebraic(chess.Move.from_uci(move))
         self.board.push_uci(move)
 
         await database_sync_to_async(Move.objects.create)(
@@ -179,8 +178,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.end_game(result)
         else:
             await self.game.asave()
-
-        return move_notation
 
     async def update_timers_in_game_object(self):
         """

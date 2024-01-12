@@ -4,7 +4,7 @@ import { useUsers } from '../../../contexts/UsersContext';
 import PrevMovesButtons from './PrevMovesButtons';
 import PrevMovesContainer from './PrevMovesContainer';
 
-export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowSurrenderMenu, gameType }) {
+export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowResignMenu, gameType }) {
     const { game, dispatchGame } = useGame();
     const { users } = useUsers();
     const [currentMoveIdx, setCurrentMoveIdx] = useState(0);
@@ -49,7 +49,7 @@ export default function PrevMoves({ setDisableBoard, setPromotionMenu, setShowSu
             <PrevMovesButtons
                 changePositions={changePositions}
                 currentMoveIdx={currentMoveIdx}
-                setShowSurrenderMenu={setShowSurrenderMenu}
+                setShowResignMenu={setShowResignMenu}
                 gameType={gameType}
             />
         </div>

@@ -77,12 +77,18 @@ export default function SettingsContainer() {
                         src={user.avatar}
                         alt="Settings Avatar"
                     />
-                    <input
-                        name="avatar"
-                        type="file"
-                        className="settings-avatar-input"
-                        onChange={handleChange}
-                    />
+                    <div className="settings-avatar-input-container">
+                        <input
+                            name="avatar"
+                            type="file"
+                            className="settings-avatar-input"
+                            onChange={handleChange}
+                        />
+                    </div>
+                </div>
+                <div className="settings-input-label">
+                    <span>Rating</span>
+                    <span>{user.rating}</span>
                 </div>
                 <label
                     htmlFor="email"

@@ -32,7 +32,7 @@
         justify-content: center;
         align-items: center;
         width: 400px;
-        height: 500px;
+        padding: 15px 0px;
         background-color: #303030;
         border: 1px solid;
         border-radius: 25px;
@@ -48,7 +48,7 @@
         .settings-body {
             display: flex;
             flex-direction: column;
-            margin-bottom: 80px;
+            margin-bottom: 40px;
             justify-content: center;
             align-items: center;
             width: 100%;
@@ -72,29 +72,33 @@
                     box-shadow: 4px 4px 6px 0px rgb(0, 0, 0, 0.2);
                 }
 
-                .settings-avatar-input {
-                    cursor: pointer;
-                    visibility: hidden;
-                    background-color: transparent;
-                    position: relative;
-                    width: 35px;
-                    height: 35px;
-                    right: -45px;
-                    bottom: 30px;
+                .settings-avatar-input-container {
+                    position: absolute;
+                    right: 40px;
+                    bottom: -8px;
 
-                    &::before {
-                        content: "";
-                        background-image: url('../../public/static/images/icons/edit_icon.png');
-                        background-repeat: no-repeat;
-                        background-color: #303030;
-                        background-position: center;
-                        background-size: 20px;
-                        visibility: visible;
-                        position: absolute;
-                        width: 25px;
-                        height: 25px;
-                        border-radius: 5px;
-                        box-shadow: 3px 3px 5px 0px rgb(0, 0, 0, 0.2);
+                    .settings-avatar-input {
+                        cursor: pointer;
+                        visibility: hidden;
+                        background-color: transparent;
+                        position: relative;
+                        width: 35px;
+                        height: 35px;
+
+                        &::before {
+                            content: "";
+                            background-image: url('../../public/static/images/icons/edit_icon.png');
+                            background-repeat: no-repeat;
+                            background-color: #303030;
+                            background-position: center;
+                            background-size: 20px;
+                            visibility: visible;
+                            position: absolute;
+                            width: 25px;
+                            height: 25px;
+                            border-radius: 5px;
+                            box-shadow: 3px 3px 5px 0px rgb(0, 0, 0, 0.2);
+                        }
                     }
                 }
 

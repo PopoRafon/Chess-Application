@@ -1,6 +1,6 @@
 @import 'pieces';
 @import '../extra/game_result';
-@import '../extra/surrender_menu';
+@import '../extra/resign_menu';
 
 @mixin board-cols-rows-mixin {
     font-weight: 500;

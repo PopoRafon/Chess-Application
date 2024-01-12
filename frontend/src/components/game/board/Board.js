@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useUsers } from '../../../contexts/UsersContext';
-import SurrenderMenu from '../extra/SurrenderMenu';
+import ResignMenu from '../extra/ResignMenu';
 import GameResultAlert from '../extra/GameResultAlert';
 import BoardSideLetters from './BoardSideLetters';
 import BoardSquares from './BoardSquares';
 import Pieces from './Pieces';
 
-export default function Board({ disableBoard, setDisableBoard, setPromotionMenu, gameType, showSurrenderMenu, setShowSurrenderMenu }) {
+export default function Board({ disableBoard, setDisableBoard, setPromotionMenu, gameType, showResignMenu, setShowResignMenu }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
     const { game } = useGame();
     const { users } = useUsers();
@@ -30,9 +30,9 @@ export default function Board({ disableBoard, setDisableBoard, setPromotionMenu,
                     gameType={gameType}
                 />
             )}
-            {showSurrenderMenu && (
-                <SurrenderMenu
-                    setShowSurrenderMenu={setShowSurrenderMenu}
+            {showResignMenu && (
+                <ResignMenu
+                    setShowResignMenu={setShowResignMenu}
                 />
             )}
             <BoardSquares

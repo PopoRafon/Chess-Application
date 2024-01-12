@@ -101,15 +101,6 @@ export default function Sidebar({ setMatchmaking }) {
                         <span className="sidebar-play-button-content">Play with computer</span>
                     </button>
                 </li>
-                <li>
-                    <button
-                        onClick={() => navigate('/play/friend')}
-                        className="sidebar-play-button"
-                    >
-                        <span className="sidebar-play-button-title">Play with Friend</span>
-                        <span className="sidebar-play-button-content">Invite your friend to the game</span>
-                    </button>
-                </li>
             </ul>
         </div>
     );

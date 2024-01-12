@@ -3,6 +3,9 @@ from api.utils import get_cookie, add_rating_points
 from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile
 from .game_consumers import GameConsumer
 
+engine = ''
+limit = ''
+
 
 class RankingGameConsumer(GameConsumer):
     async def end_game(self, result):
@@ -71,6 +74,27 @@ class GuestGameConsumer(GameConsumer):
 
 
 class ComputerGameConsumer(GameConsumer):
+    async def perform_move_creation(self, move, move_notation):
+        await super().perform_move_creation(move, move_notation)
+
+        if not self.board.turn and self.board.legal_moves.count() >= 1:
+            move = engine.play(self.board, limit).move
+            move_notation = self.board._algebraic(move)
+
+            await self.perform_move_creation(move.uci(), move_notation)
+
+            await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'send_move',
+                'white_points': self.game.white_points,
+                'black_points': self.game.black_points,
+                'fen': self.board.fen(),
+                'move': move_notation
+            })
+
+    async def update_timers_in_game_object(self):
+        if not self.game.started:
+            self.game.started = True
+
     async def connect(self):
         try:
             self.room_name = self.scope['url_route']['kwargs']['game']

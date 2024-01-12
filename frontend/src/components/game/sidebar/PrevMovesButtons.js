@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useGame } from '../../../contexts/GameContext';
 
-export default function PrevMovesButtons({ changePositions, currentMoveIdx, setShowSurrenderMenu, gameType }) {
+export default function PrevMovesButtons({ changePositions, currentMoveIdx, setShowResignMenu, gameType }) {
     const { game } = useGame();
     const [showExitGameTooltip, setShowExitGameTooltip] = useState(false);
-    const [showSurrenderTooltip, setShowSurrenderTooltip] = useState(false);
+    const [showResignTooltip, setShowResignTooltip] = useState(false);
     const [showPrevMoveTooltip, setShowPrevMoveTooltip] = useState(false);
     const [showNextMoveTooltip, setShowNextMoveTooltip] = useState(false);
     const navigate = useNavigate();
@@ -40,17 +40,17 @@ export default function PrevMovesButtons({ changePositions, currentMoveIdx, setS
             ) : (
                 <button
                     className="prev-moves-button"
-                    onClick={() => setShowSurrenderMenu(true)}
-                    onMouseEnter={() => setShowSurrenderTooltip(true)}
-                    onMouseLeave={() => setShowSurrenderTooltip(false)}
+                    onClick={() => setShowResignMenu(true)}
+                    onMouseEnter={() => setShowResignTooltip(true)}
+                    onMouseLeave={() => setShowResignTooltip(false)}
                 >
                     <img
                         width="25"
                         height="25"
-                        src="/static/images/icons/surrender_icon.png"
-                        alt="Surrender"
+                        src="/static/images/icons/resign_icon.png"
+                        alt="Resign"
                     />
-                    {showSurrenderTooltip && <div className="tooltip">Surrender</div>}
+                    {showResignTooltip && <div className="tooltip">Resign</div>}
                 </button>
             )}
             <button

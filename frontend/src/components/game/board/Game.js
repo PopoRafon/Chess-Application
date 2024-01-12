@@ -13,7 +13,7 @@ export default function Game({ gameType, gameSetup }) {
     const [promotionMenu, setPromotionMenu] = useState({ show: false });
     const [disableBoard, setDisableBoard] = useState(false);
     const [isGameLoaded, setIsGameLoaded] = useState(false);
-    const [showSurrenderMenu, setShowSurrenderMenu] = useState(false);
+    const [showResignMenu, setShowResignMenu] = useState(false);
     const [messages, setMessages] = useState([]);
     const { gameSocket, setGameSocket } = useGameSocket();
     const { users, setUsers } = useUsers();
@@ -163,8 +163,8 @@ export default function Game({ gameType, gameSetup }) {
                         disableBoard={disableBoard}
                         setDisableBoard={setDisableBoard}
                         setPromotionMenu={setPromotionMenu}
-                        showSurrenderMenu={showSurrenderMenu}
-                        setShowSurrenderMenu={setShowSurrenderMenu}
+                        showResignMenu={showResignMenu}
+                        setShowResignMenu={setShowResignMenu}
                         gameType={gameType}
                     />
                     <GameInfo
@@ -177,7 +177,7 @@ export default function Game({ gameType, gameSetup }) {
                 messages={messages}
                 gameType={gameType}
                 setDisableBoard={setDisableBoard}
-                setShowSurrenderMenu={setShowSurrenderMenu}
+                setShowResignMenu={setShowResignMenu}
                 setPromotionMenu={setPromotionMenu}
             />
         </>
