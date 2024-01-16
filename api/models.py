@@ -24,6 +24,8 @@ class Game(models.Model):
     white_timer = models.DurationField(default=timedelta(minutes=10), blank=True)
     black_timer = models.DurationField(default=timedelta(minutes=10), blank=True)
     fen = models.CharField(max_length=90, default=chess.STARTING_FEN)
+    pgn = models.TextField(max_length=1024, null=True, blank=True)
+    last_move_timestamp = models.DateTimeField(null=True, blank=True)
     result = models.CharField(max_length=40, blank=True)
     started = models.BooleanField(default=False)
 
@@ -34,13 +36,6 @@ class Message(models.Model):
     body = models.CharField(max_length=255)
 
 
-class Move(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='moves')
-    fen = models.CharField(max_length=90)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    move = models.CharField(max_length=10)
-
-
 class RankingGameRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     white_player = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_room_white')
@@ -48,7 +43,7 @@ class RankingGameRoom(models.Model):
     game = models.OneToOneField(Game, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.id
+        return f'{self.id}'
 
 class GuestGameRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -57,7 +52,7 @@ class GuestGameRoom(models.Model):
     game = models.OneToOneField(Game, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.id
+        return f'{self.id}'
 
 class ComputerGameRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -65,4 +60,4 @@ class ComputerGameRoom(models.Model):
     game = models.OneToOneField(Game, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.id
+        return f'{self.id}'

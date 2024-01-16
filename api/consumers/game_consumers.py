@@ -1,9 +1,10 @@
 import json
-import chess
+import io
+import chess, chess.pgn
 from datetime import datetime, timezone
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from api.models import Game, Move, Message
+from api.models import Game, Message
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -99,7 +100,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         """
         await self.update_timers_in_game_object()
 
+        game_pgn = chess.pgn.read_game(io.StringIO(self.game.pgn))
+        game_pgn.headers['Result'] = '1/2-1/2' if 'Draw' in result else '1-0' if 'White' in result else '0-1'
+
         self.game.result = result
+        self.game.pgn = str(game_pgn)
 
         await self.game.asave()
 
@@ -121,7 +126,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if await self.perform_move_validation(move):
             move_notation = self.board._algebraic(chess.Move.from_uci(move))
-            await self.perform_move_creation(move, move_notation)
+            await self.perform_move_creation(move)
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'send_move',
@@ -151,7 +156,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         except chess.InvalidMoveError:
             return False
 
-    async def perform_move_creation(self, move, move_notation):
+    async def perform_move_creation(self, move):
         """
         Add move to the Database and update current game state.
         """
@@ -159,14 +164,19 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.update_points_in_game_object(move)
 
         self.board.push_uci(move)
-
-        await database_sync_to_async(Move.objects.create)(
-            game=self.game,
-            fen=self.board.fen(),
-            move=move_notation
-        )
-
         self.game.fen = self.board.fen()
+        game_pgn = chess.pgn.read_game(io.StringIO(self.game.pgn))
+        node = None
+
+        for mainline_node in game_pgn.mainline():
+            node = mainline_node
+
+        if node:
+            node.add_variation(chess.Move.from_uci(move))
+        else:
+            game_pgn.add_variation(chess.Move.from_uci(move))
+
+        self.game.pgn = str(game_pgn)
 
         if self.board.is_checkmate():
             result = 'Checkmate! ' + ('Black' if self.board.turn else 'White') + ' has won!'
@@ -184,14 +194,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         Update timers in game object.
         """
         if self.game.started:
-            last_move = await database_sync_to_async(self.game.moves.last)()
-
             if self.board.turn:
-                self.game.white_timer = self.game.white_timer - (datetime.now(timezone.utc) - last_move.timestamp)
+                self.game.white_timer = self.game.white_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp)
             else:
-                self.game.black_timer = self.game.black_timer - (datetime.now(timezone.utc) - last_move.timestamp)
+                self.game.black_timer = self.game.black_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp)
         else:
             self.game.started = True
+
+        self.game.last_move_timestamp = datetime.now(timezone.utc)
 
     async def update_points_in_game_object(self, move):
         """

@@ -1,5 +1,7 @@
 from http.cookies import SimpleCookie
+from datetime import datetime
 import uuid
+import textwrap
 
 def get_cookie(scope, cookie):
     """
@@ -18,6 +20,21 @@ def create_avatar_name(instance, filename):
     extension = filename.split('.')[-1]
     hashed_file_name = f'{uuid.uuid4()}.{extension}'
     return f'avatars/{hashed_file_name}'
+
+def create_chess_pgn(white_player, black_player):
+    """
+    Create chess pgn with some default headers.
+    """
+    return textwrap.dedent(f"""\
+        [Event "Live Chess"]
+        [Site "Chess"]
+        [Date "{datetime.now().date()}"]
+        [Round "0"]
+        [White "{white_player}"]
+        [Black "{black_player}"]
+        [Result "*"]
+
+        *""")
 
 def add_rating_points(winner_profile, loser_profile):
     """

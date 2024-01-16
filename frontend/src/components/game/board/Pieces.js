@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useGameSocket } from '../../../contexts/GameSocketContext';
 import { useUsers } from '../../../contexts/UsersContext';
+import { Chess } from 'chess.js';
 import calcPosition from '../../../helpers/CalculatePosition';
 import Piece from './Piece';
 
@@ -15,23 +16,22 @@ export default function Pieces({ setPromotionMenu }) {
         const [type, oldRow, oldCol] = event.dataTransfer.getData('text').split(',');
         const [newRow, newCol] = calcPosition(piecesRef.current, event);
         setPromotionMenu({ show: false });
+        let move;
+
+        if (users.player.color === 'w') {
+            move = 'abcdefgh'[oldCol] + '87654321'[oldRow] + 'abcdefgh'[newCol] + '87654321'[newRow];
+        } else {
+            move = 'hgfedcba'[oldCol] + '12345678'[oldRow] + 'hgfedcba'[newCol] + '12345678'[newRow];
+        }
 
         if (type[0] === game.turn) {
-            if (type[1] === 'p' && (newRow === 7 || newRow === 0)) {
+            if (type[1] === 'p' && (newRow === 7 || newRow === 0) && new Chess(game.fen).moves().includes(move.slice(2, 4))) {
                 setPromotionMenu({
                     show: true,
                     oldPos: [oldRow, oldCol],
                     newPos: [newRow, newCol],
                 });
             } else {
-                let move;
-
-                if (users.player.color === 'w') {
-                    move = 'abcdefgh'[oldCol] + '87654321'[oldRow] + 'abcdefgh'[newCol] + '87654321'[newRow];
-                } else {
-                    move = 'hgfedcba'[oldCol] + '12345678'[oldRow] + 'hgfedcba'[newCol] + '12345678'[newRow];
-                }
-
                 gameSocket.send(JSON.stringify({
                     type: 'move',
                     move: move

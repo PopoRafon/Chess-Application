@@ -144,6 +144,7 @@ class GameRoomSerializer(serializers.ModelSerializer):
     black_points = serializers.IntegerField(source='game.black_points')
     result = serializers.CharField(source='game.result')
     fen = serializers.CharField(source='game.fen')
+    pgn = serializers.CharField(source='game.pgn')
 
 
 class RankingGameRoomSerializer(GameRoomSerializer):

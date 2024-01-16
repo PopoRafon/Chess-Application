@@ -10,8 +10,7 @@ export default function gameReducer(state, action) {
                 result: action.result,
                 fen: action.fen,
                 board: chess.board(),
-                turn: chess.turn(),
-                prevMoves: action.prevMoves
+                turn: chess.turn()
             };
         case 'NEXT_ROUND':
             return {

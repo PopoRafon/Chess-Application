@@ -60,8 +60,7 @@ export default function Game({ gameType, gameSetup }) {
                 dispatchGame({
                     type: 'GAME_START',
                     fen: newFen,
-                    result: setup.result,
-                    prevMoves: setup.prevMoves
+                    result: setup.result
                 });
 
                 if (gameType === 'ranking') {

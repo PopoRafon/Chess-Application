@@ -1,10 +1,8 @@
+from django.conf import settings
 from channels.db import database_sync_to_async
 from api.utils import get_cookie, add_rating_points
 from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile
 from .game_consumers import GameConsumer
-
-engine = ''
-limit = ''
 
 
 class RankingGameConsumer(GameConsumer):
@@ -74,14 +72,14 @@ class GuestGameConsumer(GameConsumer):
 
 
 class ComputerGameConsumer(GameConsumer):
-    async def perform_move_creation(self, move, move_notation):
-        await super().perform_move_creation(move, move_notation)
+    async def perform_move_creation(self, move):
+        await super().perform_move_creation(move)
 
-        if not self.board.turn and self.board.legal_moves.count() >= 1:
-            move = engine.play(self.board, limit).move
+        if not self.board.turn and not self.board.is_game_over():
+            move = settings.ENGINE.play(self.board, settings.ENGINE_LIMIT).move
             move_notation = self.board._algebraic(move)
 
-            await self.perform_move_creation(move.uci(), move_notation)
+            await self.perform_move_creation(move.uci())
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'send_move',

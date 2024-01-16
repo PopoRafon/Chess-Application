@@ -1,6 +1,8 @@
 from pathlib import Path
 import environ
 from datetime import timedelta
+import sys
+import chess.engine
 
 # Initialize environment variables
 env = environ.Env()
@@ -184,3 +186,10 @@ else:
     DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 PASSWORD_RESET_TIMEOUT = 600
+
+
+# Default chess engine settings
+
+if "runserver" in sys.argv:
+    ENGINE = chess.engine.SimpleEngine.popen_uci(BASE_DIR / env('ENGINE_PATH'))
+    ENGINE_LIMIT = chess.engine.Limit(time=0.1)
