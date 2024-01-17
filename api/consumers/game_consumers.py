@@ -132,7 +132,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'type': 'send_move',
                 'white_points': self.game.white_points,
                 'black_points': self.game.black_points,
-                'fen': self.board.fen(),
                 'move': move_notation
             })
         else:
@@ -216,13 +215,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game.black_points += pieces_values.get(piece_type, 0)
 
     async def send_move(self, event):
-        _, white_points, black_points, fen, move = event.values()
+        _, white_points, black_points, move = event.values()
 
         await self.send(json.dumps({
             'type': 'move',
             'white_points': white_points,
             'black_points': black_points,
-            'fen': fen,
             'move': move
         }))
 

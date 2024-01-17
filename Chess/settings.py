@@ -1,11 +1,9 @@
 from pathlib import Path
 import environ
 from datetime import timedelta
-import sys
-import chess.engine
 
 # Initialize environment variables
-env = environ.Env()
+ENV = environ.Env()
 environ.Env.read_env()
 
 
@@ -18,7 +16,7 @@ BASE_DOMAIN = 'http://localhost:3000'
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = ENV('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -180,16 +178,9 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'gmail'
     EMAIL_PORT = 587
-    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+    EMAIL_HOST_USER = ENV('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = ENV('EMAIL_HOST_PASSWORD')
     EMAIL_USE_TLS = True
-    DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+    DEFAULT_FROM_EMAIL = ENV('DEFAULT_FROM_EMAIL')
 
 PASSWORD_RESET_TIMEOUT = 600
-
-
-# Default chess engine settings
-
-if "runserver" in sys.argv:
-    ENGINE = chess.engine.SimpleEngine.popen_uci(BASE_DIR / env('ENGINE_PATH'))
-    ENGINE_LIMIT = chess.engine.Limit(time=0.1)

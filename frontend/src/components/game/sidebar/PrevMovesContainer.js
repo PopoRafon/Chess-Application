@@ -12,7 +12,7 @@ export default function PrevMovesContainer({ changePositions, currentMoveIdx }) 
             <div className="prev-moves-header">Previous Moves</div>
             <div className="prev-moves-content scrollbar">
                 <ol>
-                    {game.prevMoves.map((move, index) => (
+                    {game.history.map((move, index) => (
                         index % 2 === 0 && (
                             <li
                                 className="move"
@@ -22,14 +22,14 @@ export default function PrevMovesContainer({ changePositions, currentMoveIdx }) 
                                     className={`prev-move ${(currentMoveIdx === index) && 'current-move'}`}
                                     onClick={handleMoveChange(index)}
                                 >
-                                    {move[0]}
+                                    {move}
                                 </button>
-                                {game.prevMoves[index + 1] && (
+                                {game.history[index + 1] && (
                                     <button
-                                        className={`prev-move ${(currentMoveIdx === index + 1) && 'current-move'}`}
+                                        className={`prev-move ${(currentMoveIdx === (index + 1)) && 'current-move'}`}
                                         onClick={handleMoveChange(index + 1)}
                                     >
-                                        {game.prevMoves[index + 1][0]}
+                                        {game.history[index + 1]}
                                     </button>
                                 )}
                             </li>

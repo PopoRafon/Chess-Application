@@ -1,8 +1,16 @@
+import sys
+import chess.engine
 from django.conf import settings
 from channels.db import database_sync_to_async
 from api.utils import get_cookie, add_rating_points
 from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile
 from .game_consumers import GameConsumer
+
+# Chess engine settings
+
+if "runserver" in sys.argv:
+    engine = chess.engine.SimpleEngine.popen_uci(settings.BASE_DIR / settings.ENV('ENGINE_PATH'))
+    engine_limit = chess.engine.Limit(time=0.1)
 
 
 class RankingGameConsumer(GameConsumer):
@@ -76,7 +84,7 @@ class ComputerGameConsumer(GameConsumer):
         await super().perform_move_creation(move)
 
         if not self.board.turn and not self.board.is_game_over():
-            move = settings.ENGINE.play(self.board, settings.ENGINE_LIMIT).move
+            move = engine.play(self.board, engine_limit).move
             move_notation = self.board._algebraic(move)
 
             await self.perform_move_creation(move.uci())
@@ -85,7 +93,6 @@ class ComputerGameConsumer(GameConsumer):
                 'type': 'send_move',
                 'white_points': self.game.white_points,
                 'black_points': self.game.black_points,
-                'fen': self.board.fen(),
                 'move': move_notation
             })
 

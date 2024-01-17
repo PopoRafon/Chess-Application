@@ -7,7 +7,7 @@ export default function GameInfoTimer({ player }) {
     const lastMoveTimestamp = useRef((player.lastMove ?? Date.now()) - (6e2 - player.timer) * 1e3);
 
     useEffect(() => {
-        if (!game.result && game.prevMoves.length >= 1 && game.turn === player.color) {
+        if (!game.result && game.history.length >= 1 && game.turn === player.color) {
             lastMoveTimestamp.current = Date.now() - (6e2 - timer) * 1e3;
             const timerInterval = setInterval(() => {
                 setTimer(() => Math.round(6e2 - (Date.now() - lastMoveTimestamp.current) / 1e3));

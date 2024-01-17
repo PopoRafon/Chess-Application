@@ -17,7 +17,7 @@ export default function Game({ gameType, gameSetup }) {
     const [messages, setMessages] = useState([]);
     const { gameSocket, setGameSocket } = useGameSocket();
     const { users, setUsers } = useUsers();
-    const { dispatchGame } = useGame();
+    const { game, dispatchGame } = useGame();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,7 +26,6 @@ export default function Game({ gameType, gameSetup }) {
 
             if (setup !== 'error') {
                 const isPlayerWhite = setup.player === 'w';
-                let newFen;
 
                 setUsers({
                     [isPlayerWhite ? 'player' : 'enemy']: {
@@ -49,18 +48,10 @@ export default function Game({ gameType, gameSetup }) {
                     }
                 });
 
-                if (isPlayerWhite) {
-                    newFen = setup.fen;
-                } else {
-                    newFen = setup.fen.split(' ');
-                    newFen[0] = newFen[0].split('').reverse().join('');
-                    newFen = newFen.join(' ');
-                }
-
                 dispatchGame({
                     type: 'GAME_START',
-                    fen: newFen,
-                    result: setup.result
+                    result: setup.result,
+                    pgn: setup.pgn
                 });
 
                 if (gameType === 'ranking') {
@@ -80,25 +71,13 @@ export default function Game({ gameType, gameSetup }) {
                 const data = JSON.parse(message.data);
 
                 if (data.type === 'move') {
-                    const { fen, move, white_points, black_points } = data;
+                    const { move, white_points, black_points } = data;
                     const isPlayerWhite = users.player.color === 'w';
-                    let newFen;
-
-                    if (isPlayerWhite) {
-                        newFen = fen;
-                    } else {
-                        newFen = fen.split(' ');
-                        newFen[0] = newFen[0].split('').reverse().join('');
-                        newFen = newFen.join(' ');
-                    }
 
                     dispatchGame({
                         type: 'NEXT_ROUND',
-                        fen: newFen,
-                        prevMoves: [
-                            move,
-                            fen,
-                        ]
+                        move: move,
+                        test: game.board
                     });
 
                     setUsers({
@@ -128,7 +107,7 @@ export default function Game({ gameType, gameSetup }) {
 
                     dispatchGame({
                         type: 'GAME_END',
-                        result
+                        result: result
                     });
 
                     new Audio('/static/sounds/game_end.mp3').play();
