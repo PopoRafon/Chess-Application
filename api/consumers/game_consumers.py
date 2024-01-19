@@ -1,10 +1,8 @@
-import json
-import io
-import chess, chess.pgn
-from datetime import datetime, timezone
+import json, io, chess, chess.pgn
+from datetime import datetime, timezone, timedelta
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from api.models import Game, Message
+from api.models import Game
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -16,9 +14,9 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         """
         This method must be overridden and must add additional attributes to game object:
-        - self.user - User connected to socket.
-        - self.room - Room object.
-        - self.game_id - Game object id.
+        - `self.user` - User connected to socket.
+        - `self.room` - Room object.
+        - `self.game_id` - Game object id.
         """
         await self.accept()
 
@@ -42,6 +40,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.receive_message(text_data_json)
                 case 'resign':
                     await self.receive_resign()
+                case 'timeout':
+                    await self.receive_timeout()
                 case _:
                     await self.send_error()
         else:
@@ -53,53 +53,32 @@ class GameConsumer(AsyncWebsocketConsumer):
         }))
 
     async def receive_message(self, data):
-        _, body = data.values()
-        body = body.strip()
-
-        if await self.perform_message_validation(body):
-            await database_sync_to_async(Message.objects.create)(game=self.game, sender=self.user, body=body)
-
-            await self.channel_layer.group_send(self.room_group_name, {
-                'type': 'send_message',
-                'username': self.user.username,
-                'body': body
-            })
-        else:
-            await self.send_error()
-
-    async def perform_message_validation(self, message):
         """
-        Perform all necessary validations for message.
-        Returns True if all validations pass.
+        This method should be only available and overridden in
+        game rooms that use `User` model as foreign key in player field.
         """
-        if not message:
-            return False
-        elif len(message) > 255:
-            return False
-
-        return True
-
-    async def send_message(self, event):
-        _, username, body = event.values()
-
-        await self.send(json.dumps({
-            'type': 'message',
-            'username': username,
-            'body': body
-        }))
+        await self.send_error()
 
     async def receive_resign(self):
         player_color = await self.get_player_color()
-        result = 'Resign! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
 
-        await self.end_game(result)
+        if self.game.started:
+            result = 'Resign! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
+
+            await self.update_timers_in_game_object()
+            await self.end_game(result)
+        else:
+            result = 'Resign! Draw!'
+
+            await self.end_game(result)
+
+    async def receive_timeout(self):
+        await self.update_timers_in_game_object()
 
     async def end_game(self, result):
         """
         Setup up everything for game end and send game result to users.
         """
-        await self.update_timers_in_game_object()
-
         game_pgn = chess.pgn.read_game(io.StringIO(self.game.pgn))
         game_pgn.headers['Result'] = '1/2-1/2' if 'Draw' in result else '1-0' if 'White' in result else '0-1'
 
@@ -140,7 +119,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def perform_move_validation(self, move):
         """
         Perform all necessary validations for move.
-        Returns True if all validations pass.
+        Returns `True` if all validations pass.
         """
         try:
             player_color = await self.get_player_color()
@@ -159,48 +138,62 @@ class GameConsumer(AsyncWebsocketConsumer):
         """
         Add move to the Database and update current game state.
         """
-        await self.update_timers_in_game_object()
-        await self.update_points_in_game_object(move)
+        if await self.update_timers_in_game_object():
+            await self.update_points_in_game_object(move)
 
-        self.board.push_uci(move)
-        self.game.fen = self.board.fen()
-        game_pgn = chess.pgn.read_game(io.StringIO(self.game.pgn))
-        node = None
+            self.board.push_uci(move)
+            self.game.fen = self.board.fen()
+            game_pgn = chess.pgn.read_game(io.StringIO(self.game.pgn))
+            node = None
 
-        for mainline_node in game_pgn.mainline():
-            node = mainline_node
+            for mainline_node in game_pgn.mainline():
+                node = mainline_node
 
-        if node:
-            node.add_variation(chess.Move.from_uci(move))
-        else:
-            game_pgn.add_variation(chess.Move.from_uci(move))
+            if node:
+                node.add_variation(chess.Move.from_uci(move))
+            else:
+                game_pgn.add_variation(chess.Move.from_uci(move))
 
-        self.game.pgn = str(game_pgn)
+            self.game.pgn = str(game_pgn)
 
-        if self.board.is_checkmate():
-            result = 'Checkmate! ' + ('Black' if self.board.turn else 'White') + ' has won!'
+            if self.board.is_checkmate():
+                result = 'Checkmate! ' + ('Black' if self.board.turn else 'White') + ' has won!'
 
-            await self.end_game(result)
-        elif self.board.is_stalemate():
-            result = 'Stalemate! Draw!'
+                await self.end_game(result)
+            elif self.board.is_stalemate():
+                result = 'Stalemate! Draw!'
 
-            await self.end_game(result)
-        else:
-            await self.game.asave()
+                await self.end_game(result)
+            else:
+                await self.game.asave()
 
     async def update_timers_in_game_object(self):
         """
-        Update timers in game object.
+        Update timers in game object. Checks if timers are in correct boundaries.
+        Automatically calls `end_game` method if timers exceed their boundaries.
+        Returns `True` if timers are correct and `False` if they exceeded their boundaries. 
         """
         if self.game.started:
             if self.board.turn:
-                self.game.white_timer = self.game.white_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp)
+                self.game.white_timer = max(self.game.white_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp), timedelta(seconds=0))
+
+                if self.game.white_timer == timedelta(seconds=0):
+                    await self.end_game(f'Timeout! {"Black has won!" if self.board.has_insufficient_material(not self.board.turn) else "Draw!"}')
+
+                    return False
             else:
-                self.game.black_timer = self.game.black_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp)
+                self.game.black_timer = max(self.game.black_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp), timedelta(seconds=0))
+
+                if self.game.black_timer == timedelta(seconds=0):
+                    await self.end_game(f'Timeout! {"White has won!" if self.board.has_insufficient_material(not self.board.turn) else "Draw!"}')
+
+                    return False
         else:
             self.game.started = True
 
         self.game.last_move_timestamp = datetime.now(timezone.utc)
+
+        return True
 
     async def update_points_in_game_object(self, move):
         """

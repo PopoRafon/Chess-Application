@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from api.models import GuestGameRoom, RankingGameRoom
+from api.models import GuestGameRoom, RankingGameRoom, Profile
 
 ranking_queue = []
 guest_queue = []
@@ -21,6 +21,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await self.accept()
 
             if self.user.is_authenticated:
+                self.user_profile = await database_sync_to_async(Profile.objects.get)(user=self.user)
                 ranking_queue.append(self)
 
                 await self.check_ranking_queue()
@@ -43,26 +44,30 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
     async def check_ranking_queue(self):
         if len(ranking_queue) >= 2:
-            user_one = ranking_queue.pop()
-            user_two = ranking_queue.pop()
+            for i, matchmaking_consumer in enumerate(ranking_queue[:-1]):
+                if self.user != matchmaking_consumer.user:
+                    if abs(self.user_profile.rating - matchmaking_consumer.user_profile.rating) <= 400:
+                        ranking_queue.pop(len(ranking_queue) - 1)
+                        ranking_queue.pop(i)
 
-            if user_one.user != user_two.user:
-                room = await database_sync_to_async(RankingGameRoom.objects.create)(
-                    white_player=user_one.scope['user'],
-                    black_player=user_two.scope['user']
-                )
+                        room = await database_sync_to_async(RankingGameRoom.objects.create)(
+                            white_player=self.user,
+                            black_player=matchmaking_consumer.user
+                        )
 
-                await user_one.send(json.dumps({'url': str(room.id)}))
-                await user_two.send(json.dumps({'url': str(room.id)}))
-            else:
-                ranking_queue.append(user_one)
+                        await self.send(json.dumps({'url': str(room.id)}))
+                        await matchmaking_consumer.send(json.dumps({'url': str(room.id)}))
+
+                        return
+                else:
+                    ranking_queue.pop(i)
 
     async def check_guest_queue(self):
         if len(guest_queue) >= 2:
-            user_one = guest_queue.pop()
-            user_two = guest_queue.pop()
+            first_user = guest_queue.pop()
+            second_user = guest_queue.pop()
 
             room = await database_sync_to_async(GuestGameRoom.objects.create)()
 
-            await user_one.send(json.dumps({'url': str(room.id), 'guest_game_token': room.white_player}))
-            await user_two.send(json.dumps({'url': str(room.id), 'guest_game_token': room.black_player}))
+            await first_user.send(json.dumps({'url': str(room.id), 'guest_game_token': room.white_player}))
+            await second_user.send(json.dumps({'url': str(room.id), 'guest_game_token': room.black_player}))

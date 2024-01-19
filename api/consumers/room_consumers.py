@@ -1,9 +1,8 @@
-import sys
-import chess.engine
+import sys, json, chess.engine
 from django.conf import settings
 from channels.db import database_sync_to_async
 from api.utils import get_cookie, add_rating_points
-from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile
+from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile, Message
 from .game_consumers import GameConsumer
 
 # Chess engine settings
@@ -16,23 +15,61 @@ if "runserver" in sys.argv:
 class RankingGameConsumer(GameConsumer):
     async def end_game(self, result):
         await super().end_game(result)
-        white_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.white_player)
-        black_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.black_player)
 
-        if 'White' in result:
-            white_player_profile.wins += 1
-            black_player_profile.loses += 1
-            add_rating_points(white_player_profile, black_player_profile)
-        elif 'Black' in result:
-            white_player_profile.loses += 1
-            black_player_profile.wins += 1
-            add_rating_points(black_player_profile, white_player_profile)
+        if self.game.started:
+            white_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.white_player)
+            black_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.black_player)
+
+            if 'White' in result:
+                white_player_profile.wins += 1
+                black_player_profile.loses += 1
+                add_rating_points(white_player_profile, black_player_profile)
+            elif 'Black' in result:
+                white_player_profile.loses += 1
+                black_player_profile.wins += 1
+                add_rating_points(black_player_profile, white_player_profile)
+            else:
+                white_player_profile.draws += 1
+                black_player_profile.draws += 1
+
+            await white_player_profile.asave()
+            await black_player_profile.asave()
+
+    async def receive_message(self, data):
+        _, body = data.values()
+        body = body.strip()
+
+        if await self.perform_message_validation(body):
+            await database_sync_to_async(Message.objects.create)(game=self.game, sender=self.user, body=body)
+
+            await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'send_message',
+                'username': self.user.username,
+                'body': body
+            })
         else:
-            white_player_profile.draws += 1
-            black_player_profile.draws += 1
+            await self.send_error()
 
-        await white_player_profile.asave()
-        await black_player_profile.asave()
+    async def perform_message_validation(self, message):
+        """
+        Perform all necessary validations for message.
+        Returns `True` if all validations pass.
+        """
+        if not message:
+            return False
+        elif len(message) > 255:
+            return False
+
+        return True
+
+    async def send_message(self, event):
+        _, username, body = event.values()
+
+        await self.send(json.dumps({
+            'type': 'message',
+            'username': username,
+            'body': body
+        }))
 
     async def connect(self):
         try:
@@ -80,8 +117,8 @@ class GuestGameConsumer(GameConsumer):
 
 
 class ComputerGameConsumer(GameConsumer):
-    async def perform_move_creation(self, move):
-        await super().perform_move_creation(move)
+    async def receive_move(self, data):
+        await super().receive_move(data)
 
         if not self.board.turn and not self.board.is_game_over():
             move = engine.play(self.board, engine_limit).move

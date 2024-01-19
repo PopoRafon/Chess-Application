@@ -1,12 +1,11 @@
+import uuid, textwrap
 from http.cookies import SimpleCookie
 from datetime import datetime
-import uuid
-import textwrap
 
 def get_cookie(scope, cookie):
     """
     Get cookies out of consumers scope.
-    Returns empty string if exception occurs.
+    Returns empty `string` if cookie couldn't be retrieved.
     """
     try:
         return SimpleCookie(dict(scope['headers']).get(b'cookie').decode('utf8')).get(cookie).value

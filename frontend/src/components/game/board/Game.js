@@ -57,8 +57,6 @@ export default function Game({ gameType, gameSetup }) {
                 if (gameType === 'ranking') {
                     setMessages(setup.messages);
                 }
-
-                setIsGameLoaded(true);
             } else {
                 navigate('/');
             }
@@ -67,6 +65,8 @@ export default function Game({ gameType, gameSetup }) {
 
     useEffect(() => {
         if (gameSocket) {
+            gameSocket.onopen = () => setIsGameLoaded(true);
+
             gameSocket.onmessage = (message) => {
                 const data = JSON.parse(message.data);
 
