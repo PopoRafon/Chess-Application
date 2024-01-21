@@ -7,20 +7,29 @@
     height: 100%;
     top: 0px;
     left: 0px;
-}
 
-.piece {
-    cursor: grab;
-    position: absolute;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 80px;
-    z-index: 5;
-    width: 90px;
-    height: 90px;
+    .piece {
+        cursor: grab;
+        position: absolute;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 80px;
+        z-index: 5;
+        width: 90px;
+        height: 90px;
+    
+        &:active {
+            cursor: grabbing;
+        }
+    }
 
-    &:active {
-        cursor: grabbing;
+    .highlighted-square {
+        position: absolute;
+        background-color: transparent;
+        border: 4px solid rgb(187, 204, 170);
+        width: 90px;
+        height: 90px;
+        box-sizing: border-box;
     }
 }
 

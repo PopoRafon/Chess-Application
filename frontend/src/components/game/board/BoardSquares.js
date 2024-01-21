@@ -3,13 +3,10 @@ import { useUsers } from '../../../contexts/UsersContext';
 
 export default function BoardSquares({ rowsRef, colsRef }) {
     const { users } = useUsers();
-    const indexShift = useRef(users.player.color === 'w' ? 0 : 1);    
+    const indexShift = useRef(users.player.color === 'w' ? 0 : 1);
 
     return (
-        <div
-            className="board-squares"
-            draggable={false}
-        >
+        <div className="board-squares">
             {rowsRef.current.map((_, rowIdx) => (
                 colsRef.current.map((_, colIdx) => (
                     <div

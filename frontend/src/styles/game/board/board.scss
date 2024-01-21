@@ -2,11 +2,12 @@
 @import '../extra/game_result';
 @import '../extra/resign_menu';
 
-@mixin board-cols-rows-mixin {
+@mixin board-coordinates-mixin {
     font-weight: 500;
     font-size: large;
     position: absolute;
     display: grid;
+    pointer-events: none;
 }
 
 $board-black-color: rgb(119, 153, 84);
@@ -34,14 +35,14 @@ $board-white-color: rgb(233, 237, 204);
     }
 
     .board-cols {
-        @include board-cols-rows-mixin;
+        @include board-coordinates-mixin;
         grid-template-columns: repeat(8, 90px);
         bottom: 0px;
         left: 75px;
     }
 
     .board-rows {
-        @include board-cols-rows-mixin;
+        @include board-coordinates-mixin;
         grid-template-rows: repeat(8, 90px);
         top: 0px;
         left: 2px;

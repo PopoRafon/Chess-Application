@@ -3,14 +3,14 @@
     flex-direction: column;
     align-items: center;
     position: absolute;
-    background-color: #3d3d3d;
-    border: 1px solid #535353;
+    background-color: #3a3a3a;
     border-radius: 10px;
-    padding: 25px 0px;
-    width: 250px;
-    height: 210px;
+    padding: 0px 0px 15px;
+    width: 240px;
+    height: 240px;
     box-shadow: 0px 0px 6px 3px rgb(0, 0, 0, 0.20);
     z-index: 25;
+    overflow: hidden;
     animation: scale-animation 0.75s ease 0s 1;
 
     .game-result-exit-button {
@@ -37,25 +37,41 @@
     }
 
     .game-result-header {
-        font-size: large;
-        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #343434;
+        box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.2);
+        width: 100%;
+        padding: 4px 0px 12px;
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+
+        .game-result-header-decision {
+            font-size: x-large;
+            font-weight: 700;
+        }
+
+        .game-result-header-description {
+            font-size: small;
+            font-weight: 600;
+        }
     }
 
     .game-result-body {
         display: flex;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: center;
         height: 100%;
+        width: 100%;
 
         .game-result-user {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-left: 10px;
-            margin-right: 10px;
-            width: 85px;
-            height: 85px;
+            width: 100px;
 
             .game-result-avatar {
                 width: 60px;
@@ -68,11 +84,11 @@
 
                 @keyframes win-circle {
                     0% {
-                        outline: 2px solid;
+                        outline: 3px solid;
                         outline-color: white;
                     }
                     100% {
-                        outline: 2px solid;
+                        outline: 3px solid;
                         outline-color: rgb(19, 160, 19);
                     }
                 }

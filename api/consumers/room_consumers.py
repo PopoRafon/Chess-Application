@@ -1,7 +1,8 @@
 import sys, json, chess.engine
 from django.conf import settings
 from channels.db import database_sync_to_async
-from api.utils import get_cookie, add_rating_points
+from api.utils.cookies import get_cookie
+from api.utils.models import add_rating_points
 from api.models import GuestGameRoom, RankingGameRoom, ComputerGameRoom, Profile, Message
 from .game_consumers import GameConsumer
 
@@ -109,9 +110,9 @@ class GuestGameConsumer(GameConsumer):
                     self.channel_name
                 )
 
-                return await self.accept()
-
-            await self.close()
+                await self.accept()
+            else:
+                await self.close()
         except Exception:
             await self.close()
 
@@ -136,6 +137,7 @@ class ComputerGameConsumer(GameConsumer):
     async def update_timers_in_game_object(self):
         if not self.game.started:
             self.game.started = True
+        return True
 
     async def connect(self):
         try:
@@ -151,9 +153,9 @@ class ComputerGameConsumer(GameConsumer):
                     self.channel_name
                 )
 
-                return await self.accept()
-
-            await self.close()
+                await self.accept()
+            else:
+                await self.close()
         except Exception:
             await self.close()
 

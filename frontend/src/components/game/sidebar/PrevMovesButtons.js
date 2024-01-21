@@ -45,8 +45,6 @@ export default function PrevMovesButtons({ changePositions, currentMoveIdx, setS
                     onMouseLeave={() => setShowResignTooltip(false)}
                 >
                     <img
-                        width="25"
-                        height="25"
                         src="/static/images/icons/resign_icon.png"
                         alt="Resign"
                     />

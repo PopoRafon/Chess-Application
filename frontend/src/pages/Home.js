@@ -12,9 +12,9 @@ export default function Home() {
         <div className="home-page">
             <div className="home-ranking">
                 <h2 className="home-ranking-header">Top Players</h2>
-                <div className="home-ranking-body">
+                <ul className="home-ranking-body">
                     {topPlayers.map((player, index) => (
-                        <div
+                        <li
                             className="home-ranking-player"
                             key={index}
                         >
@@ -30,9 +30,9 @@ export default function Home() {
                                     <span style={{ fontSize: 'medium' }}>Rating: {player.rating}</span>
                                 </>
                             )}
-                        </div>
+                        </li>
                     ))}
-                </div>
+                </ul>
             </div>
             <div className="home-container">
                 <h1 className="home-header">

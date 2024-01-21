@@ -3,7 +3,7 @@ import chess
 from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
-from .utils import create_avatar_name
+from .utils.models import create_avatar_name
 
 
 class Profile(models.Model):

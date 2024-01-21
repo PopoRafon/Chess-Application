@@ -63,12 +63,12 @@ class GameConsumer(AsyncWebsocketConsumer):
         player_color = await self.get_player_color()
 
         if self.game.started:
-            result = 'Resign! ' + ('Black' if player_color == 'w' else 'White') + ' has won!'
+            result = f'winner: {"black" if player_color == "w" else "white"}/by: resignation'
 
             await self.update_timers_in_game_object()
             await self.end_game(result)
         else:
-            result = 'Resign! Draw!'
+            result = 'winner: draw/by: resignation'
 
             await self.end_game(result)
 
@@ -80,7 +80,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         Setup up everything for game end and send game result to users.
         """
         game_pgn = chess.pgn.read_game(io.StringIO(self.game.pgn))
-        game_pgn.headers['Result'] = '1/2-1/2' if 'Draw' in result else '1-0' if 'White' in result else '0-1'
+        game_pgn.headers['Result'] = '1/2-1/2' if 'draw' in result else '1-0' if 'white' in result else '0-1'
 
         self.game.result = result
         self.game.pgn = str(game_pgn)
@@ -157,11 +157,11 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game.pgn = str(game_pgn)
 
             if self.board.is_checkmate():
-                result = 'Checkmate! ' + ('Black' if self.board.turn else 'White') + ' has won!'
+                result = f'winner: {"black" if self.board.turn else "white"}/by: checkmate'
 
                 await self.end_game(result)
             elif self.board.is_stalemate():
-                result = 'Stalemate! Draw!'
+                result = 'winner: draw/by: stalemate'
 
                 await self.end_game(result)
             else:
@@ -178,14 +178,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.game.white_timer = max(self.game.white_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp), timedelta(seconds=0))
 
                 if self.game.white_timer == timedelta(seconds=0):
-                    await self.end_game(f'Timeout! {"Black has won!" if self.board.has_insufficient_material(not self.board.turn) else "Draw!"}')
+                    await self.end_game(f'winner: {"black" if not self.board.has_insufficient_material(not self.board.turn) else "draw"}/by: timeout')
 
                     return False
             else:
                 self.game.black_timer = max(self.game.black_timer - (datetime.now(timezone.utc) - self.game.last_move_timestamp), timedelta(seconds=0))
 
                 if self.game.black_timer == timedelta(seconds=0):
-                    await self.end_game(f'Timeout! {"White has won!" if self.board.has_insufficient_material(not self.board.turn) else "Draw!"}')
+                    await self.end_game(f'winner: {"white" if not self.board.has_insufficient_material(not self.board.turn) else "draw"}/by: timeout')
 
                     return False
         else:

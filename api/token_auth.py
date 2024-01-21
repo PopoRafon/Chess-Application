@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import UntypedToken
 from channels.middleware import BaseMiddleware
 from channels.consumer import database_sync_to_async
 from channels.auth import AuthMiddlewareStack
-from api.utils import get_cookie
+from api.utils.cookies import get_cookie
 
 @database_sync_to_async
 def get_user(validated_token):

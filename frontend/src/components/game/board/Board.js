@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { useUsers } from '../../../contexts/UsersContext';
+import Pieces from './Pieces';
 import ResignMenu from '../extra/ResignMenu';
 import GameResultAlert from '../extra/GameResultAlert';
-import BoardSideLetters from './BoardSideLetters';
+import BoardCoordinates from './BoardCoordinates';
 import BoardSquares from './BoardSquares';
-import Pieces from './Pieces';
 
 export default function Board({ disableBoard, setDisableBoard, setPromotionMenu, gameType, showResignMenu, setShowResignMenu }) {
     const [showResultAlert, setShowResultAlert] = useState(false);
@@ -40,15 +40,17 @@ export default function Board({ disableBoard, setDisableBoard, setPromotionMenu,
                 colsRef={colsRef}
             />
             <Pieces
+                rowsRef={rowsRef}
+                colsRef={colsRef}
                 setPromotionMenu={setPromotionMenu}
             />
-            <BoardSideLetters
-                letters={rowsRef.current}
-                lettersType="rows"
+            <BoardCoordinates
+                coordinates={rowsRef.current}
+                coordinatesType="rows"
             />
-            <BoardSideLetters
-                letters={colsRef.current}
-                lettersType="cols"
+            <BoardCoordinates
+                coordinates={colsRef.current}
+                coordinatesType="cols"
             />
         </div>
     );

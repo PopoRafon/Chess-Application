@@ -1,16 +1,5 @@
 import uuid, textwrap
-from http.cookies import SimpleCookie
 from datetime import datetime
-
-def get_cookie(scope, cookie):
-    """
-    Get cookies out of consumers scope.
-    Returns empty `string` if cookie couldn't be retrieved.
-    """
-    try:
-        return SimpleCookie(dict(scope['headers']).get(b'cookie').decode('utf8')).get(cookie).value
-    except Exception:
-        return ''
 
 def create_avatar_name(instance, filename):
     """

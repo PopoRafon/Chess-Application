@@ -12,9 +12,9 @@ export default function GameResultAlert({ setShowResultAlert, gameType }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (game.result.includes(users.player.color === 'w' ? 'White' : 'Black')) {
+        if (game.result.includes(users.player.color === 'w' ? 'white' : 'black')) {
             setPlayerWinner(true);
-        } else {
+        } else if (!game.result.includes('draw')) {
             setEnemyWinner(true);
         }
     }, [setPlayerWinner, setEnemyWinner, game.result, users.player.color]);
@@ -40,7 +40,10 @@ export default function GameResultAlert({ setShowResultAlert, gameType }) {
                 onClick={() => setShowResultAlert(false)}
             >
             </button>
-            <span className="game-result-header">{game.result}</span>
+            <div className="game-result-header">
+                <span className="game-result-header-decision">{playerWinner ? 'You won!' : enemyWinner ? 'You lost!' : 'Draw!'}</span>
+                <span className="game-result-header-description">by {game.result.split('by:')[1]}</span>
+            </div>
             <div className="game-result-body">
                 <div className="game-result-user">
                     <img
@@ -50,7 +53,7 @@ export default function GameResultAlert({ setShowResultAlert, gameType }) {
                     />
                     <span className="game-result-username">{users.player.username}</span>
                 </div>
-                VS
+                <span style={{ fontWeight: '600' }}>VS</span>
                 <div className="game-result-user">
                     <img
                         src={users.enemy.avatar}
