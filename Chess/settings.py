@@ -80,7 +80,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.01', 6379)]
+            'hosts': [('127.0.0.1', 6379)]
         }
     }
 }
@@ -142,20 +142,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / 'static/'
+if DEBUG:
+    STATIC_URL = 'static/'
 
-STATIC_URL = 'static/'
+    STATIC_ROOT = BASE_DIR / 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'frontend/build/static/'
-]
+    STATICFILES_DIRS = [
+        BASE_DIR / 'frontend/build/static/'
+    ]
 
 
 # Media files settings
 
-MEDIA_ROOT = BASE_DIR / 'frontend/public/media/'
-
 MEDIA_URL = 'media/'
+
+MEDIA_ROOT = BASE_DIR / 'frontend/public/media/'
 
 CONTENT_TYPES = ['image', 'video']
 

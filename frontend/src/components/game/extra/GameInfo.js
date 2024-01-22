@@ -4,7 +4,7 @@ import GameInfoTimer from './GameInfoTimer';
 
 export default function GameInfo({ playerType, gameType }) {
     const { users } = useUsers();
-    const player = useMemo(() => users[playerType], [users]);
+    const player = useMemo(() => users[playerType], [users, playerType]);
 
     return (
         <div className="game-info">

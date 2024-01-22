@@ -1,5 +1,10 @@
+# environment
 .env
+
+# dependencies
 env
 __pycache__
+
+# misc
 db.sqlite3
 engine

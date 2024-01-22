@@ -3,8 +3,6 @@ from channels.db import database_sync_to_async
 from api.models import Profile
 from api.utils.consumers import MatchmakingQueue
 
-matchmaking = MatchmakingQueue()
-
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -21,14 +19,14 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         if self.user.is_authenticated:
             self.user_profile = await database_sync_to_async(Profile.objects.get)(user=self.user)
 
-            await matchmaking.add_to_ranking_queue(self)
-            await matchmaking.check_ranking_queue()
+            await MatchmakingQueue.add_to_ranking_queue(self)
+            await MatchmakingQueue.check_ranking_queue()
         else:
-            await matchmaking.add_to_guest_queue(self)
-            await matchmaking.check_guest_queue()
+            await MatchmakingQueue.add_to_guest_queue(self)
+            await MatchmakingQueue.check_guest_queue()
 
     async def disconnect(self, close_code):
-        await matchmaking.remove_from_queue(self)
+        await MatchmakingQueue.remove_from_queue(self)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name

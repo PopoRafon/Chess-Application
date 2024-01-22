@@ -1,0 +1,14 @@
+env
+frontend
+
+**/__pycache__
+db.sqlite3
+
+.git
+.github
+.gitignore
+
+*.md
+
+Dockerfile
+.dockerignore
