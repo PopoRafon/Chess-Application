@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUsers } from '../../../contexts/UsersContext';
-import { useGame } from '../../../contexts/GameContext';
-import { useGameSocket } from '../../../contexts/GameSocketContext';
-import playSound from '../../../helpers/GameSounds';
+import { useUsers } from '#contexts/UsersContext';
+import { useGame } from '#contexts/GameContext';
+import { useGameSocket } from '#contexts/GameSocketContext';
+import playSound from '#helpers/GameSounds';
 import GameSidebar from '../sidebar/GameSidebar';
 import PromotionMenu from './PromotionMenu';
 import GameInfo from '../extra/GameInfo';
@@ -70,47 +70,53 @@ export default function Game({ gameType, gameSetup }) {
             gameSocket.onmessage = (message) => {
                 const data = JSON.parse(message.data);
 
-                if (data.type === 'move') {
-                    const { move, white_points, black_points } = data;
-                    const isPlayerWhite = users.player.color === 'w';
+                switch (data.type) {
+                    case 'move':
+                        const { move, white_points, black_points } = data;
+                        const isPlayerWhite = users.player.color === 'w';
 
-                    dispatchGame({
-                        type: 'NEXT_ROUND',
-                        move: move,
-                        test: game.board
-                    });
+                        dispatchGame({
+                            type: 'NEXT_ROUND',
+                            move: move,
+                            test: game.board
+                        });
 
-                    setUsers({
-                        [isPlayerWhite ? 'player' : 'enemy']: {
-                            ...users[isPlayerWhite ? 'player' : 'enemy'],
-                            points: white_points
-                        },
-                        [!isPlayerWhite ? 'player' : 'enemy']: {
-                            ...users[!isPlayerWhite ? 'player' : 'enemy'],
-                            points: black_points
-                        }
-                    });
+                        setUsers({
+                            [isPlayerWhite ? 'player' : 'enemy']: {
+                                ...users[isPlayerWhite ? 'player' : 'enemy'],
+                                points: white_points
+                            },
+                            [!isPlayerWhite ? 'player' : 'enemy']: {
+                                ...users[!isPlayerWhite ? 'player' : 'enemy'],
+                                points: black_points
+                            }
+                        });
 
-                    playSound(move);
-                } else if (data.type === 'message') {
-                    const { username, body } = data;
+                        playSound(move);
+                        break;
+                    case 'message':
+                        const { username, body } = data;
 
-                    setMessages((messages) => [
-                        ...messages,
-                        {
-                            username: username,
-                            body: body
-                        }
-                    ]);
-                } else if (data.type === 'game_end') {
-                    const { result } = data;
+                        setMessages((messages) => [
+                            ...messages,
+                            {
+                                username: username,
+                                body: body
+                            }
+                        ]);
+                        break;
+                    case 'game_end':
+                        const { result } = data;
 
-                    dispatchGame({
-                        type: 'GAME_END',
-                        result: result
-                    });
+                        dispatchGame({
+                            type: 'GAME_END',
+                            result: result
+                        });
 
-                    new Audio('/static/sounds/game_end.mp3').play();
+                        new Audio('/static/sounds/game_end.mp3').play();
+                        break;
+                    default:
+                        new Error('Message received is of unknown type.');
                 }
             }
 

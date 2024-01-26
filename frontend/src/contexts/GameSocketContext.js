@@ -1,9 +1,9 @@
 import { useContext, createContext, useState } from 'react';
 
-const GameSocketContext = createContext();
+const GameSocketContext = createContext(null);
 
 function GameSocketProvider({ children }) {
-    const [gameSocket, setGameSocket] = useState();
+    const [gameSocket, setGameSocket] = useState(null);
 
     return (
         <GameSocketContext.Provider value={{ gameSocket, setGameSocket }}>
@@ -18,4 +18,4 @@ function useGameSocket() {
     return context;
 }
 
-export { GameSocketProvider, useGameSocket };
+export { GameSocketProvider, useGameSocket, GameSocketContext };

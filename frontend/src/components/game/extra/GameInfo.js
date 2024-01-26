@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useUsers } from '../../../contexts/UsersContext';
+import { useUsers } from '#contexts/UsersContext';
 import GameInfoTimer from './GameInfoTimer';
 
 export default function GameInfo({ playerType, gameType }) {

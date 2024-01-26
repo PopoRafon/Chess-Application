@@ -12,7 +12,7 @@ export default function NavigationLink({ title, href, imagePrefix }) {
                     src={`/static/images/icons/navigation/${imagePrefix}_icon.png`}
                     alt={imagePrefix}
                 />
-                <span>{title}</span>
+                {title}
             </Link>
         </li>
     );

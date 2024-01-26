@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGame } from '#contexts/GameContext';
 import Cookies from 'js-cookie';
-import { useGame } from '../../../contexts/GameContext';
 
 export default function PrevMovesButtons({ changePositions, currentMoveIdx, setShowResignMenu, gameType }) {
     const { game } = useGame();

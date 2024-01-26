@@ -1,47 +1,47 @@
 import Cookie from 'js-cookie';
 
-let tokenRefreshInterval;
+export default class AccessToken {
+    static tokenRefreshInterval;
 
-async function createAccessToken() {
-    return await fetch('/api/v1/token/refresh', {
-        method: 'POST'
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.access) {
-            Cookie.set('access', data.access);
-            refreshAccessToken();
-        } else {
-            Cookie.remove('access');
+    static async createToken() {
+        return await fetch('/api/v1/token/refresh', {
+            method: 'POST'
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.access) {
+                Cookie.set('access', data.access);
+                this.refreshToken();
+            } else {
+                Cookie.remove('access');
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+    
+    static refreshToken() {
+        clearInterval(this.tokenRefreshInterval);
+        const token = Cookie.get('access');
+    
+        if (token) {
+            this.tokenRefreshInterval = setInterval(() => {
+                fetch('/api/v1/token/refresh', {
+                    method: 'POST'
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.access) {
+                        Cookie.set('access', data.access);
+                    } else {
+                        clearInterval(this.tokenRefreshInterval);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            }, 14*60*1e3);
         }
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-}
-
-function refreshAccessToken() {
-    clearInterval(tokenRefreshInterval);
-    const token = Cookie.get('access');
-
-    if (token) {
-        tokenRefreshInterval = setInterval(() => {
-            fetch('/api/v1/token/refresh', {
-                method: 'POST'
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.access) {
-                    Cookie.set('access', data.access);
-                } else {
-                    clearInterval(tokenRefreshInterval);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        }, 9*60*1000);
     }
 }
-
-export { createAccessToken, refreshAccessToken };

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { passwordReq, confirmPasswordReq } from '../../helpers/FormsRequirements';
-import { passwordResetConfirmFormValidation } from '../../helpers/FormsValidations';
-import { useAlert } from '../../contexts/AlertContext';
+import { passwordReq, confirmPasswordReq } from '#helpers/FormsRequirements';
+import { passwordResetConfirmFormValidation } from '#helpers/FormsValidations';
+import { useAlert } from '#contexts/AlertContext';
 import FormInput from './FormInput';
 
 export default function PasswordResetConfirmForm() {
@@ -60,7 +60,7 @@ export default function PasswordResetConfirmForm() {
             noValidate={true}
         >
             <FormInput
-                id="new_password1"
+                name="new_password1"
                 label="New Password"
                 type="password"
                 value={formData.new_password1}
@@ -69,7 +69,7 @@ export default function PasswordResetConfirmForm() {
                 requirements={passwordReq}
             />
             <FormInput
-                id="new_password2"
+                name="new_password2"
                 label="Confirm New Password"
                 type="password"
                 value={formData.new_password2}

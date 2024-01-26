@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
-import LoginForm from '../components/forms/LoginForm';
+import { useUser } from '#contexts/UserContext';
+import LoginForm from '#components/forms/LoginForm';
 
 export default function Login() {
     const { user } = useUser();

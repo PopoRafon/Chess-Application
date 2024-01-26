@@ -1,9 +1,17 @@
 import { createContext, useState, useContext } from 'react';
 
-const UserContext = createContext();
+const initialValue = {
+    isLoggedIn: false,
+    avatar: '',
+    email: '',
+    username: '',
+    rating: null
+};
+
+const UserContext = createContext(initialValue);
 
 function UserProvider({ children }) {
-    const [user, setUser] = useState({ isLoggedIn: false });
+    const [user, setUser] = useState(initialValue);
 
     return (
         <UserContext.Provider value={{ user, setUser }}>
@@ -18,4 +26,4 @@ function useUser() {
     return context;
 }
 
-export { UserProvider, useUser };
+export { UserProvider, useUser, UserContext };

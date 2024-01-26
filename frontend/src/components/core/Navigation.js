@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useUser } from '../../contexts/UserContext';
-import { useAlert } from '../../contexts/AlertContext';
+import { useUser } from '#contexts/UserContext';
+import { useAlert } from '#contexts/AlertContext';
 import NavigationLink from './NavigationLink';
 
 export default function Navigation() {

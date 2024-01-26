@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @keyframes scale-animation {
   0% {
     transform: scale(0);
@@ -1669,6 +1670,9 @@
   border-style: solid;
   border-color: #363636 transparent transparent transparent;
 }
+.form-page .form-container .form .form-input-container .form-input-tooltip li::before {
+  content: "• ";
+}
 .form-page .form-container .form .form-buttons {
   display: flex;
   width: 60%;
@@ -1734,7 +1738,10 @@
   align-items: center;
   height: 38px;
   width: 100%;
-  text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+.form-page .form-container .form .form-checkbox-container label, .form-page .form-container .form .form-checkbox-container input {
+  cursor: pointer;
 }
 
 .app {

@@ -1,5 +1,5 @@
-import { useUsers } from '../../../contexts/UsersContext';
-import { useGameSocket } from '../../../contexts/GameSocketContext';
+import { useUsers } from '#contexts/UsersContext';
+import { useGameSocket } from '#contexts/GameSocketContext';
 
 export default function PromotionMenu({ promotionMenu, setPromotionMenu }) {
     const { users } = useUsers();

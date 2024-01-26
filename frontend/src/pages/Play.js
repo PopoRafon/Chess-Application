@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import PlaySidebar from '../components/play/PlaySidebar';
+import PlaySidebar from '#components/play/PlaySidebar';
 
 export default function Play() {
     const [matchmaking, setMatchmaking] = useState(false);

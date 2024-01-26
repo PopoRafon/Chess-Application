@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useUsers } from '../../../contexts/UsersContext';
+import { useUsers } from '#contexts/UsersContext';
 
 export default function BoardSquares({ rowsRef, colsRef }) {
     const { users } = useUsers();

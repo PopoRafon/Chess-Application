@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUsers } from '#contexts/UsersContext';
+import { useGame } from '#contexts/GameContext';
 import Cookies from 'js-cookie';
-import { useUsers } from '../../../contexts/UsersContext';
-import { useGame } from '../../../contexts/GameContext';
 
 export default function GameResultAlert({ setShowResultAlert, gameType }) {
     const { users } = useUsers();

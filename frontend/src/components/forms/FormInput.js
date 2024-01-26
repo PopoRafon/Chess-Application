@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
-export default function FormInput({ id, label, type, value, handleChange, error, requirements }) {
+export default function FormInput({ name, label, type, value, handleChange, error, requirements }) {
     const [requirementsTooltip, setRequirementsTooltip] = useState(false);
 
     return (
         <div className="form-input-container">
-            <label htmlFor={id}>{label}</label>
+            <label htmlFor={name}>{label}</label>
             <input
-                id={id}
+                id={name}
                 type={type}
-                name={id}
+                name={name}
                 value={value}
                 onChange={handleChange}
                 onFocus={() => setRequirementsTooltip(true)}
@@ -20,12 +20,7 @@ export default function FormInput({ id, label, type, value, handleChange, error,
             {requirements && requirementsTooltip && (
                 <ul className="form-input-tooltip">
                     {requirements.map((req, index) => (
-                        <li
-                            className=""
-                            key={index}
-                        >
-                            • {req}
-                        </li>
+                        <li key={index}>{req}</li>
                     ))}
                 </ul>
             )}

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useUser } from '../../contexts/UserContext';
-import { refreshAccessToken } from '../../utils/AccessToken';
-import { useAlert } from '../../contexts/AlertContext';
-import { usernameReq, passwordReq } from '../../helpers/FormsRequirements';
-import { loginFormValidation } from '../../helpers/FormsValidations';
+import { useUser } from '#contexts/UserContext';
+import { useAlert } from '#contexts/AlertContext';
+import { usernameReq, passwordReq } from '#helpers/FormsRequirements';
+import { loginFormValidation } from '#helpers/FormsValidations';
+import AccessToken from '#utils/AccessToken';
 import FormInput from './FormInput';
-import getUserData from '../../utils/UserData';
+import getUserData from '#utils/UserData';
 
 export default function LoginForm() {
     const { setUser } = useUser();
@@ -43,7 +43,7 @@ export default function LoginForm() {
                 if (data.success) {
                     getUserData(setUser);
 
-                    refreshAccessToken();
+                    AccessToken.refreshToken();
 
                     setAlert(data.success);
 
@@ -65,7 +65,7 @@ export default function LoginForm() {
             noValidate={true}
         >
             <FormInput
-                id="username"
+                name="username"
                 label="Username"
                 type="text"
                 value={formData.username}
@@ -74,7 +74,7 @@ export default function LoginForm() {
                 requirements={usernameReq}
             />
             <FormInput
-                id="password"
+                name="password"
                 label="Password"
                 type="password"
                 value={formData.password}

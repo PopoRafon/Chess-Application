@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAlert } from '../../contexts/AlertContext';
+import { useAlert } from '#contexts/AlertContext';
 
 export default function Alert() {
     const { alert, setAlert } = useAlert();

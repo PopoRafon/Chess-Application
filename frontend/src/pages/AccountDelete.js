@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
-import AccountDeleteForm from '../components/forms/AccountDeleteForm';
+import { useUser } from '#contexts/UserContext';
+import AccountDeleteForm from '#components/forms/AccountDeleteForm';
 
 export default function AccountDelete() {
     const { user } = useUser();

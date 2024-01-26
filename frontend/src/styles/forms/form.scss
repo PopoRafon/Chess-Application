@@ -90,6 +90,10 @@ $invalid-field-color: rgb(221, 16, 16);
                         border-style: solid;
                         border-color: #363636 transparent transparent transparent;
                     }
+
+                    & li::before {
+                        content: "• "
+                    }
                 }
             }
 
@@ -155,7 +159,11 @@ $invalid-field-color: rgb(221, 16, 16);
                 align-items: center;
                 height: 38px;
                 width: 100%;
-                text-shadow: 5px 5px 6px rgb(0, 0, 0, 0.3);
+                text-shadow: 2px 2px 4px rgb(0, 0, 0, 0.3);
+
+                & label, & input {
+                    cursor: pointer;
+                }
             }            
         }
     }

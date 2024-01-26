@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useUser } from '../../contexts/UserContext';
-import { refreshAccessToken } from '../../utils/AccessToken';
-import { useAlert } from '../../contexts/AlertContext';
-import { emailReq, usernameReq, passwordReq, confirmPasswordReq } from '../../helpers/FormsRequirements';
-import { registerFormValidation } from '../../helpers/FormsValidations';
+import { useUser } from '#contexts/UserContext';
+import { useAlert } from '#contexts/AlertContext';
+import { emailReq, usernameReq, passwordReq, confirmPasswordReq } from '#helpers/FormsRequirements';
+import { registerFormValidation } from '#helpers/FormsValidations';
+import AccessToken from '#utils/AccessToken';
 import FormInput from './FormInput';
 import FormCheckbox from './FormCheckbox';
-import getUserData from '../../utils/UserData';
+import getUserData from '#utils/UserData';
 
 export default function RegisterForm() {
     const { setUser } = useUser();
@@ -47,7 +47,7 @@ export default function RegisterForm() {
                 if (data.success) {
                     getUserData(setUser);
 
-                    refreshAccessToken();
+                    AccessToken.refreshToken();
 
                     setAlert(data.success);
 
@@ -69,7 +69,7 @@ export default function RegisterForm() {
             noValidate={true}
         >
             <FormInput
-                id="email"
+                name="email"
                 label="Email Address"
                 type="email"
                 value={formData.email}
@@ -78,7 +78,7 @@ export default function RegisterForm() {
                 requirements={emailReq}
             />
             <FormInput
-                id="username"
+                name="username"
                 label="Username"
                 type="text"
                 value={formData.username}
@@ -87,7 +87,7 @@ export default function RegisterForm() {
                 requirements={usernameReq}
             />
             <FormInput
-                id="password1"
+                name="password1"
                 label="Password"
                 type="password"
                 value={formData.password1}
@@ -96,7 +96,7 @@ export default function RegisterForm() {
                 requirements={passwordReq}
             />
             <FormInput
-                id="password2"
+                name="password2"
                 label="Confirm Password"
                 type="password"
                 value={formData.password2}

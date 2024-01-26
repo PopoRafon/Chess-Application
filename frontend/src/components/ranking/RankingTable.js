@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import getRankingPlayers from '../../utils/RankingPlayers';
+import getRankingPlayers from '#utils/RankingPlayers';
 
 export default function RankingTable() {
     const [ranking, setRanking] = useState();

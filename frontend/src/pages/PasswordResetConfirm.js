@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
-import PasswordResetConfirmForm from '../components/forms/PasswordResetConfirmForm';
+import { useUser } from '#contexts/UserContext';
+import PasswordResetConfirmForm from '#components/forms/PasswordResetConfirmForm';
 
 export default function PasswordResetConfirm() {
     const { user } = useUser();

@@ -1,25 +1,25 @@
-import './styles/main.css';
+import '#styles/main.css';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useUser } from './contexts/UserContext';
-import { AlertProvider } from './contexts/AlertContext';
-import { createAccessToken } from './utils/AccessToken';
-import Navigation from './components/core/Navigation';
-import getUserData from './utils/UserData';
-import Alert from './components/core/AuthenticationAlert';
-import Page404 from './pages/Page404';
-import Home from './pages/Home';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Play from './pages/Play';
-import PlayOnline from './pages/PlayOnline';
-import PlayComputer from './pages/PlayComputer';
-import Ranking from './pages/Ranking';
-import Settings from './pages/Settings';
-import PasswordChange from './pages/PasswordChange';
-import PasswordReset from './pages/PasswordReset';
-import PasswordResetConfirm from './pages/PasswordResetConfirm';
-import AccountDelete from './pages/AccountDelete';
+import { useUser } from '#contexts/UserContext';
+import { AlertProvider } from '#contexts/AlertContext';
+import AccessToken from '#utils/AccessToken';
+import Navigation from '#components/core/Navigation';
+import getUserData from '#utils/UserData';
+import Alert from '#components/core/Alert';
+import Page404 from '#pages/Page404';
+import Home from '#pages/Home';
+import Register from '#pages/Register';
+import Login from '#pages/Login';
+import Play from '#pages/Play';
+import PlayOnline from '#pages/PlayOnline';
+import PlayComputer from '#pages/PlayComputer';
+import Ranking from '#pages/Ranking';
+import Settings from '#pages/Settings';
+import PasswordChange from '#pages/PasswordChange';
+import PasswordReset from '#pages/PasswordReset';
+import PasswordResetConfirm from '#pages/PasswordResetConfirm';
+import AccountDelete from '#pages/AccountDelete';
 
 function App() {
   const { setUser } = useUser();
@@ -27,7 +27,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      await createAccessToken();
+      await AccessToken.createToken();
       await getUserData(setUser);
 
       setIsLoaded(true);

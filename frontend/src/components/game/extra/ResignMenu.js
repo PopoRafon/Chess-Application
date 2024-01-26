@@ -1,4 +1,4 @@
-import { useGameSocket } from '../../../contexts/GameSocketContext';
+import { useGameSocket } from '#contexts/GameSocketContext';
 
 export default function ResignMenu({ setShowResignMenu }) {
     const { gameSocket } = useGameSocket();

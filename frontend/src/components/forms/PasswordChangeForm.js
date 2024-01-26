@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '#contexts/UserContext';
+import { useAlert } from '#contexts/AlertContext';
+import { oldPasswordReq, passwordReq, confirmPasswordReq } from '#helpers/FormsRequirements';
+import { passwordChangeFormValidation } from '#helpers/FormsValidations';
+import AccessToken from '#utils/AccessToken';
 import Cookies from 'js-cookie';
-import { useUser } from '../../contexts/UserContext';
-import { refreshAccessToken } from '../../utils/AccessToken';
-import { useAlert } from '../../contexts/AlertContext';
-import { oldPasswordReq, passwordReq, confirmPasswordReq } from '../../helpers/FormsRequirements';
-import { passwordChangeFormValidation } from '../../helpers/FormsValidations';
 import FormInput from './FormInput';
-import getUserData from '../../utils/UserData';
+import getUserData from '#utils/UserData';
 
 export default function PasswordChangeForm() {
     const { setUser } = useUser();
@@ -47,7 +47,7 @@ export default function PasswordChangeForm() {
                 if (data.success) {
                     getUserData(setUser);
 
-                    refreshAccessToken();
+                    AccessToken.refreshToken();
 
                     setAlert(data.success);
 
@@ -69,7 +69,7 @@ export default function PasswordChangeForm() {
             noValidate={true}
         >
             <FormInput
-                id="old_password"
+                name="old_password"
                 label="Old Password"
                 type="password"
                 value={formData.old_password}
@@ -78,7 +78,7 @@ export default function PasswordChangeForm() {
                 requirements={oldPasswordReq}
             />
             <FormInput
-                id="new_password1"
+                name="new_password1"
                 label="New Password"
                 type="password"
                 value={formData.new_password1}
@@ -87,7 +87,7 @@ export default function PasswordChangeForm() {
                 requirements={passwordReq}
             />
             <FormInput
-                id="new_password2"
+                name="new_password2"
                 label="Confirm New Password"
                 type="password"
                 value={formData.new_password2}

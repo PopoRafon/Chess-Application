@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useGame } from '../../../contexts/GameContext';
+import { useGame } from '#contexts/GameContext';
 import PrevMovesButtons from './PrevMovesButtons';
 import PrevMovesContainer from './PrevMovesContainer';
 

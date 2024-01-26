@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAlert } from '../../contexts/AlertContext';
-import { emailRecoveryReq } from '../../helpers/FormsRequirements';
-import { passwordResetFormValidation } from '../../helpers/FormsValidations';
+import { useAlert } from '#contexts/AlertContext';
+import { emailRecoveryReq } from '#helpers/FormsRequirements';
+import { passwordResetFormValidation } from '#helpers/FormsValidations';
 import FormInput from './FormInput';
 
 export default function PasswordResetForm() {
@@ -54,7 +54,7 @@ export default function PasswordResetForm() {
             noValidate={true}
         >
             <FormInput
-                id="email"
+                name="email"
                 label="Email address"
                 type="text"
                 value={formData.email}

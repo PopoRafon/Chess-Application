@@ -1,4 +1,4 @@
-import { useGame } from '../../../contexts/GameContext';
+import { useGame } from '#contexts/GameContext';
 
 export default function PrevMovesContainer({ changePositions, currentMoveIdx }) {
     const { game } = useGame();

@@ -2,8 +2,8 @@ import { useMemo, useRef, useState } from 'react';
 import { Chess } from 'chess.js';
 import { useGame } from '../../../contexts/GameContext';
 import { useUsers } from '../../../contexts/UsersContext';
-import { useGameSocket } from '../../../contexts/GameSocketContext';
-import calcPosition from '../../../helpers/CalculatePosition';
+import { useGameSocket } from '#contexts/GameSocketContext';
+import calcPosition from '#helpers/CalculatePosition';
 import Piece from './Piece';
 
 export default function Pieces({ rowsRef, colsRef, setPromotionMenu }) {

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { useGame } from '../../../contexts/GameContext';
-import { useUsers } from '../../../contexts/UsersContext';
+import { useGame } from '#contexts/GameContext';
+import { useUsers } from '#contexts/UsersContext';
 import Pieces from './Pieces';
 import ResignMenu from '../extra/ResignMenu';
 import GameResultAlert from '../extra/GameResultAlert';

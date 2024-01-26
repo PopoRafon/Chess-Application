@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import calcPosition from '../../../helpers/CalculatePosition';
+import calcPosition from '#helpers/CalculatePosition';
 
 export default function Piece({ type, row, col, piecesRef, setHighlightedSquare }) {
     const [pos, setPos] = useState();

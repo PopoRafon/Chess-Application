@@ -1,6 +1,6 @@
-import { useGameSocket } from '../../../contexts/GameSocketContext';
 import { useState } from 'react';
-import { useUser } from '../../../contexts/UserContext';
+import { useGameSocket } from '#contexts/GameSocketContext';
+import { useUser } from '#contexts/UserContext';
 
 export default function Chat({ messages }) {
     const [showSubmitTooltip, setShowSubmitTooltip] = useState(false);

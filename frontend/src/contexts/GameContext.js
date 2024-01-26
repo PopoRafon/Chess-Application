@@ -1,5 +1,5 @@
 import { createContext, useReducer, useContext } from 'react';
-import gameReducer from '../reducers/GameReducer';
+import gameReducer from '#reducers/GameReducer';
 
 const initialValue = {
     fen: '',
@@ -28,4 +28,4 @@ function useGame() {
     return context;
 }
 
-export { GameProvider, useGame };
+export { GameProvider, useGame, GameContext };

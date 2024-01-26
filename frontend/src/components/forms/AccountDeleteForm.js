@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAlert } from '../../contexts/AlertContext';
-import { useUser } from '../../contexts/UserContext';
+import { useAlert } from '#contexts/AlertContext';
+import { useUser } from '#contexts/UserContext';
 import FormInput from './FormInput';
 
 export default function AccountDeleteForm() {
@@ -57,7 +57,7 @@ export default function AccountDeleteForm() {
             noValidate={true}
         >
             <FormInput
-                id="password"
+                name="password"
                 label="Password"
                 type="password"
                 value={formData.password}

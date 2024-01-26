@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../contexts/UserContext';
-import { useAlert } from '../../contexts/AlertContext';
-import getUserData from '../../utils/UserData';
+import { useUser } from '#contexts/UserContext';
+import { useAlert } from '#contexts/AlertContext';
+import getUserData from '#utils/UserData';
 import AccountDeleteAlert from './AccountDeleteAlert';
 
 export default function SettingsContainer() {
@@ -58,9 +58,10 @@ export default function SettingsContainer() {
 
     function handleFieldStatusChange(setField, initialValue) {
         return () => {
-            setField(prev => {
-                return { value: initialValue, disabled: !prev.disabled };
-            });
+            setField(prev => ({
+                value: initialValue,
+                disabled: !prev.disabled
+            }));
         }
     }
 

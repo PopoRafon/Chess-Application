@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { useGame } from '../../../contexts/GameContext';
-import { useGameSocket } from '../../../contexts/GameSocketContext';
+import { useGame } from '#contexts/GameContext';
+import { useGameSocket } from '#contexts/GameSocketContext';
 
 export default function GameInfoTimer({ player }) {
     const { game } = useGame();

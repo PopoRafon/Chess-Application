@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import getRankingPlayers from '../utils/RankingPlayers';
+import getRankingPlayers from '#utils/RankingPlayers';
 
 export default function Home() {
     const [topPlayers, setTopPlayers] = useState([]);
