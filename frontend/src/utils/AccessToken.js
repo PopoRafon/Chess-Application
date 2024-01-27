@@ -1,7 +1,7 @@
 import Cookie from 'js-cookie';
 
 export default class AccessToken {
-    static tokenRefreshInterval;
+    static #tokenRefreshInterval;
 
     static async createToken() {
         return await fetch('/api/v1/token/refresh', {
@@ -22,11 +22,11 @@ export default class AccessToken {
     }
     
     static refreshToken() {
-        clearInterval(this.tokenRefreshInterval);
+        clearInterval(this.#tokenRefreshInterval);
         const token = Cookie.get('access');
     
         if (token) {
-            this.tokenRefreshInterval = setInterval(() => {
+            this.#tokenRefreshInterval = setInterval(() => {
                 fetch('/api/v1/token/refresh', {
                     method: 'POST'
                 })
@@ -35,7 +35,7 @@ export default class AccessToken {
                     if (data.access) {
                         Cookie.set('access', data.access);
                     } else {
-                        clearInterval(this.tokenRefreshInterval);
+                        clearInterval(this.#tokenRefreshInterval);
                     }
                 })
                 .catch((err) => {

@@ -146,22 +146,23 @@ export default function SettingsContainer() {
                     </button>
                 </label>
             </div>
-            <div>
-                <input
+            <div className="settings-buttons-container">
+                <button
                     type="submit"
-                    className="settings-submit-changes-button"
-                    value="Save Changes"
-                />
+                    className="settings-button settings-green-button"
+                >
+                    Save Changes
+                </button>
                 <button
                     type="button"
-                    className="settings-password-change-button"
+                    className="settings-button settings-blue-button"
                     onClick={() => navigate('/password/change')}
                 >
                     Change Password
                 </button>
                 <button
                     type="button"
-                    className="settings-delete-account-button"
+                    className="settings-button settings-red-button"
                     onClick={() => setAccountDeleteAlert(prev => !prev)}
                 >
                     Delete Account

@@ -4,30 +4,31 @@
 .play-page {
     display: flex;
     flex-grow: 1;
+    height: 100vh;
 
     .play-page-container {
         display: flex;
-        flex-grow: 1;
         justify-content: center;
+        flex-grow: 1;
         align-items: center;
 
         .matchmaking {
-            position: relative;
+            position: absolute;
             font-weight: 500;
             background-color: rgb(65, 161, 65);
             border: 1px solid rgb(6, 141, 6);
             padding: 15px 22px 15px 15px;
             border-radius: 15px;
             box-shadow: 4px 4px 6px rgb(0, 0, 0, 0.20);
-    
+
             &::before {
                 position: absolute;
                 right: 17px;
                 width: 5px;
                 content: '';
-                animation: dots 3s 0s infinite;
-    
-                @keyframes dots {
+                animation: dots-animation 3s 0s infinite;
+
+                @keyframes dots-animation {
                     33% {
                         content: '.';
                     }

@@ -10,14 +10,14 @@ export default function AccountDeleteAlert({ setAccountDeleteAlert }) {
             <div className="account-delete-alert-buttons-container">
                 <button
                     type="button"
-                    className="account-delete-red-button"
+                    className="account-delete-button account-delete-red-button"
                     onClick={() => navigate('/account/delete')}
                 >
                     Yes
                 </button>
                 <button
                     type="button"
-                    className="account-delete-green-button"
+                    className="account-delete-button account-delete-green-button"
                     onClick={() => setAccountDeleteAlert(false)}
                 >
                     No

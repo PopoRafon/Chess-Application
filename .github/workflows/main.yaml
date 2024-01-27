@@ -55,4 +55,5 @@ jobs:
 
     - name: Run React Tests
       run: |
+        cd frontend/
         npm run test
