@@ -1,7 +1,7 @@
 from channels.testing import WebsocketCommunicator
 from channels.routing import URLRouter
-from .token_auth import JWTAuthMiddlewareStack
-from .routing import websocket_urlpatterns
+from api.token_auth import JWTAuthMiddlewareStack
+from api.routing import websocket_urlpatterns
 
 async def websocket_communicator(url, headers=[]):
     """
@@ -17,6 +17,6 @@ async def websocket_communicator(url, headers=[]):
     )
     connected, _ = await communicator.connect()
 
-    assert connected
+    assert connected, "Websocket connection couldn't be established."
 
     return communicator

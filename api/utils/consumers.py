@@ -20,10 +20,12 @@ class MatchmakingQueue:
 
     @classmethod
     async def add_to_ranking_queue(cls, consumer):
+        assert consumer.user.is_authenticated, 'User must be authenticated inorder to be added to the ranking queue.'
         cls.__ranking_queue.append(consumer)
 
     @classmethod
     async def add_to_guest_queue(cls, consumer):
+        assert not consumer.user.is_authenticated, "User mustn't be authenticated inorder to be added to the guest queue."
         cls.__guest_queue.append(consumer)
 
     @classmethod

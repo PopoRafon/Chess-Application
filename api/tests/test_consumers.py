@@ -1,11 +1,12 @@
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from api.testing import websocket_communicator
-from api.models import RankingGameRoom, GuestGameRoom, ComputerGameRoom
+from channels.db import database_sync_to_async
+from api.utils.testing import websocket_communicator
+from api.models import RankingGameRoom, GuestGameRoom, ComputerGameRoom, Profile
 
 
-class TestMatchmakingConsumer(TestCase):
+class TestMatchmakingConsumer(TransactionTestCase):
     def setUp(self):
         self.first_user = User.objects.create(username='first user')
         self.second_user = User.objects.create(username='second user')
@@ -14,7 +15,7 @@ class TestMatchmakingConsumer(TestCase):
         self.headers = lambda token: [(b'cookie', f'access={token}'.encode())]
         self.url = 'ws/matchmaking/'
 
-    async def test_authenticated_users_receive_game_url(self):
+    async def test_authenticated_users_within_same_rating_range_receive_game_url(self):
         first_comm = await websocket_communicator(self.url, self.headers(self.first_user_token))
         second_comm = await websocket_communicator(self.url, self.headers(self.second_user_token))
 
@@ -69,8 +70,22 @@ class TestMatchmakingConsumer(TestCase):
         await first_comm.disconnect()
         await second_comm.disconnect()
 
+    async def test_authenticated_users_with_too_big_rating_range_receive_nothing(self):
+        first_user_profile = await database_sync_to_async(Profile.objects.get)(user=self.first_user)
+        first_user_profile.rating = 1300
+        await first_user_profile.asave()
 
-class TestRankingGameConsumer(TestCase):
+        first_comm = await websocket_communicator(self.url, self.headers(self.first_user_token))
+        second_comm = await websocket_communicator(self.url, self.headers(self.second_user_token))
+
+        self.assertTrue(await first_comm.receive_nothing())
+        self.assertTrue(await second_comm.receive_nothing())
+
+        await first_comm.disconnect()
+        await second_comm.disconnect()
+
+
+class TestRankingGameConsumer(TransactionTestCase):
     def setUp(self):
         self.first_user = User.objects.create(username='first user')
         self.second_user = User.objects.create(username='second user')
@@ -90,7 +105,7 @@ class TestRankingGameConsumer(TestCase):
             await websocket_communicator(self.url, [(b'cookie', b'access=invalid_token')])
 
 
-class TestGuestGameConsumer(TestCase):
+class TestGuestGameConsumer(TransactionTestCase):
     def setUp(self):
         self.room = GuestGameRoom.objects.create()
         self.url = f'ws/guest/game/{self.room.id}/'
@@ -106,7 +121,7 @@ class TestGuestGameConsumer(TestCase):
             await websocket_communicator(self.url, [(b'cookie', b'guest_game_token=invalid_token')])
 
 
-class TestComputerGameConsumer(TestCase):
+class TestComputerGameConsumer(TransactionTestCase):
     def setUp(self):
         self.room = ComputerGameRoom.objects.create()
         self.url = f'ws/computer/game/{self.room.id}/'

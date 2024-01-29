@@ -1,5 +1,6 @@
 # environment
 .env
+my.cnf
 
 # dependencies
 env
