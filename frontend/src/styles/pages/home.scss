@@ -26,6 +26,8 @@
             gap: 10px;
 
             .home-ranking-player {
+                $width: 150px;
+                $height: 150px;
                 font-size: medium;
                 display: flex;
                 flex-direction: column;
@@ -35,16 +37,25 @@
                 box-sizing: border-box;
                 padding: 5px 5px;
                 border-radius: 5px;
-                width: 150px;
-                height: 150px;
+                width: $width;
+                height: $height;
                 box-shadow: 3px 3px 6px 0px rgb(0, 0, 0, 0.2);
                 border: 1px solid #2a2a2a;
-                transition: 0.25s;
 
-                &:hover {
-                    background-color: #313131;
-                    border-color: #2c2c2c;
-                    transform: scale(1.05) rotate(3deg);
+                &:hover::before {
+                    content: " ";
+                    position: absolute;
+                    border-radius: inherit;
+                    z-index: -1;
+                    background-color: #f0f0f0;
+                    width: calc($width + 6px);
+                    height: calc($height + 6px);
+                    animation: flashing-animation 1s normal 0s infinite;
+
+                    @keyframes flashing-animation {
+                        25% { background-color: #d0d0d0; }
+                        50% { background-color: #b9b9b9; }
+                    }
                 }
 
                 .home-ranking-username {
@@ -96,9 +107,16 @@
     }
 
     .home-page .home-ranking .home-ranking-body .home-ranking-player {
-        width: 105px;
-        height: 135px;
+        $width: 105px;
+        $height: 135px;
+        width: $width;
+        height: $height;
         font-size: small;
+
+        &:hover::before {
+            width: calc($width + 6px);
+            height: calc($height + 6px);
+        }
     }
 
     .home-page .home-container {
