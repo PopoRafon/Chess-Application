@@ -105,7 +105,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
             'read_default_file': 'Chess/my.cnf'
-        }
+        },
+        'HOST': '127.0.0.1',
+        'PORT': '3306'
     }
 }
 

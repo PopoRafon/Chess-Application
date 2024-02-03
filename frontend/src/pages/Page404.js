@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function Page404() {
     return (
-        <div className="error-page">
+        <main className="error-page">
             <div className="error-box">
                 <div className="error-header">404</div>
                 <div className="error-content">OOPS! PAGE NOT FOUND</div>
@@ -13,6 +13,6 @@ export default function Page404() {
                     Back to the Home page
                 </Link>
             </div>
-        </div>
+        </main>
     );
 }

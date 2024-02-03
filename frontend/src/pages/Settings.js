@@ -14,8 +14,8 @@ export default function Settings() {
     });
 
     return user.isLoggedIn && (
-        <div className="settings-page">
+        <main className="settings-page">
             <SettingsMenu />
-        </div>
+        </main>
     );
 }

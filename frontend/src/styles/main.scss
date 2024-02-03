@@ -6,6 +6,7 @@
 @import 'pages/home';
 @import 'pages/page404';
 @import 'pages/play';
+@import 'pages/play_online';
 @import 'pages/ranking';
 @import 'pages/settings';
 @import 'forms/form';
@@ -18,7 +19,7 @@ sans-serif;
   font-size: inherit;
 }
 
-.app {
+#root {
   display: flex;
 }
 
@@ -63,7 +64,7 @@ textarea {
 }
 
 @media only screen and (max-width: 768px) {
-  .app {
+  #root {
     flex-direction: column;
   }
 }

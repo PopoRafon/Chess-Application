@@ -3,9 +3,9 @@ import HomeContainer from '#components/home/HomeContainer';
 
 export default function Home() {
     return (
-        <div className="home-page">
+        <main className="home-page">
             <HomeRanking />
             <HomeContainer />
-        </div>
+        </main>
     );
 }

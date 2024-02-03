@@ -11,10 +11,10 @@ export default function Login() {
     }
 
     return !user.isLoggedIn && (
-        <div className="form-page">
+        <main className="form-page">
             <div className="form-container">
                 <LoginForm />
             </div>
-        </div>
+        </main>
     );
 }

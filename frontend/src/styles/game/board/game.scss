@@ -71,3 +71,12 @@
         }
     }
 }
+
+@media only screen and (max-width: 768px) {
+    .game-container {
+        .game-content {
+            transform: translate(-290px, -450px);
+            scale: 0.5;
+        }
+    }
+}

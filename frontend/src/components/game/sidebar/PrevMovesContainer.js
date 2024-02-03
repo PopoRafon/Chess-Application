@@ -17,21 +17,23 @@ export default function PrevMovesContainer({ changePositions, currentMoveIdx }) 
                                 className="prev-moves"
                                 key={index}
                             >
-                                {index / 2 + 1}.
-                                <button
-                                    className={`prev-node ${(currentMoveIdx === index) && 'current-node'}`}
-                                    onClick={handleMoveChange(index)}
-                                >
-                                    {move}
-                                </button>
-                                {game.history[index + 1] && (
+                                <span className="prev-moves-index">{index / 2 + 1}.</span>
+                                <div className="nodes-container">
                                     <button
-                                        className={`prev-node ${(currentMoveIdx === (index + 1)) && 'current-node'}`}
-                                        onClick={handleMoveChange(index + 1)}
+                                        className={`prev-node ${(currentMoveIdx === index) && 'current-node'}`}
+                                        onClick={handleMoveChange(index)}
                                     >
-                                        {game.history[index + 1]}
+                                        {move}
                                     </button>
-                                )}
+                                    {game.history[index + 1] && (
+                                        <button
+                                            className={`prev-node ${(currentMoveIdx === (index + 1)) && 'current-node'}`}
+                                            onClick={handleMoveChange(index + 1)}
+                                        >
+                                            {game.history[index + 1]}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         )
                     ))}

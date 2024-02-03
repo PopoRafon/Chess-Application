@@ -11,10 +11,10 @@ export default function Register() {
     }
 
     return !user.isLoggedIn && (
-        <div className="form-page">
+        <main className="form-page">
             <div className="form-container">
                 <RegisterForm />
             </div>
-        </div>
+        </main>
     );
 }

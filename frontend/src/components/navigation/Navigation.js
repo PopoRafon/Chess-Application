@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '#contexts/UserContext';
 import { useAlert } from '#contexts/AlertContext';
@@ -9,12 +9,6 @@ export default function Navigation() {
     const { user, setUser } = useUser();
     const { setAlert } = useAlert();
     const navigate = useNavigate();
-    const navRef = useRef();
-
-    function handleNavbarExpansion() {
-        setIsNavbarExpanded(prev => !prev);
-        navRef.current.style = isNavbarExpanded ? '' : 'transform: translateX(0px);';
-    }
 
     function handleLogout() {
         fetch('/api/v1/logout', {
@@ -38,7 +32,7 @@ export default function Navigation() {
     return (
         <nav
             className="nav"
-            ref={navRef}
+            style={{ transform: isNavbarExpanded ? 'translateX(0px)' : '' }}
         >
             <div className="nav-content">
                 <Link
@@ -48,38 +42,32 @@ export default function Navigation() {
                     <img
                         src="/static/images/logo.svg"
                         className="nav-logo-icon"
-                        alt="Logo"
-                    />
+                        alt="Logo" />
                 </Link>
                 <ul>
                     <NavigationLink
                         title="Play"
                         href="/play"
-                        imagePrefix="play"
-                    />
+                        imagePrefix="play" />
                     <NavigationLink
                         title="Ranking"
                         href="/ranking"
-                        imagePrefix="ranking"
-                    />
+                        imagePrefix="ranking" />
                     {user.isLoggedIn ? (
                         <NavigationLink
                             title="Settings"
                             href="/settings"
-                            imagePrefix="settings"
-                        />
+                            imagePrefix="settings" />
                     ) : (
                         <>
                             <NavigationLink
                                 title="Login"
                                 href="/login"
-                                imagePrefix="login"
-                            />
+                                imagePrefix="login" />
                             <NavigationLink
                                 title="Sign Up"
                                 href="/register"
-                                imagePrefix="register"
-                            />
+                                imagePrefix="register" />
                         </>
                     )}
                 </ul>
@@ -89,8 +77,7 @@ export default function Navigation() {
                             <img
                                 src={user.avatar}
                                 className="nav-footer-avatar"
-                                alt="Avatar"
-                            />
+                                alt="Avatar" />
                             <span className="nav-footer-username">{user.username}</span>
                         </div>
                         <button
@@ -104,18 +91,18 @@ export default function Navigation() {
             <div className="nav-mobile-menu">
                 <button
                     className="nav-mobile-menu-button"
-                    onClick={handleNavbarExpansion}
+                    onClick={() => setIsNavbarExpanded(prev => !prev)}
                 >
                     {isNavbarExpanded ? (
                         <img
                             width="20px"
-                            src="/static/images/icons/navigation/shrink_navbar_icon.png"
+                            src="/static/images/icons/left_arrow_icon.png"
                             alt="Shrink Navbar"
                         />
                     ) : (
                         <img
                             width="20px"
-                            src="/static/images/icons/navigation/expand_navbar_icon.png"
+                            src="/static/images/icons/right_arrow_icon.png"
                             alt="Expand Navbar"
                         />
                     )}

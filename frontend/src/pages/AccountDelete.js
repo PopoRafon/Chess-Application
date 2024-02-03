@@ -14,10 +14,10 @@ export default function AccountDelete() {
     });
 
     return user.isLoggedIn && (
-        <div className="form-page">
+        <main className="form-page">
             <div className="form-container">
                 <AccountDeleteForm />
             </div>
-        </div>
+        </main>
     );
 }

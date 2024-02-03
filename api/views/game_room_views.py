@@ -2,7 +2,7 @@ import chess
 from datetime import datetime
 from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
-from api.permissions import RankingGameRoomObjectPermissions, GuestGameRoomObjectPermissions, ComputerGameRoomObjectPermissions
+from api.utils.permissions import RankingGameRoomObjectPermissions, GuestGameRoomObjectPermissions, ComputerGameRoomObjectPermissions
 from api.models import RankingGameRoom, GuestGameRoom, ComputerGameRoom
 from api.serializers import (
     RankingGameRoomSerializer,

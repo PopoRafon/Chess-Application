@@ -14,10 +14,10 @@ export default function PasswordResetConfirm() {
     });
 
     return !user.isLoggedIn && (
-        <div className="form-page">
+        <main className="form-page">
             <div className="form-container">
                 <PasswordResetConfirmForm />
             </div>
-        </div>
+        </main>
     );
 }

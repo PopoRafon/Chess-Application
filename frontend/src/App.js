@@ -36,33 +36,31 @@ function App() {
 
   return isLoaded && (
     <BrowserRouter>
-      <div className="app">
-        <AlertProvider>
-          <Navigation />
-          <Alert />
-          <Routes>
-            <Route path='/'>
-              <Route index element={<Home />} />
-              <Route path='register' element={<Register />} />
-              <Route path='login' element={<Login />} />
-              <Route path='ranking' element={<Ranking />} />
-              <Route path='settings' element={<Settings />} />
-              <Route path='account/delete' element={<AccountDelete />} />
-              <Route path='password'>
-                <Route path='change' element={<PasswordChange />} />
-                <Route path='reset' element={<PasswordReset />} />
-                <Route path='reset/confirm/:uidb64/:token' element={<PasswordResetConfirm />} />
-              </Route>
-              <Route path='play'>
-                <Route index element={<Play />} />
-                <Route path='online/:id' element={<PlayOnline />} />
-                <Route path='computer' element={<PlayComputer />} />
-              </Route>
+      <AlertProvider>
+        <Navigation />
+        <Alert />
+        <Routes>
+          <Route path='/'>
+            <Route index element={<Home />} />
+            <Route path='register' element={<Register />} />
+            <Route path='login' element={<Login />} />
+            <Route path='ranking' element={<Ranking />} />
+            <Route path='settings' element={<Settings />} />
+            <Route path='account/delete' element={<AccountDelete />} />
+            <Route path='password'>
+              <Route path='change' element={<PasswordChange />} />
+              <Route path='reset' element={<PasswordReset />} />
+              <Route path='reset/confirm/:uidb64/:token' element={<PasswordResetConfirm />} />
             </Route>
-            <Route path='*' element={<Page404 />} />
-          </Routes>
-        </AlertProvider>
-      </div>
+            <Route path='play'>
+              <Route index element={<Play />} />
+              <Route path='online/:id' element={<PlayOnline />} />
+              <Route path='computer' element={<PlayComputer />} />
+            </Route>
+          </Route>
+          <Route path='*' element={<Page404 />} />
+        </Routes>
+      </AlertProvider>
     </BrowserRouter>
   );
 }

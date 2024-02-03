@@ -14,10 +14,10 @@ export default function PasswordChange() {
     });
 
     return user.isLoggedIn && (
-        <div className="form-page">
+        <main className="form-page">
             <div className="form-container">
                 <PasswordChangeForm />
             </div>
-        </div>
+        </main>
     );
 }

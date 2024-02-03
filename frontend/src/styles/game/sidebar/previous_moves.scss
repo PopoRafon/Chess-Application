@@ -5,7 +5,7 @@ $play-online-border-color: #363636;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: calc(100% - 350px);
+    flex-grow: 1;
     width: 100%;
 
     .prev-moves-container {
@@ -45,30 +45,40 @@ $play-online-border-color: #363636;
                 color: #EAEAEA;
                 height: 28px;
 
-                .prev-node {
-                    cursor: pointer;
-                    border: 0;
-                    background-color: transparent;
-                    color: inherit;
-                    border-radius: 2px;
-                    padding: 4px;
-                    min-width: 50px;
-                    margin-left: 55px;
-                    left: 50px;
-                    font-weight: 600;
-
-                    &:hover {
-                        background-color: #2f2f2ff0;
-                    }
+                .prev-moves-index {
+                    width: 30px;
                 }
 
-                .current-node {
-                    background-color: #333333f0;
+                .nodes-container {
+                    display: flex;
+                    width: 100%;
 
-                    &:hover {
+                    .prev-node {
+                        cursor: pointer;
+                        border: 0;
+                        background-color: transparent;
+                        color: inherit;
+                        border-radius: 2px;
+                        padding: 4px;
+                        min-width: 50px;
+                        margin-left: 55px;
+                        left: 50px;
+                        font-weight: 600;
+
+                        &:hover {
+                            background-color: #2f2f2ff0;
+                        }
+                    }
+
+                    .current-node {
                         background-color: #333333f0;
+
+                        &:hover {
+                            background-color: #333333f0;
+                        }
                     }
                 }
+
             }
 
             & .prev-moves:nth-child(even) {

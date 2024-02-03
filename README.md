@@ -1,6 +1,6 @@
 # Chess Application
 Chess Web Application created using Django, React and SASS with full duplex communication using WebSockets.
-## Requirements
+## Prerequisites
 * [Python](https://www.python.org/downloads/) >= 3.8
 * [Node](https://nodejs.org/en/download) >= 18
 * [MySQL](https://www.mysql.com/downloads/)
@@ -21,11 +21,12 @@ Chess Web Application created using Django, React and SASS with full duplex comm
 8. In your project main directory run `python manage.py migrate` command to apply all migrations to database.
 9. Move to `frontend` directory and install all React dependencies by running `npm install` command.
 ## Usage
-**On machines with installed GNU bash and GNU screen you can simply start Redis server and run `run.sh` script.**
+**On machines with installed GNU bash and GNU screen you can simply start Redis server and MySQL server then run `run.sh` script.**
 1. Start Redis server (`sudo service redis-server start` command on Linux).
-2. Start Django server using `python manage.py runserver` command in your project main directory.
-3. Open new terminal window and start React server using `npm start` command inside frontend directory.
-4. **(If you want to change any CSS file)** Open new terminal window and move to `frontend/src/styles` directory and run SASS to compile `main.scss` file into `main.css`.
+2. Start MySQL server (`sudo service mysql start` command on Linux).
+3. Start Django server using `python manage.py runserver` command in your project main directory.
+4. Open new terminal window and start React server using `npm start` command inside frontend directory.
+5. **(If you want to change any CSS file)** Open new terminal window and move to `frontend/src/styles` directory and run SASS to compile `main.scss` file into `main.css`.
 ## Features
 - Full duplex communication using WebSockets for real-time moves and updates.
 - Play against a computer opponent (AI) with the ability to configure and use third-party engines like Stockfish.

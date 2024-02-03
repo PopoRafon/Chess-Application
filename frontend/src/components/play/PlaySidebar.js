@@ -1,9 +1,10 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '#contexts/UserContext';
 import Cookies from 'js-cookie';
 
-export default function Sidebar({ setMatchmaking }) {
+export default function Sidebar({ matchmaking, setMatchmaking }) {
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const navigate = useNavigate();
     const { user } = useUser();
     const socket = useRef();
@@ -12,24 +13,30 @@ export default function Sidebar({ setMatchmaking }) {
         return () => {
             if (socket.current) {
                 socket.current.close();
-                socket.current = null;
             }
         }
     }, []);
+
+    useEffect(() => {
+        if (!matchmaking && socket.current) {
+            socket.current.close();
+            socket.current = null;
+        }
+    }, [matchmaking]);
 
     function handleMatchmaking() {
         if (user.isLoggedIn) {
             const gameUrl = Cookies.get('ranking_game_url');
 
             if (gameUrl) {
-                navigate(`/play/online/${gameUrl}`);
+                return navigate(`/play/online/${gameUrl}`);
             }
         } else {
             const gameToken = Cookies.get('guest_game_token');
             const gameUrl = Cookies.get('guest_game_url');
 
             if (gameUrl && gameToken) {
-                navigate(`/play/online/${gameUrl}`);
+                return navigate(`/play/online/${gameUrl}`);
             }
         }
 
@@ -81,27 +88,46 @@ export default function Sidebar({ setMatchmaking }) {
     }
 
     return (
-        <div className="play-page-sidebar">
-            <ul style={{ width: '100%' }}>
-                <li>
-                    <button
-                        onClick={handleMatchmaking}
-                        className="sidebar-play-button"
-                    >
-                        <span className="sidebar-play-button-title">Play Online</span>
-                        <span className="sidebar-play-button-content">Play online with other players</span>
-                    </button>
-                </li>
-                <li>
-                    <button
-                        onClick={handleGameCreation}
-                        className="sidebar-play-button"
-                    >
-                        <span className="sidebar-play-button-title">Computer</span>
-                        <span className="sidebar-play-button-content">Play with computer</span>
-                    </button>
-                </li>
-            </ul>
-        </div>
+        <aside
+            className="play-sidebar"
+            style={{ transform: isSidebarExpanded ? 'translateX(0px)' : '' }}
+        >
+            <div className="play-sidebar-mobile-menu">
+                <button
+                    className="play-sidebar-mobile-menu-button"
+                    onClick={() => setIsSidebarExpanded(prev => !prev)}
+                >    
+                    {isSidebarExpanded ? (
+                        <img
+                            width="20px"
+                            src="/static/images/icons/right_arrow_icon.png"
+                            alt="Shrink Sidebar"
+                        />
+                    ) : (
+                        <img
+                            width="20px"
+                            src="/static/images/icons/left_arrow_icon.png"
+                            alt="Expand Sidebar"
+                        />
+                    )}
+                </button>
+            </div>
+            <div className="play-sidebar-content">
+                <button
+                    onClick={handleMatchmaking}
+                    className="play-sidebar-button"
+                >
+                    <span className="play-sidebar-button-title">Play Online</span>
+                    <span className="play-sidebar-button-content">Play online with other players</span>
+                </button>
+                <button
+                    onClick={handleGameCreation}
+                    className="play-sidebar-button"
+                >
+                    <span className="play-sidebar-button-title">Computer</span>
+                    <span className="play-sidebar-button-content">Play with computer</span>
+                </button>
+            </div>
+        </aside>
     );
 }

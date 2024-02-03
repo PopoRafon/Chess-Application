@@ -131,7 +131,7 @@ export default function Game({ gameType, gameSetup }) {
 
     return isGameLoaded && (
         <>
-            <div className="game-container">
+            <section className="game-container">
                 <div className="game-content">
                     {promotionMenu.show && (
                         <PromotionMenu
@@ -156,7 +156,7 @@ export default function Game({ gameType, gameSetup }) {
                         gameType={gameType}
                     />
                 </div>
-            </div>
+            </section>
             <GameSidebar
                 messages={messages}
                 gameType={gameType}

@@ -31,8 +31,8 @@ export default function Piece({ type, row, col, piecesRef, setHighlightedSquare 
             });
         }
 
-        event.target.style.left = `${event.clientX-pos[0]-45}px`;
-        event.target.style.top = `${event.clientY-pos[1]-45}px`;
+        event.target.style.left = `${event.clientX - pos[0] - 45}px`;
+        event.target.style.top = `${event.clientY - pos[1] - 45}px`;
     }
 
     function handleDragEnd(event) {
@@ -44,12 +44,42 @@ export default function Piece({ type, row, col, piecesRef, setHighlightedSquare 
         });
     }
 
+    function handleTouchStart(event) {
+        const { left, top } = event.target.getBoundingClientRect();
+
+        event.target.style.zIndex = '20';
+
+        setPos([left, top]);
+    }
+
+    function handleTouchMove(event) {
+        const { clientX, clientY } = event.touches[0];
+
+        event.target.style.left = `${(clientX - pos[0]) * 2 - 45}px`;
+        event.target.style.top = `${(clientY - pos[1]) * 2 - 45}px`;
+    }
+
+    function handleTouchEnd(event) {
+        const { left, top, width, height } = event.target.getBoundingClientRect();
+
+        event.target.removeAttribute('style');
+        const dropEvent = new Event('drop', { bubbles: true });
+        dropEvent.dataTransfer = { getData: () => `${type},${row},${col}` };
+        dropEvent.clientX = left + (width / 2);
+        dropEvent.clientY = top + (height / 2);
+
+        event.target.dispatchEvent(dropEvent);
+    }
+
     return (
         <div
             draggable={true}
             onDragStart={handleDragStart}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             className={`piece ${type} p-${row}${col}`}
         >
         </div>

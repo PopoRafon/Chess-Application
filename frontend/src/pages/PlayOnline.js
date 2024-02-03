@@ -9,7 +9,7 @@ export default function PlayOnline() {
     const { user } = useUser();
 
     return (
-        <div className="play-page">
+        <main className="play-online-page">
             <GameProvider>
                 <UsersProvider>
                     <GameSocketProvider>
@@ -20,6 +20,6 @@ export default function PlayOnline() {
                     </GameSocketProvider>
                 </UsersProvider>
             </GameProvider>
-        </div>
+        </main>
     );
 }

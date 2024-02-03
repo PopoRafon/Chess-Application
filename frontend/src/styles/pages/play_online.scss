@@ -1,2 +1,11 @@
 @import '../game/sidebar/game_sidebar';
 @import '../game/board/game';
+
+.play-online-page {
+    display: flex;
+    flex-grow: 1;
+    height: 100vh;
+    position: relative;
+    width: 100vw;
+    overflow: hidden;
+}
