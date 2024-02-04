@@ -18,11 +18,11 @@ class RankingGameConsumer(GameConsumer):
             white_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.white_player)
             black_player_profile = await database_sync_to_async(Profile.objects.get)(user=self.room.black_player)
 
-            if 'White' in result:
+            if 'white' in result:
                 white_player_profile.wins += 1
                 black_player_profile.loses += 1
                 add_rating_points(white_player_profile, black_player_profile)
-            elif 'Black' in result:
+            elif 'black' in result:
                 white_player_profile.loses += 1
                 black_player_profile.wins += 1
                 add_rating_points(black_player_profile, white_player_profile)
@@ -45,8 +45,6 @@ class RankingGameConsumer(GameConsumer):
                 'username': self.user.username,
                 'body': body
             })
-        else:
-            await self.send_error()
 
     async def perform_message_validation(self, message):
         """

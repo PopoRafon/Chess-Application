@@ -1,13 +1,14 @@
+import 'jest';
 import '@testing-library/jest-dom';
 import Navigation from '#components/navigation/Navigation';
 import { MemoryRouter } from 'react-router-dom';
 import { UserContext } from '#contexts/UserContext';
 import { render } from '@testing-library/react';
 
-const renderWithUserContext = (userContextValue={ isLoggedIn: false }) => {
+const renderWithUserContext = (userContextValue={ user: { isLoggedIn: false }, setUser: () => {} }) => {
     return render(
         <MemoryRouter>
-            <UserContext.Provider value={{ user: userContextValue }}>
+            <UserContext.Provider value={{ ...userContextValue }}>
                 <Navigation />
             </UserContext.Provider>
         </MemoryRouter>
@@ -26,7 +27,7 @@ describe('navigation component', () => {
 
     test('correctly renders navigation for authenticated user', () => {
         const user = { isLoggedIn: true, username: 'Test User' };
-        const { queryByText, getByText } = renderWithUserContext(user);
+        const { queryByText, getByText } = renderWithUserContext({ user });
 
         expect(queryByText('Login')).not.toBeInTheDocument();
         expect(queryByText('Sign Up')).not.toBeInTheDocument();

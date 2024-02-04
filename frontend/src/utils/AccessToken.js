@@ -41,7 +41,7 @@ export default class AccessToken {
                 .catch((err) => {
                     console.log(err);
                 });
-            }, 14*60*1e3);
+            }, 14 * 60 * 1e3);
         }
     }
 }

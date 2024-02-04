@@ -65,8 +65,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         if self.game.started:
             result = f'winner: {"black" if player_color == "w" else "white"}/by: resignation'
 
-            await self.update_timers_in_game_object()
-            await self.end_game(result)
+            if await self.update_timers_in_game_object():
+                await self.end_game(result)
         else:
             result = 'winner: draw/by: resignation'
 
@@ -113,8 +113,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'black_points': self.game.black_points,
                 'move': move_notation
             })
-        else:
-            await self.send_error()
 
     async def perform_move_validation(self, move):
         """

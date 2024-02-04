@@ -23,6 +23,7 @@
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.2",
     "jest": "^29.7.0",
+    "nock": "^13.5.1",
     "react-router-dom": "^6.16.0"
   },
   "eslintConfig": {

@@ -16,6 +16,7 @@ export default function Navigation() {
         })
         .then((response) => response.json())
         .then((data) => {
+            console.log(data);
             if (data.success) {
                 setUser({ isLoggedIn: false });
 
