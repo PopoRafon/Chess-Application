@@ -135,6 +135,16 @@ class UserUpdateSerializer(serializers.Serializer):
         return attrs
 
 
+class UserGamesHistorySerializer(serializers.ModelSerializer):
+    white_player = serializers.CharField(source='white_player.username')
+    black_player = serializers.CharField(source='black_player.username')
+    result = serializers.CharField(source='game.result')
+
+    class Meta:
+        model = RankingGameRoom
+        fields = ['white_player', 'black_player', 'result']
+
+
 class GameRoomSerializer(serializers.ModelSerializer):
     """
     Parent serializer for all Game Room Serializers.

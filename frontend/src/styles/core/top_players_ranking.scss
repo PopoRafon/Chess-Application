@@ -1,0 +1,85 @@
+.top-players-ranking {
+    z-index: 10;
+    background-color: #2e2e2e;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 2px 2px 4px 0px rgb(0, 0, 0, 0.2);
+
+    .top-players-header {
+        font-size: x-large;
+        text-align: center;
+        margin: 0px;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgb(0, 0, 0, 0.3);
+    }
+
+    .top-players-body {
+        display: flex;
+        gap: 10px;
+
+        .top-player {
+            $width: 150px;
+            $height: 150px;
+            font-size: medium;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #2f2f2f;
+            box-sizing: border-box;
+            padding: 5px 5px;
+            border-radius: 5px;
+            width: $width;
+            height: $height;
+            box-shadow: 3px 3px 6px 0px rgb(0, 0, 0, 0.2);
+            border: 1px solid #2a2a2a;
+
+            &:hover::before {
+                content: " ";
+                position: absolute;
+                border-radius: inherit;
+                z-index: -1;
+                background-color: #f0f0f0;
+                width: calc($width + 6px);
+                height: calc($height + 6px);
+                animation: flashing-animation 1s normal 0s infinite;
+
+                @keyframes flashing-animation {
+                    25% { background-color: #d0d0d0; }
+                    50% { background-color: #b9b9b9; }
+                }
+            }
+
+            .top-player-username {
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                text-align: center;    
+            }
+
+            .top-player-avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .top-players-ranking .top-players-body .top-player {
+        $width: 105px;
+        $height: 135px;
+        width: $width;
+        height: $height;
+        font-size: small;
+    
+        &:hover::before {
+            width: calc($width + 6px);
+            height: calc($height + 6px);
+        }
+    }
+}

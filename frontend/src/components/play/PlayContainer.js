@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import TopPlayersRanking from '#components/ranking/TopPlayersRanking';
 
 export default function PlayContainer({ matchmaking, setMatchmaking }) {
     const [gameSearchTimer, setGameSearchTimer] = useState(0);
@@ -16,6 +17,7 @@ export default function PlayContainer({ matchmaking, setMatchmaking }) {
 
     return (
         <section className="play-container">
+            <TopPlayersRanking />
             {matchmaking && (
                 <div className="matchmaking">
                     <span className="matchmaking-timer">
@@ -30,7 +32,10 @@ export default function PlayContainer({ matchmaking, setMatchmaking }) {
                     </button>
                 </div>
             )}
-            
+            <section className="play-content">
+                <h1 className="play-header">Become the Grandmaster You Aspire to Be!</h1>
+                <span className="play">Ready to test your skills? Join the queue, and we'll find you a worthy opponent in no time.</span>
+            </section>
         </section>
     );
 }

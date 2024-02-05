@@ -3,7 +3,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.test import APISimpleTestCase
 from api.views.game_room_views import RankingGameRoomView, GuestGameRoomView, ComputerGameRoomRetrieveView, ComputerGameRoomCreateView
 from api.views.password_views import PasswordChangeView, PasswordResetView, PasswordResetConfirmView
-from api.views.user_views import UserDataView, UserDeleteView, UserUpdateView
+from api.views.user_views import UserDataView, UserDeleteView, UserUpdateView, UserGamesHistoryView
 from api.views.account_views import RegisterView, LoginView, LogoutView
 from api.views.generic_views import RankingView, TokenRefreshView
 
@@ -45,6 +45,14 @@ class TestUserUrls(APISimpleTestCase):
 
         self.assertEqual(url, '/api/v1/user/update')
         self.assertEqual(resolver.func.view_class, UserUpdateView)
+
+    def test_user_games_history_url(self):
+        url = reverse('user-games-history')
+        resolver = resolve(url)
+
+        self.assertEqual(url, '/api/v1/user/games/history')
+        self.assertEqual(resolver.func.view_class, UserGamesHistoryView)
+
 
 class TestUserAuthenticationUrls(APISimpleTestCase):
     def test_register_url(self):

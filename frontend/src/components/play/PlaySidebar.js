@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '#contexts/UserContext';
 import Cookies from 'js-cookie';
+import RecentGames from './RecentGames';
 
 export default function Sidebar({ matchmaking, setMatchmaking }) {
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -113,20 +114,23 @@ export default function Sidebar({ matchmaking, setMatchmaking }) {
                 </button>
             </div>
             <div className="play-sidebar-content">
-                <button
-                    onClick={handleMatchmaking}
-                    className="play-sidebar-button"
-                >
-                    <span className="play-sidebar-button-title">Play Online</span>
-                    <span className="play-sidebar-button-content">Play online with other players</span>
-                </button>
-                <button
-                    onClick={handleGameCreation}
-                    className="play-sidebar-button"
-                >
-                    <span className="play-sidebar-button-title">Computer</span>
-                    <span className="play-sidebar-button-content">Play with computer</span>
-                </button>
+                <RecentGames />
+                <div className="play-sidebar-buttons-container">
+                    <button
+                        onClick={handleMatchmaking}
+                        className="play-sidebar-button"
+                    >
+                        <span className="play-sidebar-button-title">Play Online</span>
+                        <span className="play-sidebar-button-content">Play online with other players</span>
+                    </button>
+                    <button
+                        onClick={handleGameCreation}
+                        className="play-sidebar-button"
+                    >
+                        <span className="play-sidebar-button-title">Computer</span>
+                        <span className="play-sidebar-button-content">Play with computer</span>
+                    </button>
+                </div>
             </div>
         </aside>
     );

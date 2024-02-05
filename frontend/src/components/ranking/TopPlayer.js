@@ -1,15 +1,15 @@
-export default function HomeRankingPlayer({ player, position }) {
+export default function TopPlayer({ player, position }) {
     return (
-        <li className="home-ranking-player">
+        <li className="top-player">
             {player && (
                 <>
                     <img
-                        className="home-ranking-avatar"
+                        className="top-player-avatar"
                         src={player.avatar}
                         alt={`${player.username} Avatar`}
                     />
                     <span>#{position}</span>
-                    <span className="home-ranking-username">{player.username}</span>
+                    <span className="top-player-username">{player.username}</span>
                     <span>Rating: {player.rating}</span>
                 </>
             )}

@@ -41,6 +41,7 @@ class RankingGameRoom(models.Model):
     white_player = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_room_white')
     black_player = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_room_black')
     game = models.OneToOneField(Game, on_delete=models.CASCADE, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.id}'

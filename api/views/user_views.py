@@ -1,8 +1,11 @@
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from api.serializers import UserUpdateSerializer
+from django.db.models import Q
+from api.serializers import UserUpdateSerializer, UserGamesHistorySerializer
+from api.models import RankingGameRoom
 
 
 class UserDataView(APIView):
@@ -66,3 +69,14 @@ class UserUpdateView(APIView):
             return Response({'success': 'Your account information has been successfully changed!'})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserGamesHistoryView(ListAPIView):
+    serializer_class = UserGamesHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return RankingGameRoom.objects.order_by('-created').filter(
+            Q(white_player=self.request.user) |
+            Q(black_player=self.request.user)
+        )[:5]

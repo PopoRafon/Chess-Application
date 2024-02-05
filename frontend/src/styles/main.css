@@ -210,14 +210,7 @@
   border-radius: 10px;
 }
 
-.home-page {
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  flex-direction: column;
-  padding: 15px 0px;
-}
-.home-page .home-ranking {
+.top-players-ranking {
   z-index: 10;
   background-color: #2e2e2e;
   padding: 8px;
@@ -225,18 +218,18 @@
   border: 1px solid #2a2a2a;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.2);
 }
-.home-page .home-ranking .home-ranking-header {
+.top-players-ranking .top-players-header {
   font-size: x-large;
   text-align: center;
   margin: 0px;
   margin-bottom: 15px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
-.home-page .home-ranking .home-ranking-body {
+.top-players-ranking .top-players-body {
   display: flex;
   gap: 10px;
 }
-.home-page .home-ranking .home-ranking-body .home-ranking-player {
+.top-players-ranking .top-players-body .top-player {
   font-size: medium;
   display: flex;
   flex-direction: column;
@@ -251,7 +244,7 @@
   box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
   border: 1px solid #2a2a2a;
 }
-.home-page .home-ranking .home-ranking-body .home-ranking-player:hover::before {
+.top-players-ranking .top-players-body .top-player:hover::before {
   content: " ";
   position: absolute;
   border-radius: inherit;
@@ -269,18 +262,37 @@
     background-color: #b9b9b9;
   }
 }
-.home-page .home-ranking .home-ranking-body .home-ranking-player .home-ranking-username {
+.top-players-ranking .top-players-body .top-player .top-player-username {
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
 }
-.home-page .home-ranking .home-ranking-body .home-ranking-player .home-ranking-avatar {
+.top-players-ranking .top-players-body .top-player .top-player-avatar {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+  .top-players-ranking .top-players-body .top-player {
+    width: 105px;
+    height: 135px;
+    font-size: small;
+  }
+  .top-players-ranking .top-players-body .top-player:hover::before {
+    width: 111px;
+    height: 141px;
+  }
+}
+.home-page {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  flex-direction: column;
+  padding: 15px 0px;
 }
 .home-page .home-container {
   display: flex;
@@ -307,15 +319,6 @@
 @media only screen and (max-width: 768px) {
   .home-page {
     padding: 15px 0px 15px 25px;
-  }
-  .home-page .home-ranking .home-ranking-body .home-ranking-player {
-    width: 105px;
-    height: 135px;
-    font-size: small;
-  }
-  .home-page .home-ranking .home-ranking-body .home-ranking-player:hover::before {
-    width: 111px;
-    height: 141px;
   }
   .home-page .home-container {
     margin-top: 3rem;
@@ -352,21 +355,28 @@
 
 .play-sidebar {
   display: flex;
-  align-items: center;
-  justify-content: center;
   border-left: 1px solid #363636;
   background-color: #2c2c2c;
   height: 100%;
   box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.15);
+  z-index: 30;
 }
 .play-sidebar .play-sidebar-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 350px;
+}
+.play-sidebar .play-sidebar-content .play-sidebar-buttons-container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   gap: 10px;
 }
-.play-sidebar .play-sidebar-content .play-sidebar-button {
+.play-sidebar .play-sidebar-content .play-sidebar-buttons-container .play-sidebar-button {
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -381,15 +391,15 @@
   color: white;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.15);
 }
-.play-sidebar .play-sidebar-content .play-sidebar-button:hover {
+.play-sidebar .play-sidebar-content .play-sidebar-buttons-container .play-sidebar-button:hover {
   background-color: rgb(62, 151, 62);
   border-color: rgb(6, 133, 6);
 }
-.play-sidebar .play-sidebar-content .play-sidebar-button .play-sidebar-button-title {
+.play-sidebar .play-sidebar-content .play-sidebar-buttons-container .play-sidebar-button .play-sidebar-button-title {
   font-size: large;
   font-weight: 700;
 }
-.play-sidebar .play-sidebar-content .play-sidebar-button .play-sidebar-button-content {
+.play-sidebar .play-sidebar-content .play-sidebar-buttons-container .play-sidebar-button .play-sidebar-button-content {
   font-size: small;
 }
 .play-sidebar .play-sidebar-mobile-menu {
@@ -399,6 +409,43 @@
   background-color: transparent;
   border: 0;
   border-radius: 5px;
+}
+.play-sidebar .recent-games {
+  position: absolute;
+  margin-top: 15px;
+  text-align: center;
+  border: 1px solid #363636;
+  background-color: rgba(41, 41, 41, 0.9411764706);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 220px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+.play-sidebar .recent-games .recent-games-header {
+  font-weight: 600;
+  font-size: large;
+  background-color: #262626;
+  border-bottom: 1px solid #363636;
+  width: 100%;
+  padding: 5px 0px;
+  margin: 0px;
+}
+.play-sidebar .recent-games .recent-games-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+}
+.play-sidebar .recent-games .recent-games-body .recent-games-entry {
+  display: inline-flex;
+  gap: 5px;
+}
+.play-sidebar .recent-games .recent-games-body .recent-games-entry .recent-games-entry-user {
+  width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media only screen and (max-width: 768px) {
@@ -416,9 +463,21 @@
 }
 .play-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   flex-grow: 1;
   align-items: center;
+  padding: 15px 0px;
+}
+.play-container .play-content {
+  margin-top: 14rem;
+  text-align: center;
+  font-size: x-large;
+}
+.play-container .play-content .play-header {
+  font-size: xx-large;
+  font-weight: 700;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+  margin: 0;
 }
 .play-container .matchmaking {
   display: flex;
@@ -432,6 +491,9 @@
   padding: 8px 10px;
   border-radius: 15px;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .play-container .matchmaking .matchmaking-leave-button {
   cursor: pointer;
@@ -477,6 +539,12 @@
   }
 }
 
+@media only screen and (max-width: 768px) {
+  .play-container .play-content {
+    margin-top: 3rem;
+    padding: 0px 40px;
+  }
+}
 .play-page {
   display: flex;
   flex-grow: 1;

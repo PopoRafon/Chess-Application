@@ -1,46 +1,54 @@
 .play-sidebar {
     display: flex;
-    align-items: center;
-    justify-content: center;
     border-left: 1px solid #363636;
     background-color: #2c2c2c;
     height: 100%;
     box-shadow: -4px 0px 6px rgb(0, 0, 0, 0.15);
+    z-index: 30;
 
     .play-sidebar-content {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 350px;
-        gap: 10px;
 
-        .play-sidebar-button {
-            cursor: pointer;
+        .play-sidebar-buttons-container {
             display: flex;
+            flex-grow: 1;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 80%;
-            height: 7vh;
-            background-color: rgb(65, 161, 65);
-            border-radius: 15px;
-            border: 0px;
-            border-bottom: 4px solid rgb(6, 141, 6);
-            color: white;
-            box-shadow: 4px 4px 6px rgb(0, 0, 0, 0.15);
+            width: 100%;
+            gap: 10px;
 
-            &:hover {
-                background-color: rgb(62, 151, 62);
-                border-color: rgb(6, 133, 6);
-            }
+            .play-sidebar-button {
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 80%;
+                height: 7vh;
+                background-color: rgb(65, 161, 65);
+                border-radius: 15px;
+                border: 0px;
+                border-bottom: 4px solid rgb(6, 141, 6);
+                color: white;
+                box-shadow: 4px 4px 6px rgb(0, 0, 0, 0.15);
 
-            .play-sidebar-button-title {
-                font-size: large;
-                font-weight: 700;
-            }
+                &:hover {
+                    background-color: rgb(62, 151, 62);
+                    border-color: rgb(6, 133, 6);
+                }
 
-            .play-sidebar-button-content {
-                font-size: small;
+                .play-sidebar-button-title {
+                    font-size: large;
+                    font-weight: 700;
+                }
+
+                .play-sidebar-button-content {
+                    font-size: small;
+                }
             }
         }
     }
@@ -52,6 +60,49 @@
             background-color: transparent;
             border: 0;
             border-radius: 5px;
+        }
+    }
+
+    .recent-games {
+        $border-color: #363636;
+        position: absolute;
+        margin-top: 15px;
+        text-align: center;
+        border: 1px solid $border-color;
+        background-color: #292929f0;
+        border-radius: 10px;
+        overflow: hidden;
+        width: 220px;
+        box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.2);
+
+        .recent-games-header {
+            font-weight: 600;
+            font-size: large;
+            background-color: #262626;
+            border-bottom: 1px solid $border-color;
+            width: 100%;
+            padding: 5px 0px;
+            margin: 0px;
+        }
+
+        .recent-games-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+
+            .recent-games-entry {
+                display: inline-flex;
+                gap: 5px;
+
+                .recent-games-entry-user {
+                    width: 80px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
         }
     }
 }

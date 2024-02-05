@@ -1,8 +1,22 @@
 .play-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     flex-grow: 1;
     align-items: center;
+    padding: 15px 0px;
+
+    .play-content {
+        margin-top: 14rem;
+        text-align: center;
+        font-size: x-large;
+
+        .play-header {
+            font-size: xx-large;
+            font-weight: 700;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+            margin: 0;
+        }
+    }
 
     .matchmaking {
         display: flex;
@@ -16,6 +30,9 @@
         padding: 8px 10px;
         border-radius: 15px;
         box-shadow: 4px 4px 6px rgb(0, 0, 0, 0.20);
+        z-index: 20;
+        top: 50%;
+        transform: translateY(-50%);
 
         .matchmaking-leave-button {
             cursor: pointer;
@@ -65,5 +82,12 @@
                 }
             }
         }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .play-container .play-content {
+        margin-top: 3rem;
+        padding: 0px 40px;
     }
 }

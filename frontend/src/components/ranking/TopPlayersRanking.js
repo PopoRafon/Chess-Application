@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import getRankingPlayers from '#utils/RankingPlayers';
-import HomeRankingPlayer from './HomeRankingPlayer';
+import TopPlayer from './TopPlayer';
 
-export default function HomeRanking() {
+export default function TopPlayersRanking() {
     const [topPlayers, setTopPlayers] = useState(new Array(3).fill(null));
 
     useEffect(() => {
@@ -10,11 +10,11 @@ export default function HomeRanking() {
     }, [setTopPlayers]);
 
     return (
-        <section className="home-ranking">
-            <h2 className="home-ranking-header">Top Players</h2>
-            <ul className="home-ranking-body">
+        <section className="top-players-ranking">
+            <h2 className="top-players-header">Top Players</h2>
+            <ul className="top-players-body">
                 {topPlayers.map((player, index) => (
-                    <HomeRankingPlayer
+                    <TopPlayer
                         player={player}
                         position={index + 1}
                         key={index}
