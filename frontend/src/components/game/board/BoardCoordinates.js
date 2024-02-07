@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useRef, memo } from 'react';
 import { useUsers } from '#contexts/UsersContext';
 
-export default function BoardCoordinates({ coordinatesType, coordinates }) {
+const BoardCoordinates = memo(function BoardCoordinates({ coordinatesType, coordinates }) {
     const { users } = useUsers();
     const indexShift = useRef(users.player.color === 'w' ? 0 : 1);
     const coordinatesColors = useRef(coordinatesType === 'cols' ? ['white-letter', 'black-letter'] : ['black-letter', 'white-letter']);
@@ -21,4 +21,6 @@ export default function BoardCoordinates({ coordinatesType, coordinates }) {
             ))}
         </div>
     );
-}
+});
+
+export default BoardCoordinates;

@@ -10,13 +10,18 @@ from api.models import RankingGameRoom
 
 class UserDataView(APIView):
     def get(self, request):
-        if request.user.is_authenticated:
+        user = request.user
+
+        if user.is_authenticated:
             return Response({
                 'success': {
-                    'avatar': request.user.profile.avatar.url,
-                    'email': request.user.email,
-                    'username': request.user.username,
-                    'rating': request.user.profile.rating
+                    'avatar': user.profile.avatar.url,
+                    'email': user.email,
+                    'username': user.username,
+                    'rating': user.profile.rating,
+                    'wins': user.profile.wins,
+                    'draws': user.profile.draws,
+                    'loses': user.profile.loses
                 }
             })
         else:
@@ -76,7 +81,7 @@ class UserGamesHistoryView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return RankingGameRoom.objects.order_by('-created').filter(
+        return RankingGameRoom.objects.select_related('game').order_by('-created').exclude(game__result='').filter(
             Q(white_player=self.request.user) |
             Q(black_player=self.request.user)
         )[:5]

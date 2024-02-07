@@ -24,7 +24,7 @@ class TestRankingGameRoomView(APITestCase):
         response_json = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response_json), 14)
+        self.assertEqual(len(response_json), 15)
 
     def test_ranking_game_room_GET_authenticated_user(self):
         third_user = User.objects.create(username='third user')
@@ -131,7 +131,7 @@ class TestUserDataView(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response_json['success'])
-        self.assertEqual(len(response_json['success']), 4)
+        self.assertEqual(len(response_json['success']), 7)
 
     def test_user_data_GET_unauthenticated_user(self):
         response = self.client.get(self.url)

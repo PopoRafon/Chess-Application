@@ -69,7 +69,7 @@ export default function Chat({ gameType, messages }) {
                             placeholder="Send message..."
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            maxLength="256"
+                            maxLength="255"
                             rows="1"
                             value={messageData}
                         />

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script is only for development purposes
-# It requires GNU bash and GNU screen installed in order to work
+# It requires GNU bash, GNU screen and Redis installed in order to work
 
 if [ "$(redis-cli ping)" = "PONG" ]; then
     SCREEN_NAME="Chess"

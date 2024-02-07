@@ -21,7 +21,7 @@ describe('access token util', () => {
         nock(/(.*?)/)
         .post('/api/v1/token/refresh')
         .once()
-        .reply(200, {
+        .reply(403, {
             error: ''
         });
 

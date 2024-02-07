@@ -1,13 +1,17 @@
 export default function playSound(move) {
+    let audio;
+
     if (move.includes('O-O')) {
-        new Audio('/static/sounds/castle.mp3').play();
+        audio = new Audio('/static/sounds/castle.mp3');
     } else if (move.includes('=')) {
-        new Audio('/static/sounds/promote.mp3').play();
+        audio = new Audio('/static/sounds/promote.mp3');
     } else if (move.includes('+')) {
-        new Audio('/static/sounds/check.mp3').play();
+        audio = new Audio('/static/sounds/check.mp3');
     } else if (move.includes('x')) {
-        new Audio('/static/sounds/capture.mp3').play();
+        audio = new Audio('/static/sounds/capture.mp3');
     } else {
-        new Audio('/static/sounds/move.mp3').play();
+        audio = new Audio('/static/sounds/move.mp3');
     }
+
+    audio.play().catch(error => console.log(error));
 }

@@ -11,7 +11,7 @@ urlpatterns = [
     path('user/data', user_views.UserDataView.as_view(), name='user-data'),
     path('user/delete', user_views.UserDeleteView.as_view(), name='user-delete'),
     path('user/update', user_views.UserUpdateView.as_view(), name='user-update'),
-    path('user/games/history', user_views.UserGamesHistoryView.as_view(), name='user-game-history'),
+    path('user/games/history', user_views.UserGamesHistoryView.as_view(), name='user-games-history'),
 
     path('register', account_views.RegisterView.as_view(), name='register'),
     path('login', account_views.LoginView.as_view(), name='login'),

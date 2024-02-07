@@ -24,4 +24,4 @@ class RankingView(ListAPIView):
             if count_param_int >= 1 and count_param_int <= 100:
                 count = count_param_int
 
-        return User.objects.prefetch_related('profile').all().order_by('-profile__rating')[0:count]
+        return User.objects.select_related('profile').all().order_by('-profile__rating')[0:count]

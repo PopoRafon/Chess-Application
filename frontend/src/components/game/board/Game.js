@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUsers } from '#contexts/UsersContext';
+import { useUser } from '#contexts/UserContext';
 import { useGame } from '#contexts/GameContext';
 import { useGameSocket } from '#contexts/GameSocketContext';
+import Cookies from 'js-cookie';
 import playSound from '#helpers/GameSounds';
 import GameSidebar from '../sidebar/GameSidebar';
 import PromotionMenu from './PromotionMenu';
@@ -16,6 +18,7 @@ export default function Game({ gameType, gameSetup }) {
     const [showResignMenu, setShowResignMenu] = useState(false);
     const [messages, setMessages] = useState([]);
     const { gameSocket, setGameSocket } = useGameSocket();
+    const { setUser } = useUser();
     const { users, setUsers } = useUsers();
     const { game, dispatchGame } = useGame();
     const navigate = useNavigate();
@@ -113,7 +116,29 @@ export default function Game({ gameType, gameSetup }) {
                             result: result
                         });
 
-                        new Audio('/static/sounds/game_end.mp3').play();
+                        new Audio('/static/sounds/game_end.mp3').play().catch(error => console.log(error));
+
+                        if (gameType === 'ranking') {
+                            const accessToken = Cookies.get('access');
+
+                            setTimeout(() => {
+                                fetch('/api/v1/user/data', {
+                                    method: 'GET',
+                                    headers: {
+                                        'Authorization': `Bearer ${accessToken}`
+                                    }
+                                })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data.success) {
+                                        setUser(prev => ({
+                                            ...prev,
+                                            ...data.success
+                                        }));
+                                    }
+                                });
+                            }, 1000);
+                        }
                         break;
                     default:
                         new Error('Message received is of unknown type.');

@@ -88,8 +88,8 @@ export default function SettingsContainer() {
                     </div>
                 </div>
                 <div className="settings-input-label">
-                    <span>Rating</span>
-                    <span>{user.rating}</span>
+                    <div>Rating</div>
+                    <div>{user.rating}</div>
                 </div>
                 <label
                     htmlFor="email"

@@ -18,7 +18,7 @@ class RankingGameRoomView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, RankingGameRoomObjectPermissions]
 
     def get_queryset(self):
-        return RankingGameRoom.objects.prefetch_related('game').all()
+        return RankingGameRoom.objects.select_related('game').all()
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -44,7 +44,7 @@ class GuestGameRoomView(RetrieveAPIView):
     permission_classes = [GuestGameRoomObjectPermissions]
 
     def get_queryset(self):
-        return GuestGameRoom.objects.prefetch_related('game').all()
+        return GuestGameRoom.objects.select_related('game').all()
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -69,7 +69,7 @@ class ComputerGameRoomRetrieveView(RetrieveAPIView):
     permission_classes = [ComputerGameRoomObjectPermissions]
 
     def get_queryset(self):
-        return ComputerGameRoom.objects.prefetch_related('game').all()
+        return ComputerGameRoom.objects.select_related('game').all()
 
 
 class ComputerGameRoomCreateView(CreateAPIView):

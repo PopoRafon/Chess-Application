@@ -5,7 +5,10 @@ const initialValue = {
     avatar: '',
     email: '',
     username: '',
-    rating: null
+    rating: null,
+    wins: null,
+    draws: null,
+    loses: null
 };
 
 const UserContext = createContext(initialValue);

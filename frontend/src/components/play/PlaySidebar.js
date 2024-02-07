@@ -114,7 +114,18 @@ export default function Sidebar({ matchmaking, setMatchmaking }) {
                 </button>
             </div>
             <div className="play-sidebar-content">
-                <RecentGames />
+                <div className="play-sidebar-account-information">
+                    <div className="account-statistics">
+                        <h2 className="account-statistics-header">Account Statistics</h2>
+                        <div className="account-statistics-body">
+                            <div style={{ color: 'green' }}>Wins: {user.wins}</div>
+                            <div style={{ color: 'red' }}>Loses: {user.loses}</div>
+                            <div style={{ color: 'grey' }}>Draws: {user.draws}</div>
+                            <div>Rating: {user.rating}</div>
+                        </div>
+                    </div>
+                    <RecentGames />
+                </div>
                 <div className="play-sidebar-buttons-container">
                     <button
                         onClick={handleMatchmaking}
