@@ -44,17 +44,20 @@ jobs:
 
     - name: Install Django Dependencies
       run: |
+        cd backend/
         pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Prepare Django Environment
       run: |
+        cd backend/
         echo "SECRET_KEY=$(openssl rand -base64 32)" > ./Chess/.env
         echo -e "[client]\ndatabase = testdb\nuser = root\npassword = rootpassword\ndefault-character-set = utf8" > ./Chess/my.cnf
         python3 manage.py migrate
 
     - name: Run Django Tests
       run: |
+        cd backend/
         python3 manage.py test
 
     - name: Install Node

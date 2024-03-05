@@ -1,5 +1,10 @@
 import Cookie from 'js-cookie';
 
+/**
+ * Fetches user data from server and sets user state with it.
+ * @param {React.Dispatch<React.SetStateAction<user>>} setUser
+ * @returns {Promise<void>} 
+ */
 export default async function getUserData(setUser) {
     const token = Cookie.get('access');
 

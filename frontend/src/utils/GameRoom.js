@@ -1,6 +1,11 @@
 import Cookies from 'js-cookie';
 
-async function setupRankingGame(setSocket) {
+/**
+ * Fetches ranking game data from server, connects to socket and sets socket state with this connection.
+ * @param {React.Dispatch<React.SetStateAction<gameSocket>>} setGameSocket 
+ * @returns {Promise<object | "error">} If connection is successful returns data and if connection fails `error` is returned.
+ */
+async function setupRankingGame(setGameSocket) {
     const accessToken = Cookies.get('access');
     const gameId = window.location.pathname.split('/')[3];
 
@@ -13,7 +18,7 @@ async function setupRankingGame(setSocket) {
     .then(response => response.json())
     .then((data) => {
         if (data.pgn) {
-            setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/ranking/game/${gameId}/`));
+            setGameSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/ranking/game/${gameId}/`));
 
             return data;
         } else {
@@ -25,7 +30,12 @@ async function setupRankingGame(setSocket) {
     });
 }
 
-async function setupGuestGame(setSocket) {
+/**
+ * Fetches guest game data from server, connects to socket and sets socket state with this connection.
+ * @param {React.Dispatch<React.SetStateAction<gameSocket>>} setGameSocket 
+ * @returns {Promise<object | "error">} If connection is successful returns data and if connection fails `error` is returned.
+ */
+async function setupGuestGame(setGameSocket) {
     const gameId = window.location.pathname.split('/')[3];
 
     return await fetch(`/api/v1/guest/game/room/${gameId}`, {
@@ -34,7 +44,7 @@ async function setupGuestGame(setSocket) {
     .then(response => response.json())
     .then((data) => {
         if (data.pgn) {
-            setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`));
+            setGameSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/guest/game/${gameId}/`));
 
             data.white_username = 'Guest';
             data.black_username = 'Guest';
@@ -51,7 +61,12 @@ async function setupGuestGame(setSocket) {
     });
 }
 
-async function setupComputerGame(setSocket, user) {
+/**
+ * Fetches computer game data from server, connects to socket and sets socket state with this connection.
+ * @param {React.Dispatch<React.SetStateAction<gameSocket>>} setGameSocket 
+ * @returns {Promise<object | "error">} If connection is successful returns data and if connection fails `error` is returned.
+ */
+async function setupComputerGame(setGameSocket, user) {
     const gameId = Cookies.get('computer_game_url');
 
     return await fetch(`/api/v1/computer/game/room/${gameId}`, {
@@ -60,7 +75,7 @@ async function setupComputerGame(setSocket, user) {
     .then(response => response.json())
     .then((data) => {
         if (data.pgn) {
-            setSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`));
+            setGameSocket(new WebSocket(`ws://${window.location.hostname}:8000/ws/computer/game/${gameId}/`));
 
             if (user.isLoggedIn) {
                 data.white_username = user.username;
